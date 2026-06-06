@@ -4,13 +4,42 @@ from pathlib import Path
 
 EVAL_ROOT = Path("outputs/eval")
 REPORT_DIR = Path("outputs/reports")
-OUTPUT_PATH = REPORT_DIR / "lmeval_samples_preview.jsonl"
+OUTPUT_FILE = REPORT_DIR / "lmeval_samples_preview.jsonl"
+
+SAMPLES_PER_FILE = 3
+
+
+STAGE_ORDER = {
+    "baseline": 0,
+    "sft_lora": 1,
+    "dpo_lora": 2,
+    "grpo_lora": 3,
+    "sft_lora_small": 4,
+    "dpo_lora_small": 5,
+    "grpo_lora_small": 6,
+    "unknown": 99,
+}
 
 
 def infer_stage(path: Path) -> str:
-    text = str(path).lower()
+    """
+    从 lm-eval samples 文件路径推断实验阶段。
 
-    if "baseline_qwen" in text:
+    注意：
+    small 阶段必须优先判断。
+    否则 sft_lora_small / dpo_lora_small / grpo_lora_small
+    会被错误识别成 sft_lora / dpo_lora / grpo_lora。
+    """
+    text = str(path).replace("\\", "/").lower()
+
+    if "sft_lora_small" in text:
+        return "sft_lora_small"
+    if "dpo_lora_small" in text:
+        return "dpo_lora_small"
+    if "grpo_lora_small" in text:
+        return "grpo_lora_small"
+
+    if "baseline" in text:
         return "baseline"
     if "sft_lora" in text:
         return "sft_lora"
@@ -22,129 +51,103 @@ def infer_stage(path: Path) -> str:
     return "unknown"
 
 
-def is_lmeval_sample_file(path: Path) -> bool:
-    """
-    只保留 lm-eval --log_samples 生成的样本文件。
+def load_jsonl(path: Path, limit: int):
+    rows = []
 
-    lm-eval 样本文件一般长这样：
-    samples_gsm8k_cot_xxx.jsonl
-
-    跳过我们自定义评估生成的：
-    custom_baseline_gsm8k_sample.jsonl
-    """
-    name = path.name.lower()
-    path_text = str(path).lower()
-
-    if "custom_baseline" in path_text:
-        return False
-
-    if not name.startswith("samples_"):
-        return False
-
-    if not name.endswith(".jsonl"):
-        return False
-
-    return True
-
-
-def find_lmeval_sample_files():
-    sample_files = []
-
-    for path in EVAL_ROOT.rglob("*.jsonl"):
-        if is_lmeval_sample_file(path):
-            sample_files.append(path)
-
-    return sample_files
-
-
-def load_jsonl(path: Path, max_lines: int = 3):
-    records = []
-
-    with open(path, "r", encoding="utf-8") as f:
-        for i, line in enumerate(f):
-            if i >= max_lines:
-                break
-
+    with path.open("r", encoding="utf-8") as f:
+        for line in f:
             line = line.strip()
+
             if not line:
                 continue
 
             try:
-                records.append(json.loads(line))
-            except Exception:
+                rows.append(json.loads(line))
+            except json.JSONDecodeError:
                 continue
 
-    return records
+            if len(rows) >= limit:
+                break
+
+    return rows
 
 
-def simplify_sample(stage: str, path: Path, sample: dict):
+def compact_sample(sample: dict, source_file: Path) -> dict:
     """
-    lm-eval 不同版本样本字段可能不同。
-    这里尽量保留最有用的信息。
+    保留 lm-eval sample 中最有用的字段。
+
+    不同版本 lm-eval 的 samples 字段可能略有不同，
+    所以这里不强行假设字段一定存在。
     """
-    doc = sample.get("doc", {})
-    arguments = sample.get("arguments", None)
-    resps = sample.get("resps", None)
-    filtered_resps = sample.get("filtered_resps", None)
-    target = sample.get("target", None)
-
-    metrics = {}
-
-    for key, value in sample.items():
-        if isinstance(value, (int, float, bool)) and (
-            "exact" in key or "acc" in key or "match" in key
-        ):
-            metrics[key] = value
+    stage = infer_stage(source_file)
 
     return {
         "stage": stage,
-        "source_file": str(path),
-        "doc": doc,
-        "arguments": arguments,
-        "resps": resps,
-        "filtered_resps": filtered_resps,
-        "target": target,
-        "metrics": metrics,
-        "raw_keys": list(sample.keys()),
+        "source_file": str(source_file),
+        "doc": sample.get("doc"),
+        "arguments": sample.get("arguments"),
+        "resps": sample.get("resps"),
+        "filtered_resps": sample.get("filtered_resps"),
+        "target": sample.get("target"),
+        "exact_match": sample.get("exact_match"),
+        "metrics": sample.get("metrics"),
     }
 
 
-def main():
-    REPORT_DIR.mkdir(parents=True, exist_ok=True)
+def collect_samples():
+    print("====== 找到 lm-eval 样本文件 ======")
 
-    sample_files = find_lmeval_sample_files()
+    sample_files = sorted(EVAL_ROOT.rglob("samples_*.jsonl"))
 
     if not sample_files:
-        print("没有找到 lm-eval 样本 jsonl 文件。")
-        print("请确认评估时使用了 --log_samples。")
+        print("没有找到 samples_*.jsonl。")
+        return []
+
+    for path in sample_files:
+        print(f"- {path}")
+
+    all_rows = []
+
+    for sample_file in sample_files:
+        rows = load_jsonl(sample_file, limit=SAMPLES_PER_FILE)
+
+        for row in rows:
+            all_rows.append(compact_sample(row, sample_file))
+
+    all_rows.sort(
+        key=lambda row: (
+            STAGE_ORDER.get(row["stage"], 99),
+            row["source_file"],
+        )
+    )
+
+    return all_rows
+
+
+def write_preview(rows):
+    REPORT_DIR.mkdir(parents=True, exist_ok=True)
+
+    with OUTPUT_FILE.open("w", encoding="utf-8") as f:
+        for row in rows:
+            f.write(json.dumps(row, ensure_ascii=False) + "\n")
+
+
+def main():
+    rows = collect_samples()
+
+    if not rows:
         return
 
-    print("====== 找到 lm-eval 样本文件 ======")
-    for path in sample_files:
-        print("-", path)
+    write_preview(rows)
 
-    simplified_records = []
+    print("")
+    print("====== lm-eval 样本预览保存完成 ======")
+    print(f"预览文件: {OUTPUT_FILE}")
+    print(f"样本数: {len(rows)}")
 
-    for path in sample_files:
-        stage = infer_stage(path)
-        samples = load_jsonl(path, max_lines=3)
-
-        for sample in samples:
-            simplified_records.append(
-                simplify_sample(stage=stage, path=path, sample=sample)
-            )
-
-    with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
-        for item in simplified_records:
-            f.write(json.dumps(item, ensure_ascii=False) + "\n")
-
-    print("\n====== lm-eval 样本预览保存完成 ======")
-    print(f"预览文件: {OUTPUT_PATH}")
-    print(f"样本数: {len(simplified_records)}")
-
-    if simplified_records:
-        print("\n====== 第一条样本字段预览 ======")
-        print(json.dumps(simplified_records[0], ensure_ascii=False, indent=2)[:3000])
+    print("")
+    print("====== 第一条样本字段预览 ======")
+    print(json.dumps(rows[0], ensure_ascii=False, indent=2)[:4000])
 
 
 if __name__ == "__main__":
