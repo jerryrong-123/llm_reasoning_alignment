@@ -22,3 +22,9 @@
 | grpo_lora | gsm8k_cot | exact_match,flexible-extract | 0.8000 | 0.2000 |
 | grpo_lora | gsm8k_cot | exact_match,strict-match | 0.4000 | 0.2449 |
 | grpo_lora | gsm8k_cot | sample_len | 5 | None |
+| sft_lora_small | gsm8k_cot | exact_match,flexible-extract | 0.4500 | 0.1141 |
+| dpo_lora_small | gsm8k_cot | exact_match,flexible-extract | 0.4000 | 0.1124 |
+| sft_lora_small | gsm8k_cot | exact_match,strict-match | 0.2500 | 0.0993 |
+| dpo_lora_small | gsm8k_cot | exact_match,strict-match | 0.2000 | 0.0918 |
+| sft_lora_small | gsm8k_cot | sample_len | 20 | None |
+| dpo_lora_small | gsm8k_cot | sample_len | 20 | None |

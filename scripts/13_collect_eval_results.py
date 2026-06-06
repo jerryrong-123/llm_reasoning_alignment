@@ -10,7 +10,21 @@ MD_PATH = REPORT_DIR / "eval_summary.md"
 
 
 def infer_stage(path: Path) -> str:
-    text = str(path).lower()
+    """
+    从 lm-eval 结果路径推断实验阶段。
+
+    注意：
+    small 阶段必须优先判断。
+    否则 dpo_lora_small 会被 dpo_lora 提前匹配，导致报告阶段名错误。
+    """
+    text = str(path).replace("\\", "/").lower()
+
+    if "sft_lora_small" in text:
+        return "sft_lora_small"
+    if "dpo_lora_small" in text:
+        return "dpo_lora_small"
+    if "grpo_lora_small" in text:
+        return "grpo_lora_small"
 
     if "baseline" in text:
         return "baseline"
