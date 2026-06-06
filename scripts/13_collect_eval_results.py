@@ -1,5 +1,5 @@
-import json
 import csv
+import json
 from pathlib import Path
 
 
@@ -9,13 +9,25 @@ CSV_PATH = REPORT_DIR / "eval_summary.csv"
 MD_PATH = REPORT_DIR / "eval_summary.md"
 
 
+STAGE_ORDER = {
+    "baseline": 0,
+    "sft_lora": 1,
+    "dpo_lora": 2,
+    "grpo_lora": 3,
+    "sft_lora_small": 4,
+    "dpo_lora_small": 5,
+    "grpo_lora_small": 6,
+    "unknown": 99,
+}
+
+
 def infer_stage(path: Path) -> str:
     """
     从 lm-eval 结果路径推断实验阶段。
 
     注意：
     small 阶段必须优先判断。
-    否则 dpo_lora_small 会被 dpo_lora 提前匹配，导致报告阶段名错误。
+    否则 dpo_lora_small 会被 dpo_lora 提前匹配。
     """
     text = str(path).replace("\\", "/").lower()
 
@@ -38,83 +50,158 @@ def infer_stage(path: Path) -> str:
     return "unknown"
 
 
-def find_result_json_files():
-    """
-    lm-eval 不同版本保存结果文件名可能不同。
-    所以这里递归扫描 outputs/eval 下所有 json 文件，
-    只要里面包含 results 字段，就认为是汇总结果。
-    """
-    files = []
+def get_sample_len(data: dict, task_name: str):
+    n_samples = data.get("n-samples", {})
+    task_samples = n_samples.get(task_name)
 
-    for path in EVAL_ROOT.rglob("*.json"):
-        try:
-            with open(path, "r", encoding="utf-8") as f:
-                data = json.load(f)
+    if isinstance(task_samples, dict):
+        return task_samples.get("effective") or task_samples.get("original")
 
-            if isinstance(data, dict) and "results" in data:
-                files.append(path)
+    if isinstance(task_samples, int):
+        return task_samples
 
-        except Exception:
-            continue
-
-    return files
+    return None
 
 
-def extract_rows_from_result(path: Path):
-    with open(path, "r", encoding="utf-8") as f:
-        data = json.load(f)
+def get_stderr_key(metric_key: str) -> str:
+    if "," in metric_key:
+        name, suffix = metric_key.split(",", 1)
+        return f"{name}_stderr,{suffix}"
 
-    stage = infer_stage(path)
+    return f"{metric_key}_stderr"
+
+
+def is_metric_key(key: str, value) -> bool:
+    if key == "alias":
+        return False
+    if "stderr" in key:
+        return False
+    if isinstance(value, bool):
+        return False
+    return isinstance(value, (int, float))
+
+
+def collect_rows():
+    print("====== 扫描 lm-eval 结果文件 ======")
+
+    result_files = sorted(EVAL_ROOT.rglob("results_*.json"))
+
+    if not result_files:
+        print("没有找到 lm-eval 结果文件。")
+        return []
+
+    print("找到结果文件：")
+    for path in result_files:
+        print(f"- {path}")
+
     rows = []
 
-    results = data.get("results", {})
+    for result_file in result_files:
+        stage = infer_stage(result_file)
 
-    for task_name, metrics in results.items():
-        if not isinstance(metrics, dict):
-            continue
+        with result_file.open("r", encoding="utf-8") as f:
+            data = json.load(f)
 
-        for metric_key, value in metrics.items():
-            if "stderr" in metric_key:
-                continue
+        results = data.get("results", {})
 
-            if isinstance(value, (int, float)):
-                stderr_key = None
-                stderr_value = None
+        for task_name, metrics in results.items():
+            sample_len = get_sample_len(data, task_name)
 
-                # lm-eval 常见格式：
-                # exact_match,flexible-extract
-                # exact_match_stderr,flexible-extract
-                if "," in metric_key:
-                    metric_name, filter_name = metric_key.split(",", 1)
-                    candidate_stderr_key = f"{metric_name}_stderr,{filter_name}"
-                    stderr_key = candidate_stderr_key
-                else:
-                    candidate_stderr_key = f"{metric_key}_stderr"
-                    stderr_key = candidate_stderr_key
+            rows.append(
+                {
+                    "stage": stage,
+                    "task": task_name,
+                    "sample_len": sample_len,
+                    "metric": "sample_len",
+                    "value": sample_len,
+                    "stderr": None,
+                    "result_file": str(result_file),
+                    "mtime": result_file.stat().st_mtime,
+                }
+            )
 
-                if stderr_key in metrics:
-                    stderr_value = metrics[stderr_key]
+            for metric_key, metric_value in metrics.items():
+                if not is_metric_key(metric_key, metric_value):
+                    continue
+
+                stderr_key = get_stderr_key(metric_key)
+                stderr_value = metrics.get(stderr_key)
 
                 rows.append(
                     {
                         "stage": stage,
                         "task": task_name,
+                        "sample_len": sample_len,
                         "metric": metric_key,
-                        "value": value,
+                        "value": metric_value,
                         "stderr": stderr_value,
-                        "source_file": str(path),
+                        "result_file": str(result_file),
+                        "mtime": result_file.stat().st_mtime,
                     }
                 )
 
-    return rows
+    return deduplicate_latest(rows)
+
+
+def deduplicate_latest(rows):
+    """
+    同一个 stage / task / sample_len / metric 如果重复跑过，
+    只保留最新一次，避免 baseline、sft_lora 等重复显示。
+    """
+    latest = {}
+
+    for row in rows:
+        key = (
+            row["stage"],
+            row["task"],
+            row["sample_len"],
+            row["metric"],
+        )
+
+        if key not in latest or row["mtime"] > latest[key]["mtime"]:
+            latest[key] = row
+
+    output = list(latest.values())
+
+    output.sort(
+        key=lambda r: (
+            STAGE_ORDER.get(r["stage"], 99),
+            str(r["task"]),
+            int(r["sample_len"] or 0),
+            str(r["metric"]),
+        )
+    )
+
+    for row in output:
+        row.pop("mtime", None)
+
+    return output
+
+
+def format_number(value):
+    if value is None:
+        return "None"
+
+    if isinstance(value, float):
+        return f"{value:.4f}"
+
+    return str(value)
 
 
 def write_csv(rows):
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
 
-    fieldnames = ["stage", "task", "metric", "value", "stderr", "source_file"]
+    fieldnames = [
+        "stage",
+        "task",
+        "sample_len",
+        "metric",
+        "value",
+        "stderr",
+        "result_file",
+    ]
 
-    with open(CSV_PATH, "w", encoding="utf-8", newline="") as f:
+    with CSV_PATH.open("w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
@@ -123,81 +210,53 @@ def write_csv(rows):
 def write_markdown(rows):
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
 
-    preferred_order = {
-        "baseline": 0,
-        "sft_lora": 1,
-        "dpo_lora": 2,
-        "grpo_lora": 3,
-        "unknown": 99,
-    }
-
-    rows = sorted(
-        rows,
-        key=lambda x: (
-            preferred_order.get(x["stage"], 99),
-            x["task"],
-            x["metric"],
-        ),
-    )
-
     lines = []
     lines.append("# Evaluation Summary")
     lines.append("")
-    lines.append("> 注意：当前结果来自 debug 设置，例如 limit=5、max_steps=1，只能证明流程跑通，不能作为正式模型性能。")
+    lines.append(
+        "> 注意：当前结果来自 debug / small 设置，例如 limit=5/20、max_steps=1/10/20。"
+        "这些结果用于验证 SFT-DPO-GRPO/RLVR 闭环流程和小规模对比，不能作为正式模型性能。"
+    )
     lines.append("")
-    lines.append("| Stage | Task | Metric | Value | Stderr |")
-    lines.append("|---|---|---|---:|---:|")
+    lines.append("| Stage | Task | Sample Len | Metric | Value | Stderr |")
+    lines.append("|---|---|---:|---|---:|---:|")
 
     for row in rows:
-        value = row["value"]
-        stderr = row["stderr"]
-
-        value_str = f"{value:.4f}" if isinstance(value, float) else str(value)
-        stderr_str = f"{stderr:.4f}" if isinstance(stderr, float) else str(stderr)
-
         lines.append(
-            f"| {row['stage']} | {row['task']} | {row['metric']} | {value_str} | {stderr_str} |"
+            "| {stage} | {task} | {sample_len} | {metric} | {value} | {stderr} |".format(
+                stage=row["stage"],
+                task=row["task"],
+                sample_len=row["sample_len"],
+                metric=row["metric"],
+                value=format_number(row["value"]),
+                stderr=format_number(row["stderr"]),
+            )
         )
 
-    with open(MD_PATH, "w", encoding="utf-8") as f:
-        f.write("\n".join(lines))
+    MD_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def main():
-    print("====== 扫描 lm-eval 结果文件 ======")
+    rows = collect_rows()
 
-    result_files = find_result_json_files()
-
-    if not result_files:
-        print("没有找到 lm-eval 汇总结果 JSON。")
-        print("请确认 outputs/eval/ 下已经有 baseline / sft / dpo / grpo 的评估结果。")
+    if not rows:
         return
 
-    print("找到结果文件：")
-    for path in result_files:
-        print("-", path)
+    write_csv(rows)
+    write_markdown(rows)
 
-    all_rows = []
-
-    for path in result_files:
-        all_rows.extend(extract_rows_from_result(path))
-
-    if not all_rows:
-        print("找到了 JSON 文件，但没有提取到 metric。")
-        return
-
-    write_csv(all_rows)
-    write_markdown(all_rows)
-
-    print("\n====== 评估结果汇总完成 ======")
+    print("")
+    print("====== 评估结果汇总完成 ======")
     print(f"CSV 文件: {CSV_PATH}")
     print(f"Markdown 文件: {MD_PATH}")
 
-    print("\n====== 汇总预览 ======")
-    for row in all_rows:
+    print("")
+    print("====== 汇总预览 ======")
+    for row in rows:
         print(
             row["stage"],
             row["task"],
+            row["sample_len"],
             row["metric"],
             row["value"],
             row["stderr"],
