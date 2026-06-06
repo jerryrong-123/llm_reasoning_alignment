@@ -1,0 +1,23 @@
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+
+sft_adapter_path: outputs/checkpoints/sft_lora
+train_file: data/processed/dpo_debug.jsonl
+output_dir: outputs/checkpoints/dpo_lora
+
+max_length: 512
+max_prompt_length: 256
+max_completion_length: 256
+
+max_steps: 1
+
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 1
+learning_rate: 0.00005
+
+beta: 0.1
+
+logging_steps: 1
+save_steps: 1
+save_total_limit: 1
+
+dtype: float32

@@ -1,0 +1,16 @@
+venv/
+__pycache__/
+*.pyc
+
+data/raw/
+data/processed/
+
+outputs/checkpoints/
+outputs/logs/
+outputs/eval/
+outputs/bad_cases/
+
+external/
+
+.env
+.cache/
