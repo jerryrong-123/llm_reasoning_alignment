@@ -8,6 +8,9 @@ sft_lora,gsm8k_cot,"exact_match,flexible-extract",0.8,0.19999999999999998,output
 sft_lora,gsm8k_cot,sample_len,5,,outputs\eval\sft_lora_qwen25_15b_gsm8k_cot_limit5\outputs__checkpoints__sft_lora\results_2026-06-04T20-05-24.149454.json
 sft_lora,gsm8k_cot,"exact_match,strict-match",0.4,0.24494897427831783,outputs\eval\sft_lora_qwen25_15b_gsm8k_cot_limit5\outputs__checkpoints__sft_lora\results_2026-06-04T20-05-24.149454.json
 sft_lora,gsm8k_cot,"exact_match,flexible-extract",0.8,0.19999999999999998,outputs\eval\sft_lora_qwen25_15b_gsm8k_cot_limit5\outputs__checkpoints__sft_lora\results_2026-06-04T20-05-24.149454.json
+grpo_lora_small,gsm8k_cot,sample_len,20,,outputs\eval\grpo_lora_small_qwen25_15b_gsm8k_cot_limit20\outputs__checkpoints__grpo_lora_small\results_2026-06-07T01-56-24.175100.json
+grpo_lora_small,gsm8k_cot,"exact_match,strict-match",0.2,0.0917662935482247,outputs\eval\grpo_lora_small_qwen25_15b_gsm8k_cot_limit20\outputs__checkpoints__grpo_lora_small\results_2026-06-07T01-56-24.175100.json
+grpo_lora_small,gsm8k_cot,"exact_match,flexible-extract",0.4,0.11239029738980327,outputs\eval\grpo_lora_small_qwen25_15b_gsm8k_cot_limit20\outputs__checkpoints__grpo_lora_small\results_2026-06-07T01-56-24.175100.json
 grpo_lora,gsm8k_cot,sample_len,5,,outputs\eval\grpo_lora_qwen25_15b_gsm8k_cot_limit5\outputs__checkpoints__grpo_lora\results_2026-06-06T15-40-21.876818.json
 grpo_lora,gsm8k_cot,"exact_match,strict-match",0.4,0.24494897427831783,outputs\eval\grpo_lora_qwen25_15b_gsm8k_cot_limit5\outputs__checkpoints__grpo_lora\results_2026-06-06T15-40-21.876818.json
 grpo_lora,gsm8k_cot,"exact_match,flexible-extract",0.8,0.19999999999999998,outputs\eval\grpo_lora_qwen25_15b_gsm8k_cot_limit5\outputs__checkpoints__grpo_lora\results_2026-06-06T15-40-21.876818.json
