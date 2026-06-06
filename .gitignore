@@ -14,3 +14,5 @@ external/
 
 .env
 .cache/
+data/samples/
+outputs/reports/lmeval_samples_preview.jsonl
