@@ -41,6 +41,7 @@ Baseline 评估
 → 评估汇总
 → 样本分析
 → 错误类型分析
+→ reasoning 错误模式分析
 → small 实验扩展
 → formal 实验扩展
 ```
@@ -58,6 +59,7 @@ Baseline
 → evaluation summary
 → small sample error analysis
 → small error type summary
+→ small reasoning error pattern analysis
 ```
 
 ---
@@ -150,6 +152,7 @@ external/   外部资源，默认不提交 Git
 * lm-eval samples 预览
 * small 阶段样本错误分析
 * small 阶段错误类型汇总
+* small 阶段 reasoning 错误模式分析
 * debug / small 阶段实验报告
 
 ---
@@ -185,6 +188,7 @@ external/   外部资源，默认不提交 Git
 * [x] lm-eval samples 阶段识别修复
 * [x] small 阶段样本级错误分析
 * [x] small 阶段错误类型汇总
+* [x] small 阶段 reasoning 错误模式分析
 
 ---
 
@@ -210,23 +214,46 @@ external/   外部资源，默认不提交 Git
 
 当前错误类型统计如下：
 
-| Stage           | Correct | Format Only Error | Reasoning / Calc Error |
-| --------------- | ------: | ----------------: | ---------------------: |
-| sft_lora_small  |       5 |                 4 |                     11 |
-| dpo_lora_small  |       3 |                 5 |                     12 |
-| grpo_lora_small |       3 |                 5 |                     12 |
+| Stage           | Correct | Strict Format Only Error | Answer Extraction / Format Error | Reasoning / Calc Error |
+| --------------- | ------: | -----------------------: | -------------------------------: | ---------------------: |
+| sft_lora_small  |       5 |                        4 |                                0 |                     11 |
+| dpo_lora_small  |       3 |                        5 |                                1 |                     11 |
+| grpo_lora_small |       3 |                        5 |                                1 |                     11 |
 
 其中：
 
-* `format_only_error` 表示答案数值已经正确，但 strict-match 不通过，主要是输出格式问题；
-* `reasoning_or_calc_error` 表示答案数值本身错误，主要是题意理解、推理链或计算过程错误；
-* `correct` 表示 flexible 和 strict 都通过。
+* `correct` 表示 flexible-extract 和 strict-match 都通过；
+* `strict_format_only_error` 表示答案数值正确，flexible-extract 通过，但 strict-match 不通过，主要是 strict 输出格式问题；
+* `answer_extraction_or_format_error` 表示 lm-eval 的 flexible-extract 判错，但脚本抽取的 pred_answer 与 gold_answer 实际相等，可能是答案抽取或格式兼容问题；
+* `reasoning_or_calc_error` 表示 pred_answer 与 gold_answer 不一致，说明答案数值本身错误，更可能是题意理解、推理链或计算错误。
 
 当前 small 阶段的主要问题不是单纯格式问题，而是数学推理 / 计算错误更多。
-因此后续改进应分两条线进行：
 
-1. 增加格式约束实验，提高 strict-match；
-2. 继续细分 reasoning_or_calc_error，分析题意理解错误、百分比错误、单位错误、多步计算错误等问题。
+---
+
+### Reasoning 错误模式进一步分析
+
+进一步对 `reasoning_or_calc_error` 进行关键词规则分析后，发现 small 阶段真正的推理 / 计算错误主要集中在以下几类：
+
+| Stage           | Percentage Error | Money / Profit Error | Unit / Rate Error |
+| --------------- | ---------------: | -------------------: | ----------------: |
+| sft_lora_small  |                6 |                    4 |                 1 |
+| dpo_lora_small  |                6 |                    4 |                 1 |
+| grpo_lora_small |                6 |                    4 |                 1 |
+
+当前结果说明：
+
+* `percentage_error` 是最主要错误来源，模型在百分比增长、折扣、比例变化、重启进度等问题上容易误解；
+* `money_profit_error` 也较明显，模型在成本、售价、利润、价值变化、总价计算等问题上容易混淆；
+* `unit_rate_error` 数量较少，但说明单位、距离、时间、速率关系仍需要加强；
+* DPO small 和 GRPO small 没有修复这些错误模式，说明当前 small 设置下的偏好数据和 reward 信号还不足以改善核心数学推理错误。
+
+因此，后续 small_v2 不应该盲目扩大训练步数，而应优先补充：
+
+1. 百分比变化类样本；
+2. 金额 / 利润 / 成本类样本；
+3. 单位速率类样本；
+4. 更明确的最终答案格式约束。
 
 由于当前评估样本数只有 20 条，这些结论只作为 small 阶段诊断依据，不能作为正式性能结论。
 
@@ -243,8 +270,9 @@ external/   外部资源，默认不提交 Git
 5. 评估结果可以统一汇总到 CSV 和 Markdown 报告；
 6. debug 实验已经扩展到 small 实验；
 7. 项目已经具备样本级错误分析能力；
-8. 项目已经能够区分格式错误和推理 / 计算错误；
-9. 项目具备继续扩展到 MATH、代码推理和正式实验的基础。
+8. 项目已经能够区分 strict 格式错误、答案抽取 / 格式兼容错误和真正的推理 / 计算错误；
+9. 项目已经能对 reasoning 错误进行初步模式归因；
+10. 项目具备继续扩展到 MATH、代码推理和正式实验的基础。
 
 ---
 
@@ -253,6 +281,8 @@ external/   外部资源，默认不提交 Git
 当前主要提交包括：
 
 ```text
+44b936d Add small reasoning error pattern analysis
+93bbf34 Update README with small error analysis
 28bd702 Add small evaluation error type summary
 03e9847 Add small evaluation error analysis
 24f2598 Fix lm-eval sample stage detection
@@ -292,8 +322,9 @@ batch_size = 1
 
 ## 后续计划
 
-* [ ] 细分 reasoning_or_calc_error，例如百分比错误、单位错误、多步计算错误、题意理解错误
+* [ ] 基于 reasoning 错误模式构建 small_v2 数据，优先补充百分比变化、金额利润、单位速率类样本
 * [ ] 增加格式约束实验，提高 strict-match
+* [ ] 继续细分 reasoning_or_calc_error，例如百分比错误、单位错误、多步计算错误、题意理解错误
 * [ ] 增加 MATH / MATH-500 评估
 * [ ] 增加 HumanEval / MBPP / EvalPlus 代码推理评估
 * [ ] 增加更大规模 SFT / DPO / GRPO 实验配置
@@ -308,5 +339,5 @@ batch_size = 1
 当前项目可以概括为：
 
 ```text
-基于 Qwen2.5-1.5B-Instruct 构建评估驱动的数学推理对齐实验框架，完成 baseline、LoRA SFT、DPO、GRPO/RLVR 多阶段后训练闭环；接入 lm-evaluation-harness，支持 GSM8K-COT 评估、LoRA adapter 评估、样本输出分析、错误类型统计和结果汇总；在本地 CPU 环境下完成 debug 与 small 两级实验验证，为后续扩展到 MATH、HumanEval、MBPP 和更大规模训练打下工程基础。
+基于 Qwen2.5-1.5B-Instruct 构建评估驱动的数学推理对齐实验框架，完成 baseline、LoRA SFT、DPO、GRPO/RLVR 多阶段后训练闭环；接入 lm-evaluation-harness，支持 GSM8K-COT 评估、LoRA adapter 评估、样本输出分析、错误类型统计、reasoning 错误模式归因和结果汇总；在本地 CPU 环境下完成 debug 与 small 两级实验验证，为后续扩展到 MATH、HumanEval、MBPP 和更大规模训练打下工程基础。
 ```
