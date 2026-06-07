@@ -1,0 +1,21 @@
+doc_id,category,gold_answer,flexible_pred,final_answer_pred,flexible_correct,final_answer_format_hit,final_answer_format_correct,reward_design_note
+0,answer_wrong_and_format_missing,18,-10,,0,0,0,negative example: both correctness and format need improvement
+1,answer_correct_and_format_correct,3,3,3,1,1,1,positive example: correctness and format can be rewarded together
+2,answer_correct_but_format_missing,70000,"70,000",,1,0,0,"format reward should help, but must not override correctness reward"
+3,answer_correct_and_format_correct,540,540,540,1,1,1,positive example: correctness and format can be rewarded together
+4,answer_correct_and_format_correct,20,20,20,1,1,1,positive example: correctness and format can be rewarded together
+5,answer_wrong_but_format_hit,64,44,44,0,1,0,danger case: format-only reward may reinforce wrong answers
+6,answer_correct_and_format_correct,260,260,260,1,1,1,positive example: correctness and format can be rewarded together
+7,answer_wrong_but_format_hit,160,120,120,0,1,0,danger case: format-only reward may reinforce wrong answers
+8,answer_wrong_but_format_hit,45,-160,-160,0,1,0,danger case: format-only reward may reinforce wrong answers
+9,answer_correct_but_format_missing,460,460,,1,0,0,"format reward should help, but must not override correctness reward"
+10,answer_wrong_but_format_hit,366,294,294,0,1,0,danger case: format-only reward may reinforce wrong answers
+11,answer_wrong_but_format_hit,694,2233,2233,0,1,0,danger case: format-only reward may reinforce wrong answers
+12,answer_wrong_but_format_hit,13,10,10,0,1,0,danger case: format-only reward may reinforce wrong answers
+13,answer_wrong_and_format_missing,18,10,,0,0,0,negative example: both correctness and format need improvement
+14,answer_correct_and_format_correct,60,60,60,1,1,1,positive example: correctness and format can be rewarded together
+15,answer_correct_but_format_missing,125,125,,1,0,0,"format reward should help, but must not override correctness reward"
+16,answer_correct_and_format_correct,230,230,230,1,1,1,positive example: correctness and format can be rewarded together
+17,answer_correct_and_format_correct,57500,57500,57500,1,1,1,positive example: correctness and format can be rewarded together
+18,answer_correct_and_format_correct,7,7,7,1,1,1,positive example: correctness and format can be rewarded together
+19,answer_wrong_and_format_missing,6,12,,0,0,0,negative example: both correctness and format need improvement
