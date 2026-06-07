@@ -42,7 +42,7 @@ Baseline 评估
 → 样本分析
 → 错误类型分析
 → reasoning 错误模式分析
-→ small 实验扩展
+→ targeted small_v2 SFT
 → formal 实验扩展
 ```
 
@@ -60,6 +60,7 @@ Baseline
 → small sample error analysis
 → small error type summary
 → small reasoning error pattern analysis
+→ targeted SFT small_v2
 ```
 
 ---
@@ -119,7 +120,7 @@ device = cpu
 dtype = float32
 batch_size = 1
 limit = 5 / 20
-max_steps = 1 / 10 / 20
+max_steps = 1 / 10 / 20 / 30
 ```
 
 当前结果主要用于验证工程链路，不作为正式模型性能。
@@ -153,6 +154,7 @@ external/   外部资源，默认不提交 Git
 * small 阶段样本错误分析
 * small 阶段错误类型汇总
 * small 阶段 reasoning 错误模式分析
+* targeted SFT small_v2 数据构造、训练与评估
 * debug / small 阶段实验报告
 
 ---
@@ -189,22 +191,30 @@ external/   外部资源，默认不提交 Git
 * [x] small 阶段样本级错误分析
 * [x] small 阶段错误类型汇总
 * [x] small 阶段 reasoning 错误模式分析
+* [x] targeted SFT small_v2 数据构造
+* [x] targeted SFT small_v2 训练
+* [x] targeted SFT small_v2 后评估
+* [x] eval_summary 已加入 sft_lora_small_v2 结果
 
 ---
 
 ## 当前 small 阶段 GSM8K-COT 评估结果
 
-| Stage           | Sample Len | Flexible Exact Match | Strict Exact Match |
-| --------------- | ---------: | -------------------: | -----------------: |
-| baseline        |          5 |               0.8000 |             0.6000 |
-| sft_lora        |          5 |               0.8000 |             0.4000 |
-| dpo_lora        |          5 |               0.8000 |             0.4000 |
-| grpo_lora       |          5 |               0.8000 |             0.4000 |
-| sft_lora_small  |         20 |               0.4500 |             0.2500 |
-| dpo_lora_small  |         20 |               0.4000 |             0.2000 |
-| grpo_lora_small |         20 |               0.4000 |             0.2000 |
+| Stage             | Sample Len | Flexible Exact Match | Strict Exact Match |
+| ----------------- | ---------: | -------------------: | -----------------: |
+| baseline          |          5 |               0.8000 |             0.6000 |
+| sft_lora          |          5 |               0.8000 |             0.4000 |
+| dpo_lora          |          5 |               0.8000 |             0.4000 |
+| grpo_lora         |          5 |               0.8000 |             0.4000 |
+| sft_lora_small    |         20 |               0.4500 |             0.2500 |
+| dpo_lora_small    |         20 |               0.4000 |             0.2000 |
+| grpo_lora_small   |         20 |               0.4000 |             0.2000 |
+| sft_lora_small_v2 |         20 |               0.6000 |             0.2000 |
 
 注意：由于当前评估样本数很小，并且训练步数较少，上表不能作为正式模型性能，只能作为工程链路和小规模对比记录。
+
+SFT small_v2 使用 targeted 数据补充 `percentage_error`、`money_profit_error`、`unit_rate_error` 后，`flexible-extract` 从 0.4500 提升到 0.6000，但 `strict-match` 从 0.2500 降到 0.2000。
+这说明 targeted 数据对答案抽取后的正确率有帮助，但最终输出格式仍需要进一步约束。
 
 ---
 
@@ -259,6 +269,65 @@ external/   外部资源，默认不提交 Git
 
 ---
 
+## Targeted SFT small_v2 实验结论
+
+基于 small 阶段错误模式分析，本项目新增 targeted SFT small_v2 数据构造脚本：
+
+```text
+scripts/22_prepare_sft_small_v2_data.py
+```
+
+该脚本从 GSM8K 中筛选并构造：
+
+```text
+percentage_error: 80
+money_profit_error: 80
+unit_rate_error: 40
+general: 50
+```
+
+最终生成：
+
+```text
+data/processed/sft_small_v2.jsonl
+data/samples/sft_small_v2_preview.jsonl
+```
+
+训练配置为：
+
+```text
+configs/sft_small_v2.yaml
+```
+
+评估配置为：
+
+```text
+configs/eval_sft_small_v2_lora.yaml
+```
+
+训练后的 LoRA adapter 为：
+
+```text
+outputs/checkpoints/sft_lora_small_v2
+```
+
+评估结果为：
+
+| Stage             | Sample Len | Flexible Exact Match | Strict Exact Match |
+| ----------------- | ---------: | -------------------: | -----------------: |
+| sft_lora_small    |         20 |               0.4500 |             0.2500 |
+| sft_lora_small_v2 |         20 |               0.6000 |             0.2000 |
+
+阶段性结论：
+
+* targeted SFT small_v2 相比 SFT small，在 `flexible-extract` 上从 0.4500 提升到 0.6000；
+* 这说明基于错误模式补充 targeted 数据是有效方向；
+* 但 `strict-match` 从 0.2500 降到 0.2000，说明模型最终答案格式仍不稳定；
+* 后续应继续做格式约束实验，例如统一要求输出 `#### answer` 或固定 `Final answer: ...` 格式；
+* 当前结论仍然来自 `limit=20` 的小样本评估，不能作为正式性能结论。
+
+---
+
 ## 当前结论
 
 当前阶段已经证明：
@@ -272,7 +341,8 @@ external/   外部资源，默认不提交 Git
 7. 项目已经具备样本级错误分析能力；
 8. 项目已经能够区分 strict 格式错误、答案抽取 / 格式兼容错误和真正的推理 / 计算错误；
 9. 项目已经能对 reasoning 错误进行初步模式归因；
-10. 项目具备继续扩展到 MATH、代码推理和正式实验的基础。
+10. targeted SFT small_v2 初步验证了基于错误模式补充数据的有效性；
+11. 项目具备继续扩展到 MATH、代码推理和正式实验的基础。
 
 ---
 
@@ -281,6 +351,8 @@ external/   外部资源，默认不提交 Git
 当前主要提交包括：
 
 ```text
+1c84b84 Add targeted SFT small v2 experiment
+7ec6ec7 Update README with reasoning error patterns
 44b936d Add small reasoning error pattern analysis
 93bbf34 Update README with small error analysis
 28bd702 Add small evaluation error type summary
@@ -299,7 +371,7 @@ d084c98 Add debug evaluation reports
 
 ## 重要说明
 
-当前所有 debug / small 结果不能作为正式性能结论，原因包括：
+当前所有 debug / small / small_v2 结果不能作为正式性能结论，原因包括：
 
 ```text
 debug 阶段：
@@ -310,20 +382,24 @@ small 阶段：
 max_steps = 10 / 20
 limit = 20
 
+small_v2 阶段：
+max_steps = 30
+limit = 20
+
 本地运行：
 device = cpu
 dtype = float32
 batch_size = 1
 ```
 
-当前阶段重点是工程验证、闭环搭建和误差分析，而不是追求指标提升。
+当前阶段重点是工程验证、闭环搭建和误差分析，而不是追求正式指标提升。
 
 ---
 
 ## 后续计划
 
-* [ ] 基于 reasoning 错误模式构建 small_v2 数据，优先补充百分比变化、金额利润、单位速率类样本
 * [ ] 增加格式约束实验，提高 strict-match
+* [ ] 基于 targeted small_v2 继续构造 format-constrained SFT 数据
 * [ ] 继续细分 reasoning_or_calc_error，例如百分比错误、单位错误、多步计算错误、题意理解错误
 * [ ] 增加 MATH / MATH-500 评估
 * [ ] 增加 HumanEval / MBPP / EvalPlus 代码推理评估
@@ -339,5 +415,5 @@ batch_size = 1
 当前项目可以概括为：
 
 ```text
-基于 Qwen2.5-1.5B-Instruct 构建评估驱动的数学推理对齐实验框架，完成 baseline、LoRA SFT、DPO、GRPO/RLVR 多阶段后训练闭环；接入 lm-evaluation-harness，支持 GSM8K-COT 评估、LoRA adapter 评估、样本输出分析、错误类型统计、reasoning 错误模式归因和结果汇总；在本地 CPU 环境下完成 debug 与 small 两级实验验证，为后续扩展到 MATH、HumanEval、MBPP 和更大规模训练打下工程基础。
+基于 Qwen2.5-1.5B-Instruct 构建评估驱动的数学推理对齐实验框架，完成 baseline、LoRA SFT、DPO、GRPO/RLVR 多阶段后训练闭环；接入 lm-evaluation-harness，支持 GSM8K-COT 评估、LoRA adapter 评估、样本输出分析、错误类型统计、reasoning 错误模式归因和结果汇总；在本地 CPU 环境下完成 debug、small 与 targeted small_v2 多级实验验证，并通过 targeted 数据将 GSM8K-COT small 评估的 flexible-extract 从 0.4500 提升到 0.6000，为后续扩展到格式约束、MATH、HumanEval、MBPP 和更大规模训练打下工程基础。
 ```
