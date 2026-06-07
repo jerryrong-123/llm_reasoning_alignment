@@ -1,4 +1,5 @@
 import csv
+import re
 from collections import Counter, defaultdict
 from pathlib import Path
 
@@ -8,6 +9,15 @@ REPORT_DIR = Path("outputs/reports")
 
 OUTPUT_CSV = REPORT_DIR / "small_eval_error_type_summary.csv"
 OUTPUT_MD = REPORT_DIR / "small_eval_error_type_summary.md"
+
+
+ERROR_TYPE_ORDER = [
+    "correct",
+    "strict_format_only_error",
+    "answer_extraction_or_format_error",
+    "reasoning_or_calc_error",
+    "unknown",
+]
 
 
 def parse_bool(value):
@@ -22,6 +32,54 @@ def parse_bool(value):
     return None
 
 
+def normalize_answer(value):
+    """
+    用于比较 pred_answer 和 gold_answer 是否实际相等。
+
+    处理：
+    - 逗号：70,000 -> 70000
+    - 美元符号：$18 -> 18
+    - 空格
+    - 整数小数：18.0 -> 18
+    """
+    if value is None:
+        return ""
+
+    text = str(value).strip()
+    text = text.replace(",", "")
+    text = text.replace("$", "")
+    text = text.replace("％", "%")
+    text = text.strip()
+
+    # 只抽取最后一个数字，避免字符串里混入说明文字
+    numbers = re.findall(r"-?\d+(?:\.\d+)?", text)
+
+    if numbers:
+        num = numbers[-1]
+
+        try:
+            value_float = float(num)
+
+            if value_float.is_integer():
+                return str(int(value_float))
+
+            return str(value_float)
+        except Exception:
+            return num
+
+    return text.lower()
+
+
+def pred_equals_gold(row):
+    pred = normalize_answer(row.get("pred_answer"))
+    gold = normalize_answer(row.get("gold_answer"))
+
+    if not pred or not gold:
+        return False
+
+    return pred == gold
+
+
 def classify_error(row):
     flexible = parse_bool(row.get("flexible_correct"))
     strict = parse_bool(row.get("strict_correct"))
@@ -30,9 +88,12 @@ def classify_error(row):
         return "correct"
 
     if flexible is True and strict is False:
-        return "format_only_error"
+        return "strict_format_only_error"
 
     if flexible is False:
+        if pred_equals_gold(row):
+            return "answer_extraction_or_format_error"
+
         return "reasoning_or_calc_error"
 
     return "unknown"
@@ -77,7 +138,9 @@ def write_csv(stage_counter):
         for stage, counter in stage_counter.items():
             total = sum(counter.values())
 
-            for error_type, count in counter.items():
+            for error_type in ERROR_TYPE_ORDER:
+                count = counter.get(error_type, 0)
+
                 writer.writerow(
                     {
                         "stage": stage,
@@ -95,7 +158,7 @@ def write_markdown(stage_counter):
     lines.append("")
     lines.append(
         "> 本报告基于 small_eval_error_analysis.csv，"
-        "用于区分 small 阶段错误到底是格式问题，还是数学推理 / 计算问题。"
+        "用于区分 small 阶段错误到底是格式问题、答案抽取问题，还是数学推理 / 计算问题。"
     )
     lines.append("")
 
@@ -107,12 +170,7 @@ def write_markdown(stage_counter):
     for stage, counter in stage_counter.items():
         total = sum(counter.values())
 
-        for error_type in [
-            "correct",
-            "format_only_error",
-            "reasoning_or_calc_error",
-            "unknown",
-        ]:
+        for error_type in ERROR_TYPE_ORDER:
             count = counter.get(error_type, 0)
             ratio = count / total if total else 0
 
@@ -124,16 +182,26 @@ def write_markdown(stage_counter):
     lines.append("## Interpretation")
     lines.append("")
     lines.append(
-        "- `format_only_error`：答案数值已经对了，但 strict-match 不通过，说明需要优化输出格式。"
+        "- `correct`：flexible-extract 和 strict-match 都通过。"
     )
     lines.append(
-        "- `reasoning_or_calc_error`：答案数值本身错了，说明是题意理解、推理链或计算错误。"
+        "- `strict_format_only_error`：答案数值正确，flexible-extract 通过，但 strict-match 不通过，主要是 strict 输出格式问题。"
     )
     lines.append(
-        "- 如果 format_only_error 较多，下一步应优先做格式约束实验。"
+        "- `answer_extraction_or_format_error`：lm-eval 的 flexible-extract 判错，但脚本抽取的 pred_answer 与 gold_answer 实际相等，可能是答案抽取或格式兼容问题。"
     )
     lines.append(
-        "- 如果 reasoning_or_calc_error 较多，下一步应优先改进训练数据、DPO 数据质量、reward 或训练步数。"
+        "- `reasoning_or_calc_error`：pred_answer 与 gold_answer 不一致，说明答案数值本身错误，更可能是题意理解、推理链或计算错误。"
+    )
+    lines.append(
+        "- `unknown`：无法根据当前字段判断。"
+    )
+    lines.append("")
+    lines.append("## Next Step")
+    lines.append("")
+    lines.append(
+        "后续 reasoning 错误模式分析应该只针对 `reasoning_or_calc_error`，"
+        "不要把 `answer_extraction_or_format_error` 误算成真正推理错误。"
     )
     lines.append("")
 
