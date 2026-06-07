@@ -43,6 +43,7 @@ Baseline 评估
 → 错误类型分析
 → reasoning 错误模式分析
 → targeted small_v2 SFT
+→ format-constrained small_v2 SFT
 → formal 实验扩展
 ```
 
@@ -61,6 +62,7 @@ Baseline
 → small error type summary
 → small reasoning error pattern analysis
 → targeted SFT small_v2
+→ format-constrained SFT small_v2
 ```
 
 ---
@@ -155,6 +157,7 @@ external/   外部资源，默认不提交 Git
 * small 阶段错误类型汇总
 * small 阶段 reasoning 错误模式分析
 * targeted SFT small_v2 数据构造、训练与评估
+* format-constrained SFT small_v2 数据构造、训练与评估
 * debug / small 阶段实验报告
 
 ---
@@ -194,27 +197,34 @@ external/   外部资源，默认不提交 Git
 * [x] targeted SFT small_v2 数据构造
 * [x] targeted SFT small_v2 训练
 * [x] targeted SFT small_v2 后评估
-* [x] eval_summary 已加入 sft_lora_small_v2 结果
+* [x] format-constrained SFT small_v2 数据构造
+* [x] format-constrained SFT small_v2 训练
+* [x] format-constrained SFT small_v2 后评估
+* [x] eval_summary 已加入 sft_lora_small_v2 和 sft_lora_small_v2_format 结果
 
 ---
 
 ## 当前 small 阶段 GSM8K-COT 评估结果
 
-| Stage             | Sample Len | Flexible Exact Match | Strict Exact Match |
-| ----------------- | ---------: | -------------------: | -----------------: |
-| baseline          |          5 |               0.8000 |             0.6000 |
-| sft_lora          |          5 |               0.8000 |             0.4000 |
-| dpo_lora          |          5 |               0.8000 |             0.4000 |
-| grpo_lora         |          5 |               0.8000 |             0.4000 |
-| sft_lora_small    |         20 |               0.4500 |             0.2500 |
-| dpo_lora_small    |         20 |               0.4000 |             0.2000 |
-| grpo_lora_small   |         20 |               0.4000 |             0.2000 |
-| sft_lora_small_v2 |         20 |               0.6000 |             0.2000 |
+| Stage                    | Sample Len | Flexible Exact Match | Strict Exact Match |
+| ------------------------ | ---------: | -------------------: | -----------------: |
+| baseline                 |          5 |               0.8000 |             0.6000 |
+| sft_lora                 |          5 |               0.8000 |             0.4000 |
+| dpo_lora                 |          5 |               0.8000 |             0.4000 |
+| grpo_lora                |          5 |               0.8000 |             0.4000 |
+| sft_lora_small           |         20 |               0.4500 |             0.2500 |
+| dpo_lora_small           |         20 |               0.4000 |             0.2000 |
+| grpo_lora_small          |         20 |               0.4000 |             0.2000 |
+| sft_lora_small_v2        |         20 |               0.6000 |             0.2000 |
+| sft_lora_small_v2_format |         20 |               0.3500 |             0.1500 |
 
 注意：由于当前评估样本数很小，并且训练步数较少，上表不能作为正式模型性能，只能作为工程链路和小规模对比记录。
 
 SFT small_v2 使用 targeted 数据补充 `percentage_error`、`money_profit_error`、`unit_rate_error` 后，`flexible-extract` 从 0.4500 提升到 0.6000，但 `strict-match` 从 0.2500 降到 0.2000。
 这说明 targeted 数据对答案抽取后的正确率有帮助，但最终输出格式仍需要进一步约束。
+
+format-constrained SFT small_v2 进一步尝试把最终答案强制为 `#### answer` 格式，但结果为 `flexible-extract=0.3500`、`strict-match=0.1500`，相比 targeted small_v2 明显下降。
+这说明当前这种直接改写 SFT 文本格式的方案没有改善 strict-match，反而伤害了整体输出质量。
 
 ---
 
@@ -323,8 +333,74 @@ outputs/checkpoints/sft_lora_small_v2
 * targeted SFT small_v2 相比 SFT small，在 `flexible-extract` 上从 0.4500 提升到 0.6000；
 * 这说明基于错误模式补充 targeted 数据是有效方向；
 * 但 `strict-match` 从 0.2500 降到 0.2000，说明模型最终答案格式仍不稳定；
-* 后续应继续做格式约束实验，例如统一要求输出 `#### answer` 或固定 `Final answer: ...` 格式；
+* 后续应继续做格式约束实验，但不能简单粗暴地改变训练文本格式；
 * 当前结论仍然来自 `limit=20` 的小样本评估，不能作为正式性能结论。
+
+---
+
+## Format-constrained SFT small_v2 实验结论
+
+针对 targeted SFT small_v2 的 strict-match 没有提升的问题，本项目进一步新增 format-constrained SFT small_v2 数据构造脚本：
+
+```text
+scripts/23_prepare_sft_small_v2_format_data.py
+```
+
+该脚本基于：
+
+```text
+data/processed/sft_small_v2.jsonl
+```
+
+构造了带格式约束的训练数据：
+
+```text
+data/processed/sft_small_v2_format.jsonl
+data/samples/sft_small_v2_format_preview.jsonl
+```
+
+核心格式约束为：
+
+```text
+You must put the final answer on the last line in exactly this format:
+#### <final_answer>
+```
+
+训练配置为：
+
+```text
+configs/sft_small_v2_format.yaml
+```
+
+评估配置为：
+
+```text
+configs/eval_sft_small_v2_format_lora.yaml
+```
+
+训练后的 LoRA adapter 为：
+
+```text
+outputs/checkpoints/sft_lora_small_v2_format
+```
+
+评估结果为：
+
+| Stage                    | Sample Len | Flexible Exact Match | Strict Exact Match |
+| ------------------------ | ---------: | -------------------: | -----------------: |
+| sft_lora_small_v2        |         20 |               0.6000 |             0.2000 |
+| sft_lora_small_v2_format |         20 |               0.3500 |             0.1500 |
+
+阶段性结论：
+
+* format-constrained small_v2 没有提升 strict-match；
+* `strict-match` 从 0.2000 下降到 0.1500；
+* `flexible-extract` 从 0.6000 下降到 0.3500；
+* 这说明当前“直接把 SFT 文本改成强制 `#### answer` 格式”的做法不适合当前 small 设置；
+* 更可能的原因是：格式约束文本改变了训练分布，削弱了原本 targeted 数据带来的推理收益；
+* 后续如果继续优化格式，应优先尝试更温和的方法，例如只改 prompt、只在 final answer 字段强化格式，或者在 reward / evaluation 层加入格式奖励，而不是整体重写 SFT 文本。
+
+当前实验虽然没有提升指标，但它是有价值的负结果，说明格式优化不能简单依赖强制模板改写，需要更细粒度的格式对齐方案。
 
 ---
 
@@ -342,7 +418,8 @@ outputs/checkpoints/sft_lora_small_v2
 8. 项目已经能够区分 strict 格式错误、答案抽取 / 格式兼容错误和真正的推理 / 计算错误；
 9. 项目已经能对 reasoning 错误进行初步模式归因；
 10. targeted SFT small_v2 初步验证了基于错误模式补充数据的有效性；
-11. 项目具备继续扩展到 MATH、代码推理和正式实验的基础。
+11. format-constrained small_v2 验证了“直接强制改写 SFT 输出模板”在当前 small 设置下并不有效；
+12. 项目具备继续扩展到 MATH、代码推理和正式实验的基础。
 
 ---
 
@@ -351,6 +428,8 @@ outputs/checkpoints/sft_lora_small_v2
 当前主要提交包括：
 
 ```text
+c22e262 Add format-constrained SFT small v2 experiment
+f359fe9 Update README with targeted small v2 results
 1c84b84 Add targeted SFT small v2 experiment
 7ec6ec7 Update README with reasoning error patterns
 44b936d Add small reasoning error pattern analysis
@@ -386,6 +465,10 @@ small_v2 阶段：
 max_steps = 30
 limit = 20
 
+small_v2_format 阶段：
+max_steps = 30
+limit = 20
+
 本地运行：
 device = cpu
 dtype = float32
@@ -398,8 +481,9 @@ batch_size = 1
 
 ## 后续计划
 
-* [ ] 增加格式约束实验，提高 strict-match
-* [ ] 基于 targeted small_v2 继续构造 format-constrained SFT 数据
+* [ ] 设计更温和的格式约束方案，避免直接重写 SFT 文本导致推理能力下降
+* [ ] 尝试只在 prompt / final answer 部分加入格式约束
+* [ ] 在 GRPO/RLVR reward 中加入格式奖励，而不是只依赖 SFT 数据格式改写
 * [ ] 继续细分 reasoning_or_calc_error，例如百分比错误、单位错误、多步计算错误、题意理解错误
 * [ ] 增加 MATH / MATH-500 评估
 * [ ] 增加 HumanEval / MBPP / EvalPlus 代码推理评估
@@ -415,5 +499,5 @@ batch_size = 1
 当前项目可以概括为：
 
 ```text
-基于 Qwen2.5-1.5B-Instruct 构建评估驱动的数学推理对齐实验框架，完成 baseline、LoRA SFT、DPO、GRPO/RLVR 多阶段后训练闭环；接入 lm-evaluation-harness，支持 GSM8K-COT 评估、LoRA adapter 评估、样本输出分析、错误类型统计、reasoning 错误模式归因和结果汇总；在本地 CPU 环境下完成 debug、small 与 targeted small_v2 多级实验验证，并通过 targeted 数据将 GSM8K-COT small 评估的 flexible-extract 从 0.4500 提升到 0.6000，为后续扩展到格式约束、MATH、HumanEval、MBPP 和更大规模训练打下工程基础。
+基于 Qwen2.5-1.5B-Instruct 构建评估驱动的数学推理对齐实验框架，完成 baseline、LoRA SFT、DPO、GRPO/RLVR 多阶段后训练闭环；接入 lm-evaluation-harness，支持 GSM8K-COT 评估、LoRA adapter 评估、样本输出分析、错误类型统计、reasoning 错误模式归因和结果汇总；在本地 CPU 环境下完成 debug、small、targeted small_v2 与 format-constrained small_v2 多级实验验证，并通过 targeted 数据将 GSM8K-COT small 评估的 flexible-extract 从 0.4500 提升到 0.6000，同时验证了直接强制格式改写会导致指标下降，为后续扩展到更温和格式约束、MATH、HumanEval、MBPP 和更大规模训练打下工程基础。
 ```
