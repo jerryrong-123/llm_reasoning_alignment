@@ -44,6 +44,7 @@ Baseline 评估
 → reasoning 错误模式分析
 → targeted small_v2 SFT
 → format-constrained small_v2 SFT
+→ small_v2 样本级对比分析
 → formal 实验扩展
 ```
 
@@ -63,6 +64,7 @@ Baseline
 → small reasoning error pattern analysis
 → targeted SFT small_v2
 → format-constrained SFT small_v2
+→ small_v2 sample comparison analysis
 ```
 
 ---
@@ -158,6 +160,7 @@ external/   外部资源，默认不提交 Git
 * small 阶段 reasoning 错误模式分析
 * targeted SFT small_v2 数据构造、训练与评估
 * format-constrained SFT small_v2 数据构造、训练与评估
+* small_v2 样本级对比分析
 * debug / small 阶段实验报告
 
 ---
@@ -201,6 +204,8 @@ external/   外部资源，默认不提交 Git
 * [x] format-constrained SFT small_v2 训练
 * [x] format-constrained SFT small_v2 后评估
 * [x] eval_summary 已加入 sft_lora_small_v2 和 sft_lora_small_v2_format 结果
+* [x] lm-eval sample preview 已修复 small_v2 / small_v2_format 阶段识别
+* [x] small_v2 样本级对比分析
 
 ---
 
@@ -404,6 +409,69 @@ outputs/checkpoints/sft_lora_small_v2_format
 
 ---
 
+## Small v2 样本级对比分析结论
+
+为了进一步确认 targeted small_v2 到底修复了哪些题，以及 format-constrained small_v2 到底破坏了哪些题，本项目新增样本级对比脚本：
+
+```text
+scripts/24_compare_small_v2_samples.py
+```
+
+该脚本对比以下三个阶段在同一批 GSM8K-COT `limit=20` 样本上的表现：
+
+```text
+sft_lora_small
+sft_lora_small_v2
+sft_lora_small_v2_format
+```
+
+生成报告：
+
+```text
+outputs/reports/small_v2_sample_comparison.csv
+outputs/reports/small_v2_sample_comparison.md
+```
+
+样本级对比结果如下：
+
+### sft_lora_small → sft_lora_small_v2
+
+| Change Type          | Count |
+| -------------------- | ----: |
+| fixed_by_targeted_v2 |     3 |
+| unchanged            |    17 |
+
+说明：
+
+* targeted small_v2 修复了 3 道 SFT small 原本答错的题；
+* 没有出现 `regressed_in_targeted_v2`，说明在当前 20 条样本中 targeted small_v2 没有把原本答对的题变错；
+* 被修复的样本包括 unit/rate、money/profit、percentage 相关题型，例如火车距离题、徒步平均速度题、房屋翻修利润题。
+
+### sft_lora_small_v2 → sft_lora_small_v2_format
+
+| Change Type                 | Count |
+| --------------------------- | ----: |
+| broken_by_format_constraint |     6 |
+| fixed_by_format_constraint  |     1 |
+| unchanged                   |    13 |
+
+说明：
+
+* format-constrained small_v2 只修复了 1 道 targeted small_v2 原本答错的题；
+* 但它破坏了 6 道 targeted small_v2 原本答对的题；
+* 被破坏的样本包括简单数量题、百分比题、年薪计算题、单位换算题和平均速度题；
+* 这进一步证明直接强制改写 SFT 文本格式会削弱模型原本的推理表现。
+
+样本级结论：
+
+```text
+targeted small_v2 是正向实验；
+format-constrained small_v2 是负结果实验；
+后续应该保留 targeted 数据补强方向，但不要继续采用直接重写 SFT 文本格式的做法。
+```
+
+---
+
 ## 当前结论
 
 当前阶段已经证明：
@@ -419,7 +487,38 @@ outputs/checkpoints/sft_lora_small_v2_format
 9. 项目已经能对 reasoning 错误进行初步模式归因；
 10. targeted SFT small_v2 初步验证了基于错误模式补充数据的有效性；
 11. format-constrained small_v2 验证了“直接强制改写 SFT 输出模板”在当前 small 设置下并不有效；
-12. 项目具备继续扩展到 MATH、代码推理和正式实验的基础。
+12. small_v2 样本级对比进一步证明 targeted small_v2 修复了 3 道错题，而 format 版本破坏了 6 道原本答对的题；
+13. 项目具备继续扩展到 MATH、代码推理和正式实验的基础。
+
+---
+
+## 当前最佳 checkpoint
+
+当前 small 阶段最值得保留的是：
+
+```text
+outputs/checkpoints/sft_lora_small_v2
+```
+
+原因是：
+
+```text
+sft_lora_small_v2 flexible-extract = 0.6000
+sft_lora_small_v2 strict-match     = 0.2000
+```
+
+不推荐继续沿着以下 checkpoint 优化：
+
+```text
+outputs/checkpoints/sft_lora_small_v2_format
+```
+
+原因是：
+
+```text
+sft_lora_small_v2_format flexible-extract = 0.3500
+sft_lora_small_v2_format strict-match     = 0.1500
+```
 
 ---
 
@@ -428,6 +527,9 @@ outputs/checkpoints/sft_lora_small_v2_format
 当前主要提交包括：
 
 ```text
+eb6c80b Add small v2 sample comparison analysis
+711d684 Fix sample preview stage detection for small v2
+80a60ca Update README with format-constrained small v2 results
 c22e262 Add format-constrained SFT small v2 experiment
 f359fe9 Update README with targeted small v2 results
 1c84b84 Add targeted SFT small v2 experiment
@@ -484,6 +586,7 @@ batch_size = 1
 * [ ] 设计更温和的格式约束方案，避免直接重写 SFT 文本导致推理能力下降
 * [ ] 尝试只在 prompt / final answer 部分加入格式约束
 * [ ] 在 GRPO/RLVR reward 中加入格式奖励，而不是只依赖 SFT 数据格式改写
+* [ ] 基于 small_v2 样本级对比结果继续扩展 targeted 数据
 * [ ] 继续细分 reasoning_or_calc_error，例如百分比错误、单位错误、多步计算错误、题意理解错误
 * [ ] 增加 MATH / MATH-500 评估
 * [ ] 增加 HumanEval / MBPP / EvalPlus 代码推理评估
@@ -499,5 +602,5 @@ batch_size = 1
 当前项目可以概括为：
 
 ```text
-基于 Qwen2.5-1.5B-Instruct 构建评估驱动的数学推理对齐实验框架，完成 baseline、LoRA SFT、DPO、GRPO/RLVR 多阶段后训练闭环；接入 lm-evaluation-harness，支持 GSM8K-COT 评估、LoRA adapter 评估、样本输出分析、错误类型统计、reasoning 错误模式归因和结果汇总；在本地 CPU 环境下完成 debug、small、targeted small_v2 与 format-constrained small_v2 多级实验验证，并通过 targeted 数据将 GSM8K-COT small 评估的 flexible-extract 从 0.4500 提升到 0.6000，同时验证了直接强制格式改写会导致指标下降，为后续扩展到更温和格式约束、MATH、HumanEval、MBPP 和更大规模训练打下工程基础。
+基于 Qwen2.5-1.5B-Instruct 构建评估驱动的数学推理对齐实验框架，完成 baseline、LoRA SFT、DPO、GRPO/RLVR 多阶段后训练闭环；接入 lm-evaluation-harness，支持 GSM8K-COT 评估、LoRA adapter 评估、样本输出分析、错误类型统计、reasoning 错误模式归因和结果汇总；在本地 CPU 环境下完成 debug、small、targeted small_v2 与 format-constrained small_v2 多级实验验证，并通过 targeted 数据将 GSM8K-COT small 评估的 flexible-extract 从 0.4500 提升到 0.6000；进一步通过样本级对比发现 targeted small_v2 修复了 3 道 small 错题且未造成回退，而直接强制格式改写破坏了 6 道原本答对的题，为后续扩展到更温和格式约束、MATH、HumanEval、MBPP 和更大规模训练打下工程基础。
 ```
