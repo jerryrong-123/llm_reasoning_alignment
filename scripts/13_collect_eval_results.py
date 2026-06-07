@@ -30,7 +30,8 @@ def infer_stage(path: Path) -> str:
     否则 dpo_lora_small 会被 dpo_lora 提前匹配。
     """
     text = str(path).replace("\\", "/").lower()
-
+    if "sft_lora_small_v2" in text:
+        return "sft_lora_small_v2"
     if "sft_lora_small" in text:
         return "sft_lora_small"
     if "dpo_lora_small" in text:
