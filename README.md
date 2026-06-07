@@ -671,3 +671,96 @@ batch_size = 1
 ```text
 基于 Qwen2.5-1.5B-Instruct 构建评估驱动的数学推理对齐实验框架，完成 baseline、LoRA SFT、DPO、GRPO/RLVR 多阶段后训练闭环；接入 lm-evaluation-harness，支持 GSM8K-COT 评估、LoRA adapter 评估、样本输出分析、错误类型统计、reasoning 错误模式归因和结果汇总；在本地 CPU 环境下完成 debug、small、targeted small_v2 与 format-constrained small_v2 多级实验验证，并通过 targeted 数据将 GSM8K-COT small 评估的 flexible-extract 从 0.4500 提升到 0.6000；进一步通过样本级对比发现 targeted small_v2 修复了 3 道 small 错题且未造成回退，而直接强制格式改写破坏了 6 道原本答对的题；补充 prompt-level format eval，发现仅修改评估 prompt 可将格式命中率提升到 0.4000，但会使 flexible_acc 降至 0.4000，为后续扩展到 reward-based 格式约束、MATH、HumanEval、MBPP 和更大规模训练打下工程基础。
 ```
+
+<!-- PROMPT_FORMAT_V2_START -->
+
+## Prompt-level format eval v2 实验结论
+
+### 实验目的
+
+本实验是对 `sft_lora_small_v2` 的进一步 prompt-level 格式约束测试。
+
+它不重新训练模型，只评估当前最佳 checkpoint：
+
+```text
+outputs/checkpoints/sft_lora_small_v2
+```
+
+上一版 `prompt-level format eval v1` 使用了较强的格式约束，要求模型输出：
+
+```text
+#### <answer>
+```
+
+v1 的结果是：
+
+```text
+flexible_acc = 0.4000
+strict_hash_acc = 0.4000
+```
+
+虽然格式命中率提高了，但 flexible accuracy 从原始 `sft_lora_small_v2` 的 `0.6000` 降到了 `0.4000`，说明过强的格式约束会干扰模型推理。
+
+因此本次 v2 改成更温和的格式提示，只要求模型最后一行输出：
+
+```text
+Final answer: <answer>
+```
+
+目标是测试：能否在减少推理正确率损失的同时，继续保持一定的最终答案格式约束能力。
+
+### 输出文件
+
+```text
+outputs/reports/sft_small_v2_prompt_format_v2_eval.csv
+outputs/reports/sft_small_v2_prompt_format_v2_eval.jsonl
+outputs/reports/sft_small_v2_prompt_format_v2_eval.md
+```
+
+### 实验结果
+
+| experiment | flexible_acc | format_acc | final_answer_format_hit_rate | strict_hash_acc |
+|---|---:|---:|---:|---:|
+| prompt-level format eval v1 | 0.4000 | 0.4000 | - | 0.4000 |
+| prompt-level format eval v2 | 0.5500 | 0.4000 | 0.7000 | 0.0000 |
+
+### 结果解释
+
+v2 是一个正向结果。
+
+相比 v1：
+
+```text
+flexible_acc: 0.4000 -> 0.5500
+format_acc:   0.4000 -> 0.4000
+```
+
+这说明更温和的 prompt 格式约束可以减少对推理正确率的伤害，同时保持一定的答案格式收益。
+
+但是 v2 仍然没有完全恢复到原始 `sft_lora_small_v2` 的 flexible score：
+
+```text
+原始 sft_lora_small_v2 flexible = 0.6000
+prompt format v2 flexible       = 0.5500
+```
+
+因此当前结论是：
+
+```text
+1. prompt-level format v2 明显优于 v1；
+2. 更温和的 prompt 格式控制是有价值的；
+3. 但 prompt-level 方法仍然不是最终方案；
+4. 后续更合理的方向是 reward-based format optimization。
+```
+
+后续进入 reward-based format optimization 时，应该让：
+
+```text
+答案正确性 reward 作为主 reward；
+最终答案格式 reward 作为辅助 reward；
+格式 reward 不能压过答案正确性 reward。
+```
+
+也就是说，下一阶段不应该继续强行改 SFT 文本格式，而应该在 GRPO/RLVR 阶段设计更温和的格式奖励。
+
+<!-- PROMPT_FORMAT_V2_END -->
