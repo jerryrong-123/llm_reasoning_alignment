@@ -45,6 +45,7 @@ Baseline 评估
 → targeted small_v2 SFT
 → format-constrained small_v2 SFT
 → small_v2 样本级对比分析
+→ prompt-level format eval
 → formal 实验扩展
 ```
 
@@ -65,6 +66,7 @@ Baseline
 → targeted SFT small_v2
 → format-constrained SFT small_v2
 → small_v2 sample comparison analysis
+→ prompt-level format eval
 ```
 
 ---
@@ -472,6 +474,67 @@ format-constrained small_v2 是负结果实验；
 
 ---
 
+## Prompt-level format eval 实验结论
+
+在 targeted small_v2 和 format-constrained small_v2 之后，本项目进一步做了一个低成本格式约束实验：
+
+```text
+scripts/25_eval_sft_small_v2_prompt_format.py
+```
+
+该实验不重新训练模型，而是继续使用当前最佳 checkpoint：
+
+```text
+outputs/checkpoints/sft_lora_small_v2
+```
+
+实验方式是：只在评估 prompt 中加入最终答案格式要求，要求模型最后一行输出：
+
+```text
+#### <answer>
+```
+
+生成报告：
+
+```text
+outputs/reports/sft_small_v2_prompt_format_eval.csv
+outputs/reports/sft_small_v2_prompt_format_eval.jsonl
+outputs/reports/sft_small_v2_prompt_format_eval.md
+```
+
+实验结果为：
+
+| Eval Setting | Flexible Acc | Strict / Format Acc |
+|---|---:|---:|
+| lm-eval sft_lora_small_v2 | 0.6000 | 0.2000 |
+| prompt-level format eval | 0.4000 | 0.4000 |
+| sft_lora_small_v2_format | 0.3500 | 0.1500 |
+
+其中 prompt-level format eval 的脚本报告中对应指标为：
+
+```text
+flexible_acc = 0.4000
+strict_hash_acc = 0.4000
+```
+
+阶段性结论：
+
+- prompt-level format eval 将格式命中率提升到 0.4000；
+- 但 flexible_acc 从 lm-eval small_v2 的 0.6000 下降到 0.4000；
+- 说明只改 prompt 可以增强格式遵循，但会干扰部分数学推理；
+- 相比直接训练 `sft_lora_small_v2_format`，prompt-level 方法更好，因为它至少把格式命中率提升到了 0.4000；
+- 但它仍然不是最终方案，因为答案正确率下降明显；
+- 后续更合理的方向是：在 GRPO/RLVR reward 中加入格式奖励，或者设计更温和的 prompt，而不是直接强制改写全部 SFT 训练文本。
+
+当前实验结论可以概括为：
+
+```text
+prompt-level format eval 是中间结果：
+它比直接 format-constrained SFT 更好，但仍会损害推理正确率。
+```
+
+---
+
 ## 当前结论
 
 当前阶段已经证明：
@@ -488,7 +551,8 @@ format-constrained small_v2 是负结果实验；
 10. targeted SFT small_v2 初步验证了基于错误模式补充数据的有效性；
 11. format-constrained small_v2 验证了“直接强制改写 SFT 输出模板”在当前 small 设置下并不有效；
 12. small_v2 样本级对比进一步证明 targeted small_v2 修复了 3 道错题，而 format 版本破坏了 6 道原本答对的题；
-13. 项目具备继续扩展到 MATH、代码推理和正式实验的基础。
+13. prompt-level format eval 证明只改 prompt 可以提升格式命中率，但会降低推理正确率；
+14. 项目具备继续扩展到 MATH、代码推理和正式实验的基础。
 
 ---
 
@@ -506,6 +570,8 @@ outputs/checkpoints/sft_lora_small_v2
 sft_lora_small_v2 flexible-extract = 0.6000
 sft_lora_small_v2 strict-match     = 0.2000
 ```
+
+prompt-level format eval 不改变 checkpoint，只改变评估 prompt。它的格式命中率达到 0.4000，但 flexible_acc 下降到 0.4000，因此当前最佳 checkpoint 仍然是 `outputs/checkpoints/sft_lora_small_v2`。
 
 不推荐继续沿着以下 checkpoint 优化：
 
@@ -527,6 +593,7 @@ sft_lora_small_v2_format strict-match     = 0.1500
 当前主要提交包括：
 
 ```text
+489d892 Add prompt-level format eval for small v2
 eb6c80b Add small v2 sample comparison analysis
 711d684 Fix sample preview stage detection for small v2
 80a60ca Update README with format-constrained small v2 results
@@ -602,5 +669,5 @@ batch_size = 1
 当前项目可以概括为：
 
 ```text
-基于 Qwen2.5-1.5B-Instruct 构建评估驱动的数学推理对齐实验框架，完成 baseline、LoRA SFT、DPO、GRPO/RLVR 多阶段后训练闭环；接入 lm-evaluation-harness，支持 GSM8K-COT 评估、LoRA adapter 评估、样本输出分析、错误类型统计、reasoning 错误模式归因和结果汇总；在本地 CPU 环境下完成 debug、small、targeted small_v2 与 format-constrained small_v2 多级实验验证，并通过 targeted 数据将 GSM8K-COT small 评估的 flexible-extract 从 0.4500 提升到 0.6000；进一步通过样本级对比发现 targeted small_v2 修复了 3 道 small 错题且未造成回退，而直接强制格式改写破坏了 6 道原本答对的题，为后续扩展到更温和格式约束、MATH、HumanEval、MBPP 和更大规模训练打下工程基础。
+基于 Qwen2.5-1.5B-Instruct 构建评估驱动的数学推理对齐实验框架，完成 baseline、LoRA SFT、DPO、GRPO/RLVR 多阶段后训练闭环；接入 lm-evaluation-harness，支持 GSM8K-COT 评估、LoRA adapter 评估、样本输出分析、错误类型统计、reasoning 错误模式归因和结果汇总；在本地 CPU 环境下完成 debug、small、targeted small_v2 与 format-constrained small_v2 多级实验验证，并通过 targeted 数据将 GSM8K-COT small 评估的 flexible-extract 从 0.4500 提升到 0.6000；进一步通过样本级对比发现 targeted small_v2 修复了 3 道 small 错题且未造成回退，而直接强制格式改写破坏了 6 道原本答对的题；补充 prompt-level format eval，发现仅修改评估 prompt 可将格式命中率提升到 0.4000，但会使 flexible_acc 降至 0.4000，为后续扩展到 reward-based 格式约束、MATH、HumanEval、MBPP 和更大规模训练打下工程基础。
 ```
