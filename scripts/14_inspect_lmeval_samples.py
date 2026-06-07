@@ -2,152 +2,122 @@ import json
 from pathlib import Path
 
 
-EVAL_ROOT = Path("outputs/eval")
+EVAL_DIR = Path("outputs/eval")
 REPORT_DIR = Path("outputs/reports")
 OUTPUT_FILE = REPORT_DIR / "lmeval_samples_preview.jsonl"
 
-SAMPLES_PER_FILE = 3
-
-
-STAGE_ORDER = {
-    "baseline": 0,
-    "sft_lora": 1,
-    "dpo_lora": 2,
-    "grpo_lora": 3,
-    "sft_lora_small": 4,
-    "dpo_lora_small": 5,
-    "grpo_lora_small": 6,
-    "unknown": 99,
-}
+MAX_SAMPLES_PER_FILE = 3
 
 
 def infer_stage(path: Path) -> str:
     """
-    从 lm-eval samples 文件路径推断实验阶段。
+    根据 lm-eval samples 文件路径推断实验阶段。
 
     注意：
-    small 阶段必须优先判断。
-    否则 sft_lora_small / dpo_lora_small / grpo_lora_small
-    会被错误识别成 sft_lora / dpo_lora / grpo_lora。
+    更长、更具体的 stage 必须放在更前面。
+    例如 sft_lora_small_v2_format 必须早于 sft_lora_small_v2，
+    sft_lora_small_v2 必须早于 sft_lora_small。
+    否则会被错误归类。
     """
     text = str(path).replace("\\", "/").lower()
 
+    if "sft_lora_small_v2_format" in text:
+        return "sft_lora_small_v2_format"
+
+    if "sft_lora_small_v2" in text:
+        return "sft_lora_small_v2"
+
     if "sft_lora_small" in text:
         return "sft_lora_small"
+
     if "dpo_lora_small" in text:
         return "dpo_lora_small"
+
     if "grpo_lora_small" in text:
         return "grpo_lora_small"
 
-    if "baseline" in text:
-        return "baseline"
     if "sft_lora" in text:
         return "sft_lora"
+
     if "dpo_lora" in text:
         return "dpo_lora"
+
     if "grpo_lora" in text:
         return "grpo_lora"
+
+    if "baseline" in text:
+        return "baseline"
 
     return "unknown"
 
 
-def load_jsonl(path: Path, limit: int):
+def find_sample_files():
+    if not EVAL_DIR.exists():
+        raise FileNotFoundError(f"找不到评估目录: {EVAL_DIR}")
+
+    files = sorted(EVAL_DIR.rglob("samples_*.jsonl"))
+    return files
+
+
+def load_preview_rows(sample_files):
     rows = []
 
-    with path.open("r", encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
+    for sample_file in sample_files:
+        stage = infer_stage(sample_file)
 
-            if not line:
-                continue
+        with sample_file.open("r", encoding="utf-8") as f:
+            for idx, line in enumerate(f):
+                if idx >= MAX_SAMPLES_PER_FILE:
+                    break
 
-            try:
-                rows.append(json.loads(line))
-            except json.JSONDecodeError:
-                continue
+                line = line.strip()
+                if not line:
+                    continue
 
-            if len(rows) >= limit:
-                break
+                try:
+                    item = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+
+                preview_item = {
+                    "stage": stage,
+                    "source_file": str(sample_file),
+                }
+
+                preview_item.update(item)
+                rows.append(preview_item)
 
     return rows
 
 
-def compact_sample(sample: dict, source_file: Path) -> dict:
-    """
-    保留 lm-eval sample 中最有用的字段。
+def write_jsonl(path: Path, rows):
+    path.parent.mkdir(parents=True, exist_ok=True)
 
-    不同版本 lm-eval 的 samples 字段可能略有不同，
-    所以这里不强行假设字段一定存在。
-    """
-    stage = infer_stage(source_file)
-
-    return {
-        "stage": stage,
-        "source_file": str(source_file),
-        "doc": sample.get("doc"),
-        "arguments": sample.get("arguments"),
-        "resps": sample.get("resps"),
-        "filtered_resps": sample.get("filtered_resps"),
-        "target": sample.get("target"),
-        "exact_match": sample.get("exact_match"),
-        "metrics": sample.get("metrics"),
-    }
-
-
-def collect_samples():
-    print("====== 找到 lm-eval 样本文件 ======")
-
-    sample_files = sorted(EVAL_ROOT.rglob("samples_*.jsonl"))
-
-    if not sample_files:
-        print("没有找到 samples_*.jsonl。")
-        return []
-
-    for path in sample_files:
-        print(f"- {path}")
-
-    all_rows = []
-
-    for sample_file in sample_files:
-        rows = load_jsonl(sample_file, limit=SAMPLES_PER_FILE)
-
-        for row in rows:
-            all_rows.append(compact_sample(row, sample_file))
-
-    all_rows.sort(
-        key=lambda row: (
-            STAGE_ORDER.get(row["stage"], 99),
-            row["source_file"],
-        )
-    )
-
-    return all_rows
-
-
-def write_preview(rows):
-    REPORT_DIR.mkdir(parents=True, exist_ok=True)
-
-    with OUTPUT_FILE.open("w", encoding="utf-8") as f:
+    with path.open("w", encoding="utf-8") as f:
         for row in rows:
             f.write(json.dumps(row, ensure_ascii=False) + "\n")
 
 
 def main():
-    rows = collect_samples()
+    print("====== 找到 lm-eval 样本文件 ======")
 
-    if not rows:
-        return
+    sample_files = find_sample_files()
 
-    write_preview(rows)
+    for file in sample_files:
+        print(f"- {file}")
+
+    rows = load_preview_rows(sample_files)
+    write_jsonl(OUTPUT_FILE, rows)
 
     print("")
     print("====== lm-eval 样本预览保存完成 ======")
     print(f"预览文件: {OUTPUT_FILE}")
     print(f"样本数: {len(rows)}")
 
-    print("")
-    print("====== 第一条样本字段预览 ======")
-    print(json.dumps(rows[0], ensure_ascii=False, indent=2)[:4000])
+    if rows:
+        print("")
+        print("====== 第一条样本字段预览 ======")
+        print(json.dumps(rows[0], ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":
