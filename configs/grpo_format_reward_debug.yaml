@@ -1,0 +1,22 @@
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+
+dpo_adapter_path: outputs/checkpoints/dpo_lora_small
+train_file: data/processed/grpo_small.jsonl
+output_dir: outputs/checkpoints/grpo_lora_small_format_reward_debug
+
+max_prompt_length: 256
+max_completion_length: 128
+
+max_steps: 1
+
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 1
+learning_rate: 0.00001
+
+num_generations: 2
+
+logging_steps: 1
+save_steps: 1
+save_total_limit: 1
+
+dtype: float32
