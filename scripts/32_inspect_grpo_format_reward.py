@@ -24,8 +24,8 @@ OUT_JSONL = OUT_DIR / "grpo_format_reward_inspection.jsonl"
 OUT_MD = OUT_DIR / "grpo_format_reward_inspection.md"
 
 NUM_PROMPTS = 3
-NUM_GENERATIONS = 2
-MAX_NEW_TOKENS = 128
+NUM_GENERATIONS = 4
+MAX_NEW_TOKENS = 256
 
 
 def normalize_gold_answer(answer_text):
@@ -46,7 +46,8 @@ def build_messages(prompt):
             "content": (
                 "You are a helpful math assistant. "
                 "Solve the problem step by step. "
-                "End with a clear final answer line."
+                "At the end, write exactly one final line in this format: "
+                "Final answer: <answer>"
             ),
         },
         {
@@ -77,7 +78,7 @@ def generate_completions(model, tokenizer, prompt, num_generations):
                 **inputs,
                 max_new_tokens=MAX_NEW_TOKENS,
                 do_sample=True,
-                temperature=0.8,
+                temperature=0.9,
                 top_p=0.95,
                 pad_token_id=tokenizer.eos_token_id,
             )
@@ -89,7 +90,7 @@ def generate_completions(model, tokenizer, prompt, num_generations):
     return completions
 
 
-def short_text(text, max_len=220):
+def short_text(text, max_len=240):
     text = str(text).replace("\n", " ").strip()
     if len(text) <= max_len:
         return text
@@ -137,14 +138,7 @@ def write_reports(rows):
     lines.append("")
     lines.append("This report inspects generated completions and reward components before running longer GRPO training.")
     lines.append("")
-    lines.append("It is used to explain why the previous GRPO debug run had:")
-    lines.append("")
-    lines.append("```text")
-    lines.append("reward_mean = 0.1")
-    lines.append("reward_std = 0")
-    lines.append("loss = 0")
-    lines.append("grad_norm = 0")
-    lines.append("```")
+    lines.append("This v2 inspection uses a stronger final-answer instruction and longer generation length.")
     lines.append("")
 
     lines.append("## Setup")
@@ -156,6 +150,7 @@ def write_reports(rows):
     lines.append(f"num_prompts: {NUM_PROMPTS}")
     lines.append(f"num_generations: {NUM_GENERATIONS}")
     lines.append(f"max_new_tokens: {MAX_NEW_TOKENS}")
+    lines.append("prompt_format_instruction: Final answer: <answer>")
     lines.append("```")
     lines.append("")
 
@@ -177,11 +172,12 @@ def write_reports(rows):
     lines.append("## Interpretation")
     lines.append("")
     if len(reward_values) <= 1:
-        lines.append("All inspected completions received the same reward. This explains why GRPO had no useful advantage signal.")
+        lines.append("All inspected completions still received the same reward. GRPO still has no useful advantage signal under this setup.")
     else:
-        lines.append("The inspected completions received different rewards. This means the reward function can produce variance under sampling.")
+        lines.append("The inspected completions received different rewards. This means the reward function can produce useful variance under sampling.")
     lines.append("")
-    lines.append("If most outputs only receive `0.1`, they are only getting extractability reward and are missing correctness/format rewards.")
+    lines.append("If format_hit remains 0, the model is not following the explicit final-answer format even with a stronger prompt.")
+    lines.append("If correctness remains 0, the main bottleneck is reasoning/answer correctness rather than formatting.")
     lines.append("")
 
     lines.append("## Cases")
@@ -244,7 +240,7 @@ def main():
 
     rows = []
 
-    print("====== 开始 reward inspection ======")
+    print("====== 开始 reward inspection v2 ======")
     for prompt_id, example in enumerate(dataset):
         prompt = example["prompt"]
         gold_answer = normalize_gold_answer(example["answer"])
@@ -285,7 +281,7 @@ def main():
 
     write_reports(rows)
 
-    print("====== reward inspection done ======")
+    print("====== reward inspection v2 done ======")
     print(f"csv:   {OUT_CSV}")
     print(f"jsonl: {OUT_JSONL}")
     print(f"md:    {OUT_MD}")
