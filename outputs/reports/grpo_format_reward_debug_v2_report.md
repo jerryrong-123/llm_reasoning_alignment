@@ -112,15 +112,15 @@ train_loss: -8.941e-08
 
 ## 对比 v1 debug
 
-| item | v1 debug | v2 debug |
-|---|---:|---:|
-| train_file | grpo_small.jsonl | grpo_format_reward_debug.jsonl |
-| max_completion_length | 128 | 256 |
-| num_generations | 2 | 4 |
-| reward_mean | 0.1 | 0.6 |
-| reward_std | 0 | 0.5774 |
-| frac_reward_zero_std | 1 | 0 |
-| grad_norm | 0 | 0.7355 |
+| item                  |         v1 debug |                       v2 debug |
+| --------------------- | ---------------: | -----------------------------: |
+| train_file            | grpo_small.jsonl | grpo_format_reward_debug.jsonl |
+| max_completion_length |              128 |                            256 |
+| num_generations       |                2 |                              4 |
+| reward_mean           |              0.1 |                            0.6 |
+| reward_std            |                0 |                         0.5774 |
+| frac_reward_zero_std  |                1 |                              0 |
+| grad_norm             |                0 |                         0.7355 |
 
 ## 结果解释
 
