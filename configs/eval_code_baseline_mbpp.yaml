@@ -1,0 +1,12 @@
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+peft_path: null
+
+tasks: mbpp
+limit: 5
+batch_size: 1
+device: cpu
+dtype: float32
+apply_chat_template: true
+
+predict_only: true
+output_name: code_baseline_qwen25_15b_mbpp_limit5_predict_only
