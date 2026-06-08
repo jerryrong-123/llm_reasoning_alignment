@@ -54,24 +54,29 @@ def extract_gold_answer(answer_text):
 
 def extract_final_answer_line(response):
     """
-    Extract answer from explicit final-answer formats.
+    Extract answer from explicit final-answer lines.
+
+    Important:
+    This function is intentionally line-based.
+
+    It should reward clear final-answer formatting, not any random
+    "the answer is ..." phrase inside the reasoning body.
     """
     if response is None:
         return None
 
-    text = str(response)
+    text = str(response).strip()
 
     patterns = [
-        r"(?:^|\n)\s*Final answer\s*:\s*(" + NUMBER_RE + r")",
-        r"(?:^|\n)\s*final answer\s*:\s*(" + NUMBER_RE + r")",
-        r"(?:^|\n)\s*####\s*(" + NUMBER_RE + r")",
-        r"(?:the answer is|answer is)\s*[:\-]?\s*(" + NUMBER_RE + r")",
-        r"(?:答案是)\s*[:：]?\s*(" + NUMBER_RE + r")",
+        r"(?im)^\s*Final answer\s*:\s*(" + NUMBER_RE + r")\s*\.?\s*$",
+        r"(?im)^\s*####\s*(" + NUMBER_RE + r")\s*\.?\s*$",
+        r"(?im)^\s*(?:The answer is|Answer is)\s*[:\-]?\s*(" + NUMBER_RE + r")\s*\.?\s*$",
+        r"(?im)^\s*答案是\s*[:：]?\s*(" + NUMBER_RE + r")\s*。?\s*$",
     ]
 
     matches = []
     for pattern in patterns:
-        matches.extend(re.findall(pattern, text, flags=re.IGNORECASE))
+        matches.extend(re.findall(pattern, text))
 
     return matches[-1] if matches else None
 
@@ -96,20 +101,14 @@ def extract_prediction(response):
 
 
 def has_final_answer_format(response):
-    if response is None:
-        return False
+    """
+    Return True only if the response contains a clear final-answer line.
 
-    text = str(response)
-
-    patterns = [
-        r"(?:^|\n)\s*Final answer\s*:",
-        r"(?:^|\n)\s*final answer\s*:",
-        r"(?:^|\n)\s*####\s*",
-        r"(?:the answer is|answer is)\s*[:\-]?",
-        r"(?:答案是)\s*[:：]?",
-    ]
-
-    return any(re.search(pattern, text, flags=re.IGNORECASE) for pattern in patterns)
+    This is stricter than extract_prediction:
+    - extract_prediction may use the last number fallback;
+    - format reward should only reward explicit final-answer formatting.
+    """
+    return extract_final_answer_line(response) is not None
 
 
 def compute_final_answer_reward(response, gold_answer):
@@ -121,7 +120,7 @@ def compute_final_answer_reward(response, gold_answer):
 
     Reward:
     - +1.0 if extracted numeric prediction equals gold numeric answer
-    - +0.1 if response contains explicit final-answer format
+    - +0.1 if response contains explicit final-answer line
     - +0.1 if a numeric prediction can be extracted
 
     Maximum auxiliary reward is 0.2, so format cannot dominate correctness.
