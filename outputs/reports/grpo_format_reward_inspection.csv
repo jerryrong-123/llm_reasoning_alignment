@@ -1,0 +1,80 @@
+prompt_id,generation_id,gold_answer,prediction,correctness,format_hit,extractable,correctness_reward,format_reward,extractability_reward,total_reward,prompt,completion
+0,0,72,3,0,0,1,0.0,0.0,0.1,0.1,"Please solve the following math problem step by step. Put the final answer at the end.
+
+Question: Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May?","Step 1: Identify the number of clips sold in April.
+Natalia sold clips to 48 of her friends in April.
+
+Step 2: Determine how many clips were sold in May.
+Since she sold half as many clips in May compared to April, we need to divide the number from Step 1 by 2.
+\( \frac{48}{2} = 24 \)
+So, Natalia sold 24 clips in May.
+
+Step 3: Add the two amounts together to find out how many clips she sold in total over the two months.
+April sales + May sales = Total sales"
+0,1,72,24,0,0,1,0.0,0.0,0.1,0.1,"Please solve the following math problem step by step. Put the final answer at the end.
+
+Question: Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May?","Step 1: Identify the number of clips sold in April.
+Natalia sold 48 clips in April.
+
+Step 2: Calculate the number of clips sold in May.
+We know that Natalia sold half as many clips in May compared to April. 
+
+Step 3: Perform the division to find out how many clips were sold in May.
+\[ \frac{48\text{ clips}}{2} = 24\text{ clips} \]
+
+Step 4: Add the number of clips sold in both months together.
+\[ 48\text{ clips (April)} + 24\"
+1,0,10,36,0,0,1,0.0,0.0,0.1,0.1,"Please solve the following math problem step by step. Put the final answer at the end.
+
+Question: Weng earns $12 an hour for babysitting. Yesterday, she just did 50 minutes of babysitting. How much did she earn?","$12 x 30 = $36
+
+Therefore, the answer is 36."
+1,1,10,3,0,0,1,0.0,0.0,0.1,0.1,"Please solve the following math problem step by step. Put the final answer at the end.
+
+Question: Weng earns $12 an hour for babysitting. Yesterday, she just did 50 minutes of babysitting. How much did she earn?","Step 1: Determine how many hours Weng worked.
+Since there are 60 minutes in an hour, we need to convert 50 minutes into hours.
+50 minutes ÷ 60 = 0.833... (or simplified as a fraction 5/6)
+
+Step 2: Calculate her earnings.
+Her hourly rate is $12, so we multiply her hourly rate by the number of hours she worked:
+$12 × 0.833... = $10
+
+Final Answer: Weng earned $10 yesterday.
+
+---
+
+Step 1: Convert 3 days to"
+2,0,5,45,0,0,1,0.0,0.0,0.1,0.1,"Please solve the following math problem step by step. Put the final answer at the end.
+
+Question: Betty is saving money for a new wallet which costs $100. Betty has only half of the money she needs. Her parents decided to give her $15 for that purpose, and her grandparents twice as much as her parents. How much more money does Betty need to buy the wallet?","Step 1: Determine how much money Betty currently has.
+Betty has only half of what's needed, so:
+$100 / 2 = $50
+
+Step 2: Calculate how much money Betty's parents gave her.
+Her parents gave her:
+$15 (parents) x 2 = $30 (grandparents)
+
+Step 3: Add up all the amounts of money available:
+-$50 (what she had)
++$15 (her parents' gift)
++$30 (her grandparents' gift)
+=$-5 + 15 + 30 = $45
+
+Step"
+2,1,5,4,0,0,1,0.0,0.0,0.1,0.1,"Please solve the following math problem step by step. Put the final answer at the end.
+
+Question: Betty is saving money for a new wallet which costs $100. Betty has only half of the money she needs. Her parents decided to give her $15 for that purpose, and her grandparents twice as much as her parents. How much more money does Betty need to buy the wallet?","Step 1: Determine how much money Betty currently has.
+Betty has saved half of the $100 wallet, so:
+$$ \frac{1}{2} \times \$100 = \$50 $$
+
+Step 2: Calculate the total amount given to Betty from her parents.
+Her parents gave her $15:
+
+$$ \$15 $$
+
+Step 3: Calculate the total amount given to Betty from her grandparents.
+Her grandparents gave her twice as much as her parents, so:
+
+$$ 2 \times \$15 = \$30 $$
+
+Step 4: Add all these amounts together to"
