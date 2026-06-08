@@ -46,6 +46,7 @@ Baseline 评估
 → format-constrained small_v2 SFT
 → small_v2 样本级对比分析
 → prompt-level format eval
+→ reward-based format optimization
 → formal 实验扩展
 ```
 
@@ -67,6 +68,11 @@ Baseline
 → format-constrained SFT small_v2
 → small_v2 sample comparison analysis
 → prompt-level format eval
+→ final-answer reward
+→ GRPO format-reward debug
+→ GRPO format-reward small run
+→ SFT-v2-start GRPO format-reward 384 run
+→ exact sample comparison
 ```
 
 ---
@@ -126,7 +132,7 @@ device = cpu
 dtype = float32
 batch_size = 1
 limit = 5 / 20
-max_steps = 1 / 10 / 20 / 30
+max_steps = 1 / 5 / 10 / 20 / 30
 ```
 
 当前结果主要用于验证工程链路，不作为正式模型性能。
@@ -154,6 +160,8 @@ external/   外部资源，默认不提交 Git
 * LoRA SFT
 * DPO 偏好对齐
 * GRPO/RLVR rule-based reward
+* final-answer correctness / format / extractability reward
+* reward-based format optimization
 * LoRA adapter 评估
 * 评估结果汇总
 * lm-eval samples 预览
@@ -162,7 +170,9 @@ external/   外部资源，默认不提交 Git
 * small 阶段 reasoning 错误模式分析
 * targeted SFT small_v2 数据构造、训练与评估
 * format-constrained SFT small_v2 数据构造、训练与评估
-* small_v2 样本级对比分析
+* prompt-level format eval
+* reward-based format optimization
+* exact sample comparison
 * debug / small 阶段实验报告
 
 ---
@@ -208,22 +218,36 @@ external/   外部资源，默认不提交 Git
 * [x] eval_summary 已加入 sft_lora_small_v2 和 sft_lora_small_v2_format 结果
 * [x] lm-eval sample preview 已修复 small_v2 / small_v2_format 阶段识别
 * [x] small_v2 样本级对比分析
+* [x] prompt-level format eval v1
+* [x] prompt-level format eval v2
+* [x] final-answer reward 设计与测试
+* [x] final-answer reward 接入 GRPOTrainer
+* [x] 从 dpo_lora_small 出发的 GRPO format-reward debug / small run / eval
+* [x] 从 sft_lora_small_v2 出发的 GRPO format-reward debug
+* [x] SFT-v2 reward inspection
+* [x] SFT-v2 + max_completion_length=384 的 GRPO format-reward debug
+* [x] SFT-v2 + max_completion_length=384 的 GRPO format-reward 5-step small run
+* [x] grpo_lora_small_v2_format_reward_384 评估
+* [x] SFT-v2 vs GRPO-384 exact sample comparison
+* [x] reward-based format optimization 阶段总结
 
 ---
 
 ## 当前 small 阶段 GSM8K-COT 评估结果
 
-| Stage                    | Sample Len | Flexible Exact Match | Strict Exact Match |
-| ------------------------ | ---------: | -------------------: | -----------------: |
-| baseline                 |          5 |               0.8000 |             0.6000 |
-| sft_lora                 |          5 |               0.8000 |             0.4000 |
-| dpo_lora                 |          5 |               0.8000 |             0.4000 |
-| grpo_lora                |          5 |               0.8000 |             0.4000 |
-| sft_lora_small           |         20 |               0.4500 |             0.2500 |
-| dpo_lora_small           |         20 |               0.4000 |             0.2000 |
-| grpo_lora_small          |         20 |               0.4000 |             0.2000 |
-| sft_lora_small_v2        |         20 |               0.6000 |             0.2000 |
-| sft_lora_small_v2_format |         20 |               0.3500 |             0.1500 |
+| Stage                                | Sample Len | Flexible Exact Match | Strict Exact Match |
+| ------------------------------------ | ---------: | -------------------: | -----------------: |
+| baseline                             |          5 |               0.8000 |             0.6000 |
+| sft_lora                             |          5 |               0.8000 |             0.4000 |
+| dpo_lora                             |          5 |               0.8000 |             0.4000 |
+| grpo_lora                            |          5 |               0.8000 |             0.4000 |
+| sft_lora_small                       |         20 |               0.4500 |             0.2500 |
+| dpo_lora_small                       |         20 |               0.4000 |             0.2000 |
+| grpo_lora_small                      |         20 |               0.4000 |             0.2000 |
+| sft_lora_small_v2                    |         20 |               0.6000 |             0.2000 |
+| sft_lora_small_v2_format             |         20 |               0.3500 |             0.1500 |
+| grpo_lora_small_format_reward        |         20 |               0.4000 |             0.2000 |
+| grpo_lora_small_v2_format_reward_384 |         20 |               0.6000 |             0.2000 |
 
 注意：由于当前评估样本数很小，并且训练步数较少，上表不能作为正式模型性能，只能作为工程链路和小规模对比记录。
 
@@ -232,6 +256,9 @@ SFT small_v2 使用 targeted 数据补充 `percentage_error`、`money_profit_err
 
 format-constrained SFT small_v2 进一步尝试把最终答案强制为 `#### answer` 格式，但结果为 `flexible-extract=0.3500`、`strict-match=0.1500`，相比 targeted small_v2 明显下降。
 这说明当前这种直接改写 SFT 文本格式的方案没有改善 strict-match，反而伤害了整体输出质量。
+
+reward-based format optimization 进一步证明：final-answer reward 可以接入 GRPOTrainer，并且从 `sft_lora_small_v2` 出发、将 `max_completion_length` 提升到 384 后可以恢复 reward variance。
+但是当前 5-step GRPO small run 只是追平 `sft_lora_small_v2`，没有超过它。
 
 ---
 
@@ -504,11 +531,11 @@ outputs/reports/sft_small_v2_prompt_format_eval.md
 
 实验结果为：
 
-| Eval Setting | Flexible Acc | Strict / Format Acc |
-|---|---:|---:|
-| lm-eval sft_lora_small_v2 | 0.6000 | 0.2000 |
-| prompt-level format eval | 0.4000 | 0.4000 |
-| sft_lora_small_v2_format | 0.3500 | 0.1500 |
+| Eval Setting              | Flexible Acc | Strict / Format Acc |
+| ------------------------- | -----------: | ------------------: |
+| lm-eval sft_lora_small_v2 |       0.6000 |              0.2000 |
+| prompt-level format eval  |       0.4000 |              0.4000 |
+| sft_lora_small_v2_format  |       0.3500 |              0.1500 |
 
 其中 prompt-level format eval 的脚本报告中对应指标为：
 
@@ -519,12 +546,12 @@ strict_hash_acc = 0.4000
 
 阶段性结论：
 
-- prompt-level format eval 将格式命中率提升到 0.4000；
-- 但 flexible_acc 从 lm-eval small_v2 的 0.6000 下降到 0.4000；
-- 说明只改 prompt 可以增强格式遵循，但会干扰部分数学推理；
-- 相比直接训练 `sft_lora_small_v2_format`，prompt-level 方法更好，因为它至少把格式命中率提升到了 0.4000；
-- 但它仍然不是最终方案，因为答案正确率下降明显；
-- 后续更合理的方向是：在 GRPO/RLVR reward 中加入格式奖励，或者设计更温和的 prompt，而不是直接强制改写全部 SFT 训练文本。
+* prompt-level format eval 将格式命中率提升到 0.4000；
+* 但 flexible_acc 从 lm-eval small_v2 的 0.6000 下降到 0.4000；
+* 说明只改 prompt 可以增强格式遵循，但会干扰部分数学推理；
+* 相比直接训练 `sft_lora_small_v2_format`，prompt-level 方法更好，因为它至少把格式命中率提升到了 0.4000；
+* 但它仍然不是最终方案，因为答案正确率下降明显；
+* 后续更合理的方向是：在 GRPO/RLVR reward 中加入格式奖励，或者设计更温和的 prompt，而不是直接强制改写全部 SFT 训练文本。
 
 当前实验结论可以概括为：
 
@@ -534,145 +561,6 @@ prompt-level format eval 是中间结果：
 ```
 
 ---
-
-## 当前结论
-
-当前阶段已经证明：
-
-1. baseline、SFT、DPO、GRPO/RLVR 的完整工程链路可以跑通；
-2. SFT、DPO、GRPO/RLVR 三阶段训练脚本可以串联；
-3. 每个阶段都可以保存 LoRA adapter；
-4. 每个 LoRA adapter 都可以通过 lm-eval 重新评估；
-5. 评估结果可以统一汇总到 CSV 和 Markdown 报告；
-6. debug 实验已经扩展到 small 实验；
-7. 项目已经具备样本级错误分析能力；
-8. 项目已经能够区分 strict 格式错误、答案抽取 / 格式兼容错误和真正的推理 / 计算错误；
-9. 项目已经能对 reasoning 错误进行初步模式归因；
-10. targeted SFT small_v2 初步验证了基于错误模式补充数据的有效性；
-11. format-constrained small_v2 验证了“直接强制改写 SFT 输出模板”在当前 small 设置下并不有效；
-12. small_v2 样本级对比进一步证明 targeted small_v2 修复了 3 道错题，而 format 版本破坏了 6 道原本答对的题；
-13. prompt-level format eval 证明只改 prompt 可以提升格式命中率，但会降低推理正确率；
-14. 项目具备继续扩展到 MATH、代码推理和正式实验的基础。
-
----
-
-## 当前最佳 checkpoint
-
-当前 small 阶段最值得保留的是：
-
-```text
-outputs/checkpoints/sft_lora_small_v2
-```
-
-原因是：
-
-```text
-sft_lora_small_v2 flexible-extract = 0.6000
-sft_lora_small_v2 strict-match     = 0.2000
-```
-
-prompt-level format eval 不改变 checkpoint，只改变评估 prompt。它的格式命中率达到 0.4000，但 flexible_acc 下降到 0.4000，因此当前最佳 checkpoint 仍然是 `outputs/checkpoints/sft_lora_small_v2`。
-
-不推荐继续沿着以下 checkpoint 优化：
-
-```text
-outputs/checkpoints/sft_lora_small_v2_format
-```
-
-原因是：
-
-```text
-sft_lora_small_v2_format flexible-extract = 0.3500
-sft_lora_small_v2_format strict-match     = 0.1500
-```
-
----
-
-## Git 提交记录
-
-当前主要提交包括：
-
-```text
-489d892 Add prompt-level format eval for small v2
-eb6c80b Add small v2 sample comparison analysis
-711d684 Fix sample preview stage detection for small v2
-80a60ca Update README with format-constrained small v2 results
-c22e262 Add format-constrained SFT small v2 experiment
-f359fe9 Update README with targeted small v2 results
-1c84b84 Add targeted SFT small v2 experiment
-7ec6ec7 Update README with reasoning error patterns
-44b936d Add small reasoning error pattern analysis
-93bbf34 Update README with small error analysis
-28bd702 Add small evaluation error type summary
-03e9847 Add small evaluation error analysis
-24f2598 Fix lm-eval sample stage detection
-ec0c777 Update README with small experiment progress
-9ea6b7f Improve evaluation summary report
-aa20dee Add small GRPO experiment config
-87588a6 Add small DPO experiment config
-e8e9ced Add small SFT experiment config
-d084c98 Add debug evaluation reports
-744c707 Initialize reasoning alignment debug pipeline
-```
-
----
-
-## 重要说明
-
-当前所有 debug / small / small_v2 结果不能作为正式性能结论，原因包括：
-
-```text
-debug 阶段：
-max_steps = 1
-limit = 5
-
-small 阶段：
-max_steps = 10 / 20
-limit = 20
-
-small_v2 阶段：
-max_steps = 30
-limit = 20
-
-small_v2_format 阶段：
-max_steps = 30
-limit = 20
-
-本地运行：
-device = cpu
-dtype = float32
-batch_size = 1
-```
-
-当前阶段重点是工程验证、闭环搭建和误差分析，而不是追求正式指标提升。
-
----
-
-## 后续计划
-
-* [ ] 设计更温和的格式约束方案，避免直接重写 SFT 文本导致推理能力下降
-* [ ] 尝试只在 prompt / final answer 部分加入格式约束
-* [ ] 在 GRPO/RLVR reward 中加入格式奖励，而不是只依赖 SFT 数据格式改写
-* [ ] 基于 small_v2 样本级对比结果继续扩展 targeted 数据
-* [ ] 继续细分 reasoning_or_calc_error，例如百分比错误、单位错误、多步计算错误、题意理解错误
-* [ ] 增加 MATH / MATH-500 评估
-* [ ] 增加 HumanEval / MBPP / EvalPlus 代码推理评估
-* [ ] 增加更大规模 SFT / DPO / GRPO 实验配置
-* [ ] 增加正式实验报告
-* [ ] 增加样本级错误分析和 bad case 分类
-* [ ] 后续在 NVIDIA 云服务器上扩展更大 batch、更多 steps、更大模型
-
----
-
-## 适合简历表述的阶段性成果
-
-当前项目可以概括为：
-
-```text
-基于 Qwen2.5-1.5B-Instruct 构建评估驱动的数学推理对齐实验框架，完成 baseline、LoRA SFT、DPO、GRPO/RLVR 多阶段后训练闭环；接入 lm-evaluation-harness，支持 GSM8K-COT 评估、LoRA adapter 评估、样本输出分析、错误类型统计、reasoning 错误模式归因和结果汇总；在本地 CPU 环境下完成 debug、small、targeted small_v2 与 format-constrained small_v2 多级实验验证，并通过 targeted 数据将 GSM8K-COT small 评估的 flexible-extract 从 0.4500 提升到 0.6000；进一步通过样本级对比发现 targeted small_v2 修复了 3 道 small 错题且未造成回退，而直接强制格式改写破坏了 6 道原本答对的题；补充 prompt-level format eval，发现仅修改评估 prompt 可将格式命中率提升到 0.4000，但会使 flexible_acc 降至 0.4000，为后续扩展到 reward-based 格式约束、MATH、HumanEval、MBPP 和更大规模训练打下工程基础。
-```
-
-<!-- PROMPT_FORMAT_V2_START -->
 
 ## Prompt-level format eval v2 实验结论
 
@@ -719,10 +607,10 @@ outputs/reports/sft_small_v2_prompt_format_v2_eval.md
 
 ### 实验结果
 
-| experiment | flexible_acc | format_acc | final_answer_format_hit_rate | strict_hash_acc |
-|---|---:|---:|---:|---:|
-| prompt-level format eval v1 | 0.4000 | 0.4000 | - | 0.4000 |
-| prompt-level format eval v2 | 0.5500 | 0.4000 | 0.7000 | 0.0000 |
+| experiment                  | flexible_acc | format_acc | final_answer_format_hit_rate | strict_hash_acc |
+| --------------------------- | -----------: | ---------: | ---------------------------: | --------------: |
+| prompt-level format eval v1 |       0.4000 |     0.4000 |                            - |          0.4000 |
+| prompt-level format eval v2 |       0.5500 |     0.4000 |                       0.7000 |          0.0000 |
 
 ### 结果解释
 
@@ -763,4 +651,429 @@ prompt format v2 flexible       = 0.5500
 
 也就是说，下一阶段不应该继续强行改 SFT 文本格式，而应该在 GRPO/RLVR 阶段设计更温和的格式奖励。
 
-<!-- PROMPT_FORMAT_V2_END -->
+---
+
+## Reward-based format optimization 阶段结论
+
+### 阶段目标
+
+本阶段在 prompt-level format optimization 之后，进一步实现 reward-based format optimization。
+
+核心目标是：不再只通过 prompt 强制模型输出格式，而是设计 reward，让模型在 GRPO/RLVR 训练中同时优化答案正确性、最终答案格式和答案可抽取性。
+
+### Final-answer reward 设计
+
+本阶段新增并验证了 final-answer reward：
+
+```text
+correctness_reward:
+  +1.0 if extracted numeric answer equals gold answer
+
+format_reward:
+  +0.1 if response contains a clear final-answer line
+
+extractability_reward:
+  +0.1 if a numeric prediction can be extracted
+
+total_reward = correctness_reward + format_reward + extractability_reward
+```
+
+核心原则是：
+
+```text
+answer correctness reward > final-answer format reward
+```
+
+也就是说，答案正确性是主 reward，格式只是辅助 reward，避免模型只学会输出 `Final answer: ...` 但答案仍然错误。
+
+相关文件：
+
+```text
+src/rewards/final_answer_reward.py
+scripts/30_test_final_answer_reward.py
+outputs/reports/final_answer_reward_test.md
+```
+
+### 从 dpo_lora_small 出发的 GRPO format-reward
+
+首先尝试从：
+
+```text
+outputs/checkpoints/dpo_lora_small
+```
+
+出发做 GRPO format-reward。
+
+该分支证明：
+
+```text
+1. final-answer reward 可以接入 GRPOTrainer；
+2. GRPO format-reward 可以训练并保存 adapter；
+3. format-reward 专用 prompt 数据可以产生 reward 方差；
+4. 但最终评估没有超过当前最佳 SFT small_v2。
+```
+
+评估结果：
+
+```text
+grpo_lora_small_format_reward:
+flexible = 0.4000
+strict   = 0.2000
+
+sft_lora_small_v2:
+flexible = 0.6000
+strict   = 0.2000
+```
+
+因此，从 `dpo_lora_small` 出发的 5-step GRPO format-reward 没有带来最终指标提升。
+
+### 从 sft_lora_small_v2 出发的 GRPO format-reward
+
+由于当前最佳 checkpoint 是：
+
+```text
+outputs/checkpoints/sft_lora_small_v2
+```
+
+所以继续尝试从 `sft_lora_small_v2` 出发做 GRPO format-reward。
+
+初始 `max_completion_length=256` 的 debug 结果没有 reward 方差：
+
+```text
+reward_std = 0
+frac_reward_zero_std = 1
+grad_norm = 0
+```
+
+随后通过 reward inspection 发现，问题主要来自生成长度和截断。将生成长度提高到 384 后，reward variance 恢复：
+
+```text
+max_completion_length = 384
+reward_std = 0.5774
+frac_reward_zero_std = 0
+grad_norm = 0.7084
+```
+
+因此继续进行了 5-step small-scale GRPO format-reward 训练：
+
+```text
+start_adapter_path: outputs/checkpoints/sft_lora_small_v2
+output_dir: outputs/checkpoints/grpo_lora_small_v2_format_reward_384
+max_completion_length: 384
+num_generations: 4
+max_steps: 5
+```
+
+训练过程中多数 step 有有效 reward 方差：
+
+```text
+step 1 reward_std = 0.5774, grad_norm = 0.7084
+step 2 reward_std = 0.5802, grad_norm = 0.7045
+step 4 reward_std = 0.55,   grad_norm = 0.6637
+step 5 reward_std = 0.05,   grad_norm = 0.9398
+```
+
+新 checkpoint 成功生成：
+
+```text
+outputs/checkpoints/grpo_lora_small_v2_format_reward_384
+```
+
+### 最终评估结果
+
+对 `grpo_lora_small_v2_format_reward_384` 进行 GSM8K-COT limit=20 评估，结果为：
+
+```text
+grpo_lora_small_v2_format_reward_384:
+flexible = 0.6000
+strict   = 0.2000
+```
+
+与当前最佳 SFT checkpoint 对比：
+
+```text
+sft_lora_small_v2:
+flexible = 0.6000
+strict   = 0.2000
+
+grpo_lora_small_v2_format_reward_384:
+flexible = 0.6000
+strict   = 0.2000
+```
+
+结论是：
+
+```text
+GRPO-384 追平了 sft_lora_small_v2，但没有超过。
+```
+
+### 样本级对比结论
+
+进一步做 exact sample comparison，精确对比：
+
+```text
+sft_lora_small_v2
+grpo_lora_small_v2_format_reward_384
+```
+
+样本级结果：
+
+```text
+sft_lora_small_v2: 12/20 = 0.6000
+grpo_lora_small_v2_format_reward_384: 12/20 = 0.6000
+```
+
+分类结果：
+
+```text
+both_correct = 12
+both_wrong = 8
+grpo_improved = 0
+grpo_regressed = 0
+```
+
+这说明：
+
+```text
+GRPO-384 和 SFT small_v2 不只是总分一样；
+它们在当前 20 个 GSM8K-COT 样本上逐题表现完全一致。
+```
+
+### 阶段最终结论
+
+本阶段最终结论是：
+
+```text
+reward-based format optimization pipeline works,
+but current small-scale GRPO format-reward training does not yet improve over the best SFT checkpoint.
+```
+
+中文总结：
+
+```text
+reward-based format optimization 链路已经跑通，
+但当前 small-scale GRPO format-reward 训练还没有超过最佳 SFT checkpoint。
+```
+
+更具体地说：
+
+```text
+1. final-answer reward 可以正常计算；
+2. final-answer reward 可以接入 GRPOTrainer；
+3. format-reward 专用 prompt 数据是必要的；
+4. num_generations=4 可以产生组内比较；
+5. max_completion_length=256 对 sft_lora_small_v2 不够；
+6. max_completion_length=384 可以恢复 reward 方差；
+7. 从 sft_lora_small_v2 出发优于从 dpo_lora_small 出发；
+8. 当前 GRPO-384 最终指标追平 sft_lora_small_v2；
+9. 逐题对比显示 GRPO-384 没有新增正确样本；
+10. 下一步不应该继续盲目增加 GRPO step。
+```
+
+相关报告：
+
+```text
+outputs/reports/reward_based_format_optimization_stage_summary.md
+outputs/reports/grpo_sft_v2_format_reward_384_eval_report.md
+outputs/reports/sft_v2_vs_grpo_384_sample_comparison.md
+```
+
+---
+
+## 当前结论
+
+当前阶段已经证明：
+
+1. baseline、SFT、DPO、GRPO/RLVR 的完整工程链路可以跑通；
+2. SFT、DPO、GRPO/RLVR 三阶段训练脚本可以串联；
+3. 每个阶段都可以保存 LoRA adapter；
+4. 每个 LoRA adapter 都可以通过 lm-eval 重新评估；
+5. 评估结果可以统一汇总到 CSV 和 Markdown 报告；
+6. debug 实验已经扩展到 small 实验；
+7. 项目已经具备样本级错误分析能力；
+8. 项目已经能够区分 strict 格式错误、答案抽取 / 格式兼容错误和真正的推理 / 计算错误；
+9. 项目已经能对 reasoning 错误进行初步模式归因；
+10. targeted SFT small_v2 初步验证了基于错误模式补充数据的有效性；
+11. format-constrained small_v2 验证了“直接强制改写 SFT 输出模板”在当前 small 设置下并不有效；
+12. small_v2 样本级对比进一步证明 targeted small_v2 修复了 3 道错题，而 format 版本破坏了 6 道原本答对的题；
+13. prompt-level format eval 证明只改 prompt 可以提升格式命中率，但会降低推理正确率；
+14. prompt-level format eval v2 证明温和的 `Final answer: <answer>` 格式约束优于强制 `#### <answer>`；
+15. reward-based format optimization 链路已经跑通；
+16. final-answer reward 可以接入 GRPOTrainer，并产生 reward 方差；
+17. 从 `sft_lora_small_v2` 出发优于从 `dpo_lora_small` 出发；
+18. `max_completion_length=384` 可以恢复 reward variance；
+19. `grpo_lora_small_v2_format_reward_384` 追平 `sft_lora_small_v2`，但没有超过；
+20. 样本级 exact comparison 显示 GRPO-384 和 SFT-v2 在当前 20 条样本上逐题完全一致；
+21. 项目具备继续扩展到 MATH、代码推理和正式实验的基础。
+
+---
+
+## 当前最佳 checkpoint
+
+当前 small 阶段最值得保留的是：
+
+```text
+outputs/checkpoints/sft_lora_small_v2
+```
+
+原因是：
+
+```text
+sft_lora_small_v2 flexible-extract = 0.6000
+sft_lora_small_v2 strict-match     = 0.2000
+```
+
+`grpo_lora_small_v2_format_reward_384` 也达到了同样指标：
+
+```text
+grpo_lora_small_v2_format_reward_384 flexible-extract = 0.6000
+grpo_lora_small_v2_format_reward_384 strict-match     = 0.2000
+```
+
+但样本级 exact comparison 显示，二者在当前 20 条 GSM8K-COT 样本上逐题表现完全一致：
+
+```text
+both_correct = 12
+both_wrong = 8
+grpo_improved = 0
+grpo_regressed = 0
+```
+
+因此当前最佳 checkpoint 仍然优先保留：
+
+```text
+outputs/checkpoints/sft_lora_small_v2
+```
+
+同时将以下 checkpoint 作为 reward-based format optimization 的正向中间结果保留：
+
+```text
+outputs/checkpoints/grpo_lora_small_v2_format_reward_384
+```
+
+不推荐继续沿着以下 checkpoint 优化：
+
+```text
+outputs/checkpoints/sft_lora_small_v2_format
+```
+
+原因是：
+
+```text
+sft_lora_small_v2_format flexible-extract = 0.3500
+sft_lora_small_v2_format strict-match     = 0.1500
+```
+
+---
+
+## Git 提交记录
+
+当前主要提交包括：
+
+```text
+23dfac0 Add reward-based format optimization stage summary
+4a8629e Add SFT v2 versus GRPO 384 sample comparison
+7481753 Add SFT v2 GRPO format reward 384 evaluation
+cb8d58b Add SFT v2 GRPO format reward 384 small run
+5ac6a58 Add SFT v2 GRPO format reward debug 384
+c365ef9 Add SFT v2 format reward inspection
+3f93aed Add GRPO format reward debug from SFT v2
+c95a216 Add exact GRPO format reward sample comparison
+7887edf Add GRPO format reward evaluation
+5c22624 Add GRPO format reward small run
+0f7bf0c Fix GRPO format reward debug v2 report content
+82325d0 Add GRPO format reward debug v2
+c84aedc Improve GRPO format reward inspection
+a2101dc Add GRPO format reward inspection
+9dc6c5e Add GRPO format reward debug run
+0c6e00d Tighten final answer format reward
+bacdb91 Add final answer reward test
+4237f9b Add prompt format reward diagnosis
+20f268e Add softer prompt-level format eval for small v2
+489d892 Add prompt-level format eval for small v2
+eb6c80b Add small v2 sample comparison analysis
+711d684 Fix sample preview stage detection for small v2
+80a60ca Update README with format-constrained small v2 results
+c22e262 Add format-constrained SFT small v2 experiment
+f359fe9 Update README with targeted small v2 results
+1c84b84 Add targeted SFT small v2 experiment
+7ec6ec7 Update README with reasoning error patterns
+44b936d Add small reasoning error pattern analysis
+93bbf34 Update README with small error analysis
+28bd702 Add small evaluation error type summary
+03e9847 Add small evaluation error analysis
+24f2598 Fix lm-eval sample stage detection
+ec0c777 Update README with small experiment progress
+9ea6b7f Improve evaluation summary report
+aa20dee Add small GRPO experiment config
+87588a6 Add small DPO experiment config
+e8e9ced Add small SFT experiment config
+d084c98 Add debug evaluation reports
+744c707 Initialize reasoning alignment debug pipeline
+```
+
+---
+
+## 重要说明
+
+当前所有 debug / small / small_v2 / reward-based format optimization 结果不能作为正式性能结论，原因包括：
+
+```text
+debug 阶段：
+max_steps = 1
+limit = 5
+
+small 阶段：
+max_steps = 10 / 20
+limit = 20
+
+small_v2 阶段：
+max_steps = 30
+limit = 20
+
+small_v2_format 阶段：
+max_steps = 30
+limit = 20
+
+prompt-level format eval：
+limit = 20
+
+reward-based format optimization：
+max_steps = 1 / 5
+limit = 20
+
+本地运行：
+device = cpu
+dtype = float32
+batch_size = 1
+```
+
+当前阶段重点是工程验证、闭环搭建和误差分析，而不是追求正式指标提升。
+
+---
+
+## 后续计划
+
+* [ ] 将 reward-based format optimization 阶段结论同步到最终项目报告
+* [ ] 设计更温和的格式约束方案，避免直接重写 SFT 文本导致推理能力下降
+* [ ] 尝试只在 prompt / final answer 部分加入格式约束
+* [ ] 优化 final-answer reward，使其能提供更强但不过度压制 correctness 的格式信号
+* [ ] 继续研究 completion 截断问题，尝试缩短 prompt 或继续增加 max_completion_length
+* [ ] 基于 small_v2 样本级对比结果继续扩展 targeted 数据
+* [ ] 继续细分 reasoning_or_calc_error，例如百分比错误、单位错误、多步计算错误、题意理解错误
+* [ ] 增加 MATH / MATH-500 评估
+* [ ] 增加 HumanEval / MBPP / EvalPlus 代码推理评估
+* [ ] 增加更大规模 SFT / DPO / GRPO 实验配置
+* [ ] 增加正式实验报告
+* [ ] 增加样本级错误分析和 bad case 分类
+* [ ] 后续在 NVIDIA 云服务器上扩展更大 batch、更多 steps、更大模型
+
+---
+
+## 适合简历表述的阶段性成果
+
+当前项目可以概括为：
+
+```text
+基于 Qwen2.5-1.5B-Instruct 构建评估驱动的数学推理对齐实验框架，完成 baseline、LoRA SFT、DPO、GRPO/RLVR 多阶段后训练闭环；接入 lm-evaluation-harness，支持 GSM8K-COT 评估、LoRA adapter 评估、样本输出分析、错误类型统计、reasoning 错误模式归因和结果汇总；在本地 CPU 环境下完成 debug、small、targeted small_v2、format-constrained small_v2、prompt-level format eval 与 reward-based format optimization 多级实验验证；通过 targeted 数据将 GSM8K-COT small 评估的 flexible-extract 从 0.4500 提升到 0.6000；进一步通过样本级对比发现 targeted small_v2 修复了 3 道 small 错题且未造成回退，而直接强制格式改写破坏了 6 道原本答对的题；设计 final-answer correctness/format/extractability 组合 reward 并接入 TRL GRPOTrainer，验证从 SFT/DPO checkpoint 出发的 reward-based format optimization 全流程；发现从最佳 SFT checkpoint 出发并提升 max_completion_length 到 384 可恢复 reward variance，但当前 5-step GRPO 在 GSM8K-COT limit=20 上追平而未超过 SFT baseline，为后续扩展到更大规模 RLVR、MATH、HumanEval、MBPP 和云端训练打下工程基础。
+```
