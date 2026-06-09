@@ -1904,4 +1904,165 @@ public game feedback data
 * Agent / Tool Use 工具路由；
 * RESTful API 服务构建；
 * 针对游戏业务场景的 LLM 应用设计。
+## 游戏场景 LLM 应用 Demo：Embedding RAG 增强
+
+在原有游戏场景 LLM 应用 Demo 的基础上，本项目进一步补充了 Embedding RAG 检索能力，用于改进 TF-IDF RAG 在语义检索上的不足。
+
+### 1. Embedding RAG Baseline
+
+新增脚本：
+
+```text
+scripts/57_game_feedback_embedding_rag_demo.py
+```
+
+输出文件：
+
+```text
+outputs/game_app_demo/game_feedback_embedding_rag_results.json
+```
+
+该脚本使用：
+
+```text
+sentence-transformers/all-MiniLM-L6-v2
+```
+
+将 200 条公开游戏玩家反馈编码为语义向量，并通过 cosine similarity 进行 Top-K 相似反馈检索。
+
+Embedding RAG 的流程为：
+
+```text
+公开游戏反馈数据
+→ SentenceTransformer 编码
+→ 语义向量索引
+→ cosine similarity Top-K 检索
+→ 基于检索结果推断 sentiment / topic
+```
+
+### 2. TF-IDF RAG 与 Embedding RAG 对比
+
+新增对比脚本：
+
+```text
+scripts/58_compare_game_feedback_rag_baselines.py
+```
+
+输出文件：
+
+```text
+outputs/game_app_demo/game_feedback_rag_baseline_comparison.json
+```
+
+在 5 个固定 query 上的对比结果：
+
+```text
+TF-IDF RAG topic hint match rate = 0.8000
+Embedding RAG topic hint match rate = 1.0000
+```
+
+关键 badcase：
+
+```text
+q_004: The game crashes after the latest update and some quests are broken.
+
+TF-IDF RAG inferred topic = price
+Embedding RAG inferred topic = updates_support
+```
+
+这个结果说明，Embedding RAG 在 crash、update、broken quests 这类更依赖语义理解的 query 上，比关键词型 TF-IDF RAG 更稳定。
+
+### 3. Embedding RAG API Self-test
+
+新增脚本：
+
+```text
+scripts/59_game_app_embedding_rag_api_self_test.py
+```
+
+输出文件：
+
+```text
+outputs/game_app_demo/game_app_embedding_rag_api_self_test_results.json
+```
+
+该脚本用 API 风格的输入输出格式验证 Embedding RAG 检索能力：
+
+```text
+输入 query
+→ Embedding 检索
+→ 返回 Top-K evidence
+→ 输出 JSON 结果
+```
+
+self-test 中 3 个请求的 top1 topic 分别为：
+
+```text
+crash / update query → updates_support
+lag / FPS query → performance
+price / sale query → price
+```
+
+### 4. Embedding RAG FastAPI Service
+
+新增服务脚本：
+
+```text
+scripts/60_game_app_fastapi_embedding_service.py
+```
+
+self-test 输出文件：
+
+```text
+outputs/game_app_demo/game_app_fastapi_embedding_self_test_results.json
+```
+
+新增 API：
+
+```text
+GET  /health
+POST /retrieve_feedback_embedding
+```
+
+self-test 结果：
+
+```text
+health_status = 200
+crash_update_status = 200
+lag_fps_status = 200
+price_status = 200
+
+crash_update_top1_topic = updates_support
+lag_fps_top1_topic = performance
+price_top1_topic = price
+```
+
+这一步说明，项目已经从离线 Embedding RAG 检索扩展到可服务化调用的 RESTful API。
+
+### 5. 当前增强版应用链路
+
+当前游戏场景 LLM 应用分支已经形成如下链路：
+
+```text
+公开游戏反馈数据
+→ rule baseline
+→ Prompt v1
+→ Prompt v2
+→ 三方 baseline 对比
+→ TF-IDF RAG
+→ Embedding RAG
+→ TF-IDF RAG vs Embedding RAG 对比
+→ Agent Tool Router
+→ FastAPI service
+→ Embedding RAG FastAPI service
+```
+
+这个增强分支进一步补充了岗位相关能力：
+
+```text
+Embedding-based Retrieval
+RAG baseline comparison
+RESTful API service
+LLM application in game feedback analysis
+```
 
