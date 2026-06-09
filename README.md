@@ -1594,4 +1594,314 @@ batch_size = 1
 基于 Qwen2.5-1.5B-Instruct 构建评估驱动的数学推理对齐实验框架，完成 baseline、LoRA SFT、DPO、GRPO/RLVR 多阶段后训练闭环；接入 lm-evaluation-harness，支持 GSM8K-COT 评估、LoRA adapter 评估、样本输出分析、错误类型统计、reasoning 错误模式归因和结果汇总；在本地 CPU 环境下完成 debug、small、targeted small_v2、format-constrained small_v2、prompt-level format eval 与 reward-based format optimization 多级实验验证；通过 targeted 数据将 GSM8K-COT small 评估的 flexible-extract 从 0.4500 提升到 0.6000；进一步通过样本级对比发现 targeted small_v2 修复了 3 道 small 错题且未造成回退，而直接强制格式改写破坏了 6 道原本答对的题；设计 final-answer correctness/format/extractability 组合 reward 并接入 TRL GRPOTrainer，验证从 SFT/DPO checkpoint 出发的 reward-based format optimization 全流程；发现从最佳 SFT checkpoint 出发并提升 max_completion_length 到 384 可恢复 reward variance，但当前 5-step GRPO 在 GSM8K-COT limit=20 上追平而未超过 SFT baseline，为后续扩展到更大规模 RLVR、MATH、HumanEval、MBPP 和云端训练打下工程基础。
 ```
 
+## 游戏场景 LLM 应用 Demo
+
+除了数学推理和代码推理对齐实验之外，本项目还补充了一个面向游戏业务场景的轻量级 LLM 应用 Demo。这个分支主要用于展示 Prompt Engineering、玩家反馈分析、RAG 检索、Agent Tool Router 和 RESTful API 服务化能力。
+
+这个分支的目标不是继续做大模型训练，而是把前面已经积累的 LLM 能力落到一个更贴近实际岗位的应用场景中。
+
+### 1. 应用背景
+
+游戏公司通常需要处理大量玩家反馈，例如社区评论、论坛帖子、商店评论和客服反馈。常见需求包括：
+
+* 判断玩家反馈的情感倾向；
+* 识别玩家反馈属于性能、Bug、玩法、剧情、画面、价格、联机等哪一类问题；
+* 检索历史上相似的玩家反馈；
+* 根据用户请求自动选择不同工具；
+* 将反馈分析能力包装成 API 服务，供其他系统调用。
+
+因此，本项目在原有 reasoning alignment 主线之外，新增了一个游戏玩家反馈分析应用分支。
+
+### 2. 数据来源
+
+游戏反馈 Demo 使用 Hugging Face 上的公开数据集：
+
+```text
+emiemimi/video-game-sentiment-dataset
+```
+
+数据准备脚本：
+
+```text
+scripts/48_prepare_public_game_feedback_data.py
+```
+
+本地处理后的 200 条样本保存到：
+
+```text
+data/raw/game_feedback_public_hf_200.jsonl
+```
+
+需要说明的是，该公开数据集使用了 LLM 辅助标注，因此标签可能存在噪声，不能完全等同于人工精标数据。本项目将其作为弱监督参考标签，用于构建应用 demo 和 baseline 对比。
+
+### 3. 规则版 Baseline
+
+首先实现了一个基于关键词规则的玩家反馈分类 baseline：
+
+```text
+scripts/49_analyze_public_game_feedback_baseline.py
+```
+
+输出文件：
+
+```text
+outputs/game_app_demo/public_game_feedback_rule_baseline_predictions.jsonl
+outputs/game_app_demo/public_game_feedback_rule_baseline_badcases.jsonl
+outputs/game_app_demo/public_game_feedback_rule_baseline_summary.json
+```
+
+200 条样本上的结果：
+
+```text
+sentiment_acc = 0.7300
+topic_acc = 0.3550
+badcase_count = 146
+```
+
+这个结果说明，简单关键词规则对情感分类有一定效果，但对 topic 分类能力较弱，尤其容易把复杂玩家反馈误分到错误类别。
+
+### 4. Prompt-based LLM Baseline
+
+随后实现了一个基于 Qwen2.5-1.5B-Instruct 的 Prompt 分类 baseline：
+
+```text
+scripts/50_prompt_classify_game_feedback.py
+```
+
+输出文件：
+
+```text
+outputs/game_app_demo/public_game_feedback_prompt_llm_predictions.jsonl
+outputs/game_app_demo/public_game_feedback_prompt_llm_summary.json
+```
+
+在 10 条小样本测试集上的结果：
+
+```text
+sentiment_acc = 0.5000
+topic_acc = 0.5000
+parse_rate = 0.9000
+```
+
+这个版本说明，直接写一个简单 prompt 虽然能调用 LLM 完成结构化分类，但 JSON 解析稳定性和 topic 分类效果仍然不够好。
+
+### 5. Prompt v2 优化版
+
+基于 Prompt v1 的 badcase，进一步实现了 Prompt v2：
+
+```text
+scripts/52_prompt_classify_game_feedback_v2.py
+```
+
+Prompt v2 加入了：
+
+* 明确的 sentiment 标签定义；
+* 明确的 topic 标签定义；
+* 更严格的 JSON 输出要求；
+* “不要过度推断情绪”的提示约束。
+
+输出文件：
+
+```text
+outputs/game_app_demo/public_game_feedback_prompt_llm_v2_predictions.jsonl
+outputs/game_app_demo/public_game_feedback_prompt_llm_v2_summary.json
+```
+
+在同一批 10 条样本上的结果：
+
+```text
+sentiment_acc = 0.5000
+topic_acc = 0.8000
+parse_rate = 1.0000
+```
+
+相比 Prompt v1，Prompt v2 明显提升了 topic 分类准确率和 JSON 解析稳定性。
+
+### 6. 三方 Baseline 对比
+
+为了公平比较不同方法，在同一批样本上对比了：
+
+```text
+rule baseline
+prompt v1 baseline
+prompt v2 baseline
+```
+
+对比脚本：
+
+```text
+scripts/53_compare_game_feedback_all_baselines.py
+```
+
+输出文件：
+
+```text
+outputs/game_app_demo/public_game_feedback_all_baselines_comparison.json
+```
+
+共同 10 条样本上的对比结果：
+
+```text
+rule_sentiment_acc = 0.9000
+rule_topic_acc = 0.4000
+
+prompt_v1_sentiment_acc = 0.5000
+prompt_v1_topic_acc = 0.5000
+prompt_v1_parse_rate = 0.9000
+
+prompt_v2_sentiment_acc = 0.5000
+prompt_v2_topic_acc = 0.8000
+prompt_v2_parse_rate = 1.0000
+```
+
+阶段性结论：
+
+```text
+Prompt v2 在 topic 分类和结构化输出稳定性上明显优于 Prompt v1；
+规则版 sentiment 分类在小样本上仍然更强；
+这说明不同任务可以采用不同策略，后续可以将 rule-based sentiment 与 LLM-based topic classification 组合成 hybrid pipeline。
+```
+
+### 7. TF-IDF RAG 检索 Baseline
+
+为了补充 RAG 能力，项目实现了一个轻量级 TF-IDF 检索 baseline：
+
+```text
+scripts/54_game_feedback_tfidf_rag_demo.py
+```
+
+输出文件：
+
+```text
+outputs/game_app_demo/game_feedback_tfidf_rag_results.json
+```
+
+该脚本基于 200 条公开游戏反馈构建 TF-IDF 索引，对输入 query 召回 Top-K 相似历史评论，并根据检索结果推断 sentiment 和 topic。
+
+这个 RAG baseline 的流程是：
+
+```text
+公开游戏反馈数据
+→ TF-IDF 索引
+→ Top-K 相似反馈检索
+→ 检索证据返回
+→ 基于近邻样本推断 sentiment / topic
+```
+
+实验中，TF-IDF 对 performance、price、story、graphics 等 query 有一定效果，但对语义更复杂的 bug / crash / update 类 query 仍然不稳定。这说明后续可以继续扩展 embedding-based retrieval。
+
+### 8. Agent Tool Router Demo
+
+项目进一步实现了一个轻量级 Agent Tool Router：
+
+```text
+scripts/55_game_app_tool_router_demo.py
+```
+
+输出文件：
+
+```text
+outputs/game_app_demo/game_app_tool_router_results.json
+```
+
+当前 Tool Router 支持两个工具：
+
+```text
+feedback_classification
+feedback_retrieval
+```
+
+它可以根据用户输入自动选择：
+
+* 如果用户想“分类这个评论”，就调用 feedback_classification；
+* 如果用户想“找相似反馈”，就调用 feedback_retrieval。
+
+这个 demo 形成了一个最小 Agent / Tool Use 工作流：
+
+```text
+用户请求
+→ 意图判断
+→ 工具选择
+→ 调用分类工具或检索工具
+→ 返回结构化结果
+```
+
+### 9. FastAPI 服务化 Demo
+
+为了展示 API 服务构建能力，项目将游戏反馈分析能力包装成 FastAPI 服务：
+
+```text
+scripts/56_game_app_fastapi_service.py
+```
+
+self-test 输出文件：
+
+```text
+outputs/game_app_demo/game_app_fastapi_self_test_results.json
+```
+
+当前 API 包含 4 个接口：
+
+```text
+GET  /health
+POST /classify_feedback
+POST /retrieve_feedback
+POST /route
+```
+
+self-test 结果：
+
+```text
+health_status = 200
+classify_status = 200
+retrieve_status = 200
+route_status = 200
+```
+
+这说明该游戏反馈分析 pipeline 不仅可以作为离线脚本运行，也可以通过 RESTful API 对外提供服务。
+
+### 10. 稳定版本 Tag
+
+游戏场景 LLM 应用 Demo 当前稳定版本 tag：
+
+```text
+local-game-app-demo-complete
+```
+
+该 tag 对应的阶段性完成状态包括：
+
+```text
+公开游戏反馈数据
+→ 规则版 baseline
+→ Prompt-based LLM baseline
+→ Prompt v2 优化
+→ 三方 baseline 对比
+→ TF-IDF RAG 检索
+→ Agent Tool Router
+→ FastAPI 服务化 API
+```
+
+### 11. 当前游戏应用分支总结
+
+该分支展示了一个轻量但完整的 LLM 应用落地流程：
+
+```text
+public game feedback data
+→ rule baseline
+→ prompt-based LLM classification
+→ prompt optimization
+→ baseline comparison
+→ RAG retrieval
+→ Agent Tool Router
+→ FastAPI service
+```
+
+这个分支与 LLM 应用落地岗位高度相关，能够体现以下能力：
+
+* Prompt Engineering；
+* 玩家反馈情感分析与话题分类；
+* RAG 检索系统 baseline；
+* Agent / Tool Use 工具路由；
+* RESTful API 服务构建；
+* 针对游戏业务场景的 LLM 应用设计。
 
