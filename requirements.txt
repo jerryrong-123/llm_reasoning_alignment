@@ -10,4 +10,4 @@ tqdm
 numpy
 pandas
 scikit-learn
-matplotlib
+matplotlibevalplus==0.3.1
