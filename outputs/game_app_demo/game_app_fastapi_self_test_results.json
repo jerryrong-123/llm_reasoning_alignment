@@ -1,0 +1,71 @@
+{
+  "health": {
+    "status": "ok",
+    "sample_count": 200,
+    "tools": [
+      "feedback_classification",
+      "feedback_retrieval"
+    ]
+  },
+  "classify_feedback": {
+    "tool": "feedback_classification",
+    "input": "The game crashes after the latest patch and some quests are broken.",
+    "pred_sentiment": "negative",
+    "pred_topic": "bugs"
+  },
+  "retrieve_feedback": {
+    "tool": "feedback_retrieval",
+    "query": "The game keeps lagging and FPS drops during online matches.",
+    "top_k": 3,
+    "retrieved": [
+      {
+        "score": 0.2361,
+        "id": "public_game_feedback_0023",
+        "text": "The biggest performance issue in DD2 was in cities. I have a 3060 and the open world was surprisingly good fps wise. Now in Wilds, my fps is between 35-50 fps without mention the game looks way blurier than DD2",
+        "expected_sentiment": "mixed",
+        "expected_topic": "performance"
+      },
+      {
+        "score": 0.2324,
+        "id": "public_game_feedback_0024",
+        "text": "Its significantly worse than in world at least it was during the beta for me.",
+        "expected_sentiment": "negative",
+        "expected_topic": "other"
+      },
+      {
+        "score": 0.1737,
+        "id": "public_game_feedback_0102",
+        "text": "Is there any information available on improving the absolutely horrible online shop? Or nintendo online functionality? Native voice chat, messaging or even streaming games?",
+        "expected_sentiment": "negative",
+        "expected_topic": "multiplayer"
+      }
+    ]
+  },
+  "route": {
+    "selected_tool": "feedback_retrieval",
+    "input": "帮我找相似反馈：the game has lag and FPS drops.",
+    "result": [
+      {
+        "score": 0.3503,
+        "id": "public_game_feedback_0023",
+        "text": "The biggest performance issue in DD2 was in cities. I have a 3060 and the open world was surprisingly good fps wise. Now in Wilds, my fps is between 35-50 fps without mention the game looks way blurier than DD2",
+        "expected_sentiment": "mixed",
+        "expected_topic": "performance"
+      },
+      {
+        "score": 0.2912,
+        "id": "public_game_feedback_0101",
+        "text": "Tbh, people aren’t that great at actually setting up games and knowing what they are looking at. Cyberpunk by default has mouse acceleration and smoothing on. That alone makes the game feel laggy however turning it off is like night and day regarding responsiveness. So, does Frame Gen make noticeable input lag? Yes and no. It really depends on what the base frames are. If you are at 60fps in Cyberpunk and you enable FG, it will actually make 45 real frames and FG up to 90ish. It feels extremely shitty because you have the input latency of 45fps but perceiving 90fps. I mean, it’s more sluggish than RDR2’s animations. But, if you have 120fps and then enable FG you’ll barely feel the difference. Input lag and FG is better viewed from a “what percentage of latency did it increase” rather than “how many ms did latency increase.” In other words, you’re unlikely to feel a 5% difference but you will definitely feel a 20% difference.",
+        "expected_sentiment": "mixed",
+        "expected_topic": "performance"
+      },
+      {
+        "score": 0.2308,
+        "id": "public_game_feedback_0010",
+        "text": "But the technique used for this frame gen is new so you have no point of refrence. Not even mentioning the sheer fact that this massive lag is only apparent if you were natively running at low fps. There is literally no situation where turning dlss framegen will be worse than not turning it on",
+        "expected_sentiment": "negative",
+        "expected_topic": "performance"
+      }
+    ]
+  }
+}
