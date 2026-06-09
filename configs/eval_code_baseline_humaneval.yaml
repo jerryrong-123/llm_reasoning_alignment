@@ -1,0 +1,15 @@
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+dataset_candidates:
+  - openai/openai_humaneval
+  - openai_humaneval
+split: test
+
+limit: 5
+device: cpu
+dtype: float32
+apply_chat_template: true
+max_new_tokens: 256
+
+safe_generate_only: true
+execute_generated_code: false
+output_name: code_baseline_qwen25_15b_humaneval_limit5_safe_samples
