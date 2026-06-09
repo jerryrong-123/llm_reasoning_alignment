@@ -1,0 +1,102 @@
+{
+  "comparison_type": "tfidf_rag_vs_embedding_rag",
+  "common_query_count": 5,
+  "tfidf_topic_hint_match_count": 4,
+  "embedding_topic_hint_match_count": 5,
+  "tfidf_topic_hint_match_rate": 0.8,
+  "embedding_topic_hint_match_rate": 1.0,
+  "notes": [
+    "The topic hint match is a lightweight manual proxy for whether the retrieved baseline inferred a reasonable topic for each demo query.",
+    "Embedding RAG is expected to be more robust for semantic queries than keyword-based TF-IDF.",
+    "The public dataset labels may contain noise because the dataset uses LLM-assisted annotation."
+  ],
+  "examples": [
+    {
+      "query_id": "q_001",
+      "query": "The game keeps lagging during online matches and the FPS drops badly in team fights.",
+      "expected_topic_hint": [
+        "performance"
+      ],
+      "tfidf_inferred_sentiment": "mixed",
+      "tfidf_inferred_topic": "performance",
+      "tfidf_topic_hint_match": true,
+      "embedding_inferred_sentiment": "mixed",
+      "embedding_inferred_topic": "performance",
+      "embedding_topic_hint_match": true,
+      "tfidf_top1_id": "public_game_feedback_0023",
+      "tfidf_top1_topic": "performance",
+      "embedding_top1_id": "public_game_feedback_0101",
+      "embedding_top1_topic": "performance"
+    },
+    {
+      "query_id": "q_002",
+      "query": "I want to buy this game on sale, but I am not sure whether it is worth the money.",
+      "expected_topic_hint": [
+        "price"
+      ],
+      "tfidf_inferred_sentiment": "positive",
+      "tfidf_inferred_topic": "price",
+      "tfidf_topic_hint_match": true,
+      "embedding_inferred_sentiment": "negative",
+      "embedding_inferred_topic": "price",
+      "embedding_topic_hint_match": true,
+      "tfidf_top1_id": "public_game_feedback_0132",
+      "tfidf_top1_topic": "price",
+      "embedding_top1_id": "public_game_feedback_0059",
+      "embedding_top1_topic": "price"
+    },
+    {
+      "query_id": "q_003",
+      "query": "The story is interesting, but the combat and boss fights feel repetitive.",
+      "expected_topic_hint": [
+        "gameplay",
+        "story"
+      ],
+      "tfidf_inferred_sentiment": "mixed",
+      "tfidf_inferred_topic": "story",
+      "tfidf_topic_hint_match": true,
+      "embedding_inferred_sentiment": "mixed",
+      "embedding_inferred_topic": "story",
+      "embedding_topic_hint_match": true,
+      "tfidf_top1_id": "public_game_feedback_0032",
+      "tfidf_top1_topic": "story",
+      "embedding_top1_id": "public_game_feedback_0060",
+      "embedding_top1_topic": "graphics"
+    },
+    {
+      "query_id": "q_004",
+      "query": "The game crashes after the latest update and some quests are broken.",
+      "expected_topic_hint": [
+        "bugs",
+        "updates_support"
+      ],
+      "tfidf_inferred_sentiment": "positive",
+      "tfidf_inferred_topic": "price",
+      "tfidf_topic_hint_match": false,
+      "embedding_inferred_sentiment": "negative",
+      "embedding_inferred_topic": "updates_support",
+      "embedding_topic_hint_match": true,
+      "tfidf_top1_id": "public_game_feedback_0137",
+      "tfidf_top1_topic": "bugs",
+      "embedding_top1_id": "public_game_feedback_0121",
+      "embedding_top1_topic": "updates_support"
+    },
+    {
+      "query_id": "q_005",
+      "query": "The graphics look beautiful and the animation quality is much better than before.",
+      "expected_topic_hint": [
+        "graphics"
+      ],
+      "tfidf_inferred_sentiment": "positive",
+      "tfidf_inferred_topic": "graphics",
+      "tfidf_topic_hint_match": true,
+      "embedding_inferred_sentiment": "mixed",
+      "embedding_inferred_topic": "graphics",
+      "embedding_topic_hint_match": true,
+      "tfidf_top1_id": "public_game_feedback_0075",
+      "tfidf_top1_topic": "graphics",
+      "embedding_top1_id": "public_game_feedback_0060",
+      "embedding_top1_topic": "graphics"
+    }
+  ]
+}
