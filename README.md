@@ -2065,4 +2065,99 @@ RAG baseline comparison
 RESTful API service
 LLM application in game feedback analysis
 ```
+## 游戏场景 LLM 应用 Demo：LangChain RAG Chain 增强
+
+在 Embedding RAG 和 FastAPI 服务化基础上，本项目进一步补充了 LangChain RAG Chain Demo，用于体现 LangChain 在 LLM 应用开发中的编排能力。
+
+### 1. LangChain RAG Demo
+
+新增脚本：
+
+```text
+scripts/61_game_app_langchain_rag_demo.py
+```
+
+输出文件：
+
+```text
+outputs/game_app_demo/game_app_langchain_rag_demo_results.json
+```
+
+该脚本使用 LangChain 的核心组件包装已有 Embedding RAG 检索流程：
+
+```text
+langchain_core.documents.Document
+langchain_core.runnables.RunnableLambda
+```
+
+整体链路为：
+
+```text
+公开游戏反馈数据
+→ LangChain Document 封装
+→ SentenceTransformer 向量编码
+→ RunnableLambda 检索链
+→ RunnableLambda 结果聚合链
+→ 输出 LangChain RAG Chain 结果
+```
+
+### 2. LangChain 组件使用方式
+
+本 Demo 没有调用外部 LLM API，而是把已有的本地 Embedding Retrieval 流程包装为 LangChain 风格链路：
+
+```text
+Retriever Runnable
+→ Evidence Top-K
+→ Topic / Sentiment Aggregation Runnable
+→ Final JSON Output
+```
+
+这样可以避免依赖外部 API Key，同时证明项目具备 LangChain 工具链的基础使用能力。
+
+### 3. Self-test 结果
+
+LangChain RAG Demo 在 3 个游戏反馈 query 上完成测试：
+
+```text
+lc_rag_q_001: crashes / update / broken quests → updates_support
+lc_rag_q_002: lag / FPS drops → performance
+lc_rag_q_003: sale / worth money → price
+```
+
+运行结果：
+
+```text
+sample_count = 200
+document_count = 200
+query_count = 3
+```
+
+### 4. 项目能力补充
+
+加入 LangChain 后，当前游戏场景 LLM 应用分支进一步覆盖：
+
+```text
+Prompt Engineering
+Rule-based baseline
+Prompt v1 / Prompt v2 comparison
+TF-IDF RAG
+Embedding RAG
+TF-IDF vs Embedding RAG comparison
+LangChain RAG Chain
+Agent Tool Router
+FastAPI service
+Embedding RAG FastAPI service
+```
+
+这使项目更贴近 LLM 应用岗位中常见的工具链要求：
+
+```text
+LangChain
+Transformers
+Embedding Retrieval
+RAG
+Tool / Chain Composition
+RESTful API
+Evaluation and Error Analysis
+```
 
