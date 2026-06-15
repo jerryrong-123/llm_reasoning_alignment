@@ -1,0 +1,98 @@
+{
+  "sample_file": "outputs/eval/sft_lora_v5_eval_style_completion_only_qwen25_15b_gsm8k_cot_limit100/outputs__checkpoints__sft_lora_v5_eval_style_completion_only/samples_gsm8k_cot_2026-06-15T19-25-00.509377.jsonl",
+  "total": 200,
+  "official_flexible_correct": 69,
+  "official_flexible_accuracy": 0.345,
+  "official_invalid_count": 91,
+  "normalized_extracted_count": 200,
+  "normalized_extract_rate": 1.0,
+  "normalized_correct": 124,
+  "normalized_accuracy": 0.62,
+  "newly_recovered_correct": 56,
+  "official_correct_to_normalized_wrong": 1,
+  "improved_examples": [
+    {
+      "doc_id": 4,
+      "target": "20",
+      "normalized_pred": "20",
+      "filtered_resps": [
+        "[invalid]"
+      ],
+      "raw_response_head": "Wendi feeds each chicken 3 cups of feed per day. With 20 chickens, she needs 20 * 3 = <<20*3=60>>60 cups of feed daily.\n\nIn the morning, she gives out 15 cups, and in the afternoon, she gives out 25 cups. That means she has already given out 15 + 25 = <<15+25=40>>40 cups of feed.\n\nSo, she still needs to give out 60 - 40 = <<60-40=20>>20 cups of feed in the final meal of the day."
+    },
+    {
+      "doc_id": 6,
+      "target": "260",
+      "normalized_pred": "260",
+      "filtered_resps": [
+        "[invalid]"
+      ],
+      "raw_response_head": "First, we find out how many sheep Charleston has. Since Charleston has 4 times as many sheep as Seattle, and Seattle has 20 sheep, we calculate:\n\n\\[ \\text{Charleston's sheep} = 4 \\times 20 = 80 \\]\n\nNext, we determine how many sheep Toulouse has. Since Toulouse has twice as many sheep as Charleston, we calculate:\n\n\\[ \\text{Toulouse's sheep} = 2 \\times 80 = 160 \\]\n\nNow, we add up all the sheep:\n\n\\[ \\text{Total sheep} = \\text{Toulouse's sheep} + \\text{Charleston's sheep} + \\text{Seattle's sheep} \\]\n\\[ \\text{Total sheep} = 160 + 80 + 20 \\]\n\\[ \\text{Total sheep} = 260 \\]\n\nSo, Toulouse, Charleston, and Seattle have a total of 260 sheep together."
+    },
+    {
+      "doc_id": 9,
+      "target": "460",
+      "normalized_pred": "460",
+      "filtered_resps": [
+        "[invalid]"
+      ],
+      "raw_response_head": "Eliza earns $10/hour for the first 40 hours, so for those hours, she earns 40 * $10 = $400.\n\nFor the remaining 5 hours (overtime), she earns 1.2 times her regular hourly rate, which is 1.2 * $10 = $12 per hour.\n\nSo for the overtime hours, she earns 5 * $12 = $60.\n\nTherefore, her total earnings for the week are $400 (regular hours) + $60 (overtime) = $460."
+    },
+    {
+      "doc_id": 10,
+      "target": "366",
+      "normalized_pred": "366",
+      "filtered_resps": [
+        "[invalid]"
+      ],
+      "raw_response_head": "In the second month, the program had 60 * 3 = <<60*3=180>>180 downloads.\nThen it had 180 * .7 = <<180*.7=126>>126 downloads.\n\nSo in total, the program had 60 + 180 + 126 = <<60+180+126=366>>366 downloads over the three months."
+    },
+    {
+      "doc_id": 11,
+      "target": "694",
+      "normalized_pred": "694",
+      "filtered_resps": [
+        "[invalid]"
+      ],
+      "raw_response_head": "First, let's calculate the cost of the donuts:\n- Donuts cost $68 per dozen.\n- Toula bought 3 dozens.\n\nTotal cost for donuts = \\( 3 \\times \\$68 \\) = **\\$204**\n\nNext, let's calculate the cost of the mini cupcakes:\n- Mini cupcakes cost $80 per dozen.\n- Toula bought 2 dozens.\n\nTotal cost for mini cupcakes = \\( 2 \\times \\$80 \\) = **\\$160**\n\nFinally, let's calculate the cost of the mini cheesecakes:\n- Mini cheesecakes cost $55 per dozen.\n- Toula bought 6 dozens.\n\nTotal cost for mini cheesecakes = \\( 6 \\times \\$55 \\) = **\\$330**\n\nNow, we add up all the costs:\n\nTotal cost = Cost of donuts + Cost of mini cupcakes + Cost of mini cheesecakes\n\nTotal cost = **\\$204** + **\\$160** + **\\$330** = **\\$694**\n\nSo, the total cost for all the pastries is **$694**."
+    },
+    {
+      "doc_id": 14,
+      "target": "60",
+      "normalized_pred": "60",
+      "filtered_resps": [
+        "[invalid]"
+      ],
+      "raw_response_head": "First, calculate the number of students who enrolled in contemporary dance:\n\\[ 20\\% \\text{ of } 20 = 0.20 \\times 20 = 4 \\]\n\nNext, subtract those who enrolled in contemporary dance from the total to find out how many remain:\n\\[ 20 - 4 = 16 \\]\n\nThen, calculate the number of students who enrolled in jazz dance from the remaining:\n\\[ 25\\% \\text{ of } 16 = 0.25 \\times 16 = 4 \\]\n\nFinally, subtract those who enrolled in jazz dance from the remaining to find out how many enrolled in hip-hop dance:\n\\[ 16 - 4 = 12 \\]\n\nTo find the percentage of students who enrolled in hip-hop dance, divide the number of students who enrolled in hip-hop dance by the total number of students and multiply by 100:\n\\[ \\frac{12}{20} \\times 100 = 60\\% \\]\n\nSo, 60% of the entire students enrolled in hip-hop dance."
+    },
+    {
+      "doc_id": 17,
+      "target": "57500",
+      "normalized_pred": "57500",
+      "filtered_resps": [
+        "[invalid]"
+      ],
+      "raw_response_head": "First, calculate Jill's weekly earnings from teaching:\n\\[ \\text{Weekly earning from teaching} = \\$20 \\times 35 \\text{ hours/week} = \\$700 \\]\n\nNext, calculate Jill's weekly earnings from coaching:\n\\[ \\text{Weekly earning from coaching} = \\$30 \\times 15 \\text{ hours/week} = \\$450 \\]\n\nNow add these amounts together to find her total weekly earnings:\n\\[ \\text{Total weekly earnings} = \\$700 + \\$450 = \\$1150 \\]\n\nFinally, multiply her total weekly earnings by the number of weeks she teaches in a year to get her annual salary:\n\\[ \\text{Annual salary} = \\$1150 \\times 50 \\text{ weeks/year} = \\$57,500 \\]\n\nSo, Jill's annual salary is $57,500."
+    },
+    {
+      "doc_id": 22,
+      "target": "7",
+      "normalized_pred": "7",
+      "filtered_resps": [
+        "[invalid]"
+      ],
+      "raw_response_head": "Billy's first 3 customers buy 3 DVDs, so that's 3 DVDs sold.\nHis next 2 customers buy 2 DVDs each, which totals 2 * 2 = <<2*2=4>>4 DVDs sold.\nHis last 3 customers don't buy any DVDs.\n\nAdding it all up:\n3 (first group) + 4 (second group) + 0 (third group) = <<3+4+0=7>>7 DVDs sold.\n\nSo, Billy sold 7 DVDs on Tuesday."
+    }
+  ],
+  "failed_examples": [
+    {
+      "doc_id": 58,
+      "target": "57",
+      "normalized_pred": "53",
+      "filtered_resps": [
+        "57"
+      ],
+      "raw_response_head": "The delivery fee was 25% of the original bill, which is 25/100 * $40.00 = $<<25*40=10>>10.\nSo the total cost before adding the tip was $40.00 + $10.00 + $3.00 = $<<40+10+3=53>>53.\nAfter adding the tip, the final price of Stephen's groceries was $53.00 + $4.00 = <<53+4=57>><<53+4=57>>."
+    }
+  ]
+}

@@ -179,7 +179,6 @@ def main():
         args=training_args,
         train_dataset=tokenized_dataset,
         data_collator=collator,
-        tokenizer=tokenizer,
     )
 
     print("\n====== 开始训练 SFT v5 completion-only ======")
