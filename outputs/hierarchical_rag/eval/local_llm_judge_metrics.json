@@ -1,0 +1,37 @@
+{
+  "method": "local_llm_as_a_judge",
+  "judge_model": "D:\\llm_reasoning_alignment_server_restored\\models\\qwen2.5-0.5b-instruct",
+  "judge_model_note": "Lightweight local judge for low-cost CI-style evaluation.",
+  "device": "cpu",
+  "limit": null,
+  "top5": {
+    "top_k_name": "top5",
+    "query_count": 50,
+    "llm_judge_answer_correctness": 0.1,
+    "llm_judge_groundedness": 0.1,
+    "llm_judge_context_relevance": 5.0,
+    "llm_judge_answer_quality": 5.0,
+    "exact_match": 0.12,
+    "contains_match": 0.5,
+    "avg_context_recall": 0.86,
+    "error_type_counts": {
+      "wrong_reasoning": 45,
+      "unknown": 5
+    }
+  },
+  "top10": {
+    "top_k_name": "top10",
+    "query_count": 50,
+    "llm_judge_answer_correctness": 0.12,
+    "llm_judge_groundedness": 0.12,
+    "llm_judge_context_relevance": 5.0,
+    "llm_judge_answer_quality": 5.0,
+    "exact_match": 0.14,
+    "contains_match": 0.46,
+    "avg_context_recall": 0.9466666666666667,
+    "error_type_counts": {
+      "wrong_reasoning": 44,
+      "unknown": 6
+    }
+  }
+}

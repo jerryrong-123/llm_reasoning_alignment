@@ -1,0 +1,11 @@
+base_model: /root/autodl-tmp/hf_cache/hub/models--Qwen--Qwen2.5-1.5B-Instruct/snapshots/989aa7980e4cf806f80c7fef2b1adb7bc71aa306
+peft_path: outputs/checkpoints/grpo_lora_grpo_v11_quick50_lr11e7_beta07/checkpoint-25
+
+tasks: gsm8k_cot
+limit: 100
+batch_size: 1
+device: cuda
+dtype: bfloat16
+apply_chat_template: true
+
+output_name: grpo_v11_quick50_lr11e7_beta07_checkpoint-25_qwen25_15b_gsm8k_cot_limit100

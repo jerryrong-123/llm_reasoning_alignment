@@ -1,0 +1,17 @@
+{
+  "method": "final_rag_context_pack",
+  "retriever": "best_hybrid_rrf_plus_bge_rerank",
+  "query_count": 50,
+  "source_rerank_recall@10": 0.9466666666666667,
+  "source_rerank_mrr@10": 0.964,
+  "context_hit@5": 1.0,
+  "context_recall@5": 0.86,
+  "context_precision@5": 0.38,
+  "context_mrr@5": 0.964,
+  "avg_context_count@5": 5,
+  "context_hit@10": 1.0,
+  "context_recall@10": 0.9466666666666667,
+  "context_precision@10": 0.21000000000000002,
+  "context_mrr@10": 0.964,
+  "avg_context_count@10": 10
+}

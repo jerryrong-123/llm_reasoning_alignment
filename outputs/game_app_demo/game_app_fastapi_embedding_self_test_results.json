@@ -1,0 +1,108 @@
+{
+  "health": {
+    "status": "ok",
+    "service": "game_app_embedding_rag_api",
+    "sample_count": 200,
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "endpoints": [
+      "/health",
+      "/retrieve_feedback_embedding"
+    ]
+  },
+  "crash_update_query": {
+    "tool": "embedding_feedback_retrieval",
+    "query": "The game crashes after the latest update and some quests are broken.",
+    "top_k": 3,
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "retrieved": [
+      {
+        "score": 0.4206,
+        "id": "public_game_feedback_0121",
+        "text": "Had no idea gameinformer shut down that sucks I had that for years",
+        "expected_sentiment": "negative",
+        "expected_topic": "updates_support",
+        "source_subreddit": "pcgaming"
+      },
+      {
+        "score": 0.4026,
+        "id": "public_game_feedback_0035",
+        "text": "Wasn't this issue fixed in a patch?",
+        "expected_sentiment": "negative",
+        "expected_topic": "updates_support",
+        "source_subreddit": "ps5"
+      },
+      {
+        "score": 0.3766,
+        "id": "public_game_feedback_0170",
+        "text": "I have had to delete this game from my Ps5 console as I have used my gun on a mission and it won’t go back in its holster and now I can’t do anymore missions as it won’t let me I have tried everything to fix it but it is saved and keeps going back to the same thing so frustrating as hell it’s a shame as it was not that bad of game but if anyone has the same problem or knows how to fix it that would be great",
+        "expected_sentiment": "mixed",
+        "expected_topic": "other",
+        "source_subreddit": "ps5"
+      }
+    ]
+  },
+  "lag_fps_query": {
+    "tool": "embedding_feedback_retrieval",
+    "query": "The game keeps lagging and FPS drops during online matches.",
+    "top_k": 3,
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "retrieved": [
+      {
+        "score": 0.4273,
+        "id": "public_game_feedback_0101",
+        "text": "Tbh, people aren’t that great at actually setting up games and knowing what they are looking at. Cyberpunk by default has mouse acceleration and smoothing on. That alone makes the game feel laggy however turning it off is like night and day regarding responsiveness. So, does Frame Gen make noticeable input lag? Yes and no. It really depends on what the base frames are. If you are at 60fps in Cyberpunk and you enable FG, it will actually make 45 real frames and FG up to 90ish. It feels extremely shitty because you have the input latency of 45fps but perceiving 90fps. I mean, it’s more sluggish than RDR2’s animations. But, if you have 120fps and then enable FG you’ll barely feel the difference. Input lag and FG is better viewed from a “what percentage of latency did it increase” rather than “how many ms did latency increase.” In other words, you’re unlikely to feel a 5% difference but you will definitely feel a 20% difference.",
+        "expected_sentiment": "mixed",
+        "expected_topic": "performance",
+        "source_subreddit": "gaming"
+      },
+      {
+        "score": 0.427,
+        "id": "public_game_feedback_0152",
+        "text": "Just give me a 60 fps patch for Bloodborne and RDR2 on PS4/5",
+        "expected_sentiment": "neutral",
+        "expected_topic": "other",
+        "source_subreddit": "videogames"
+      },
+      {
+        "score": 0.4189,
+        "id": "public_game_feedback_0010",
+        "text": "But the technique used for this frame gen is new so you have no point of refrence. Not even mentioning the sheer fact that this massive lag is only apparent if you were natively running at low fps. There is literally no situation where turning dlss framegen will be worse than not turning it on",
+        "expected_sentiment": "negative",
+        "expected_topic": "performance",
+        "source_subreddit": "pcgaming"
+      }
+    ]
+  },
+  "price_query": {
+    "tool": "embedding_feedback_retrieval",
+    "query": "I want to buy this game on sale, but I am not sure whether it is worth the money.",
+    "top_k": 3,
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "retrieved": [
+      {
+        "score": 0.5545,
+        "id": "public_game_feedback_0059",
+        "text": "Then I won't buy it though I wasn't exclusively talking about Monster Hunter. Overall my point though is that I am not paying triple a prices for a game that intentionally forgoes optimisation by crutching on a technology that actively makes the game feel worse when used that way.",
+        "expected_sentiment": "negative",
+        "expected_topic": "price",
+        "source_subreddit": "games"
+      },
+      {
+        "score": 0.4891,
+        "id": "public_game_feedback_0043",
+        "text": "I buy it for the story but my main issues really was the character roster was worse than 9, 10 or 11 and I didn't like the gameplay changes, expecially the cameo (kameo?) thing.",
+        "expected_sentiment": "negative",
+        "expected_topic": "story",
+        "source_subreddit": "games"
+      },
+      {
+        "score": 0.4597,
+        "id": "public_game_feedback_0003",
+        "text": "7/10 game imo, worth finishing if you have the time since it is long as fuck, but the demo is the absolute peak of the game story wise. Gameplay wise there's some really good bosses.",
+        "expected_sentiment": "positive",
+        "expected_topic": "price",
+        "source_subreddit": "games"
+      }
+    ]
+  }
+}

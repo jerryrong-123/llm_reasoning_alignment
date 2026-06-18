@@ -1,0 +1,127 @@
+{
+  "project": "hierarchical_rag_agent_eval",
+  "loaded_files": {
+    "bm25_child": "outputs\\hierarchical_rag\\eval\\bm25_child_metrics.json",
+    "parent_bm25_child_expansion": "outputs\\hierarchical_rag\\eval\\parent_bm25_child_expansion_metrics.json",
+    "embedding_child": "outputs\\hierarchical_rag\\eval\\embedding_child_metrics.json",
+    "hybrid_rrf_default": "outputs\\hierarchical_rag\\eval\\hybrid_rrf_metrics.json",
+    "hybrid_rrf_best": "outputs\\hierarchical_rag\\eval\\hybrid_rrf_best_metrics.json",
+    "bge_rerank_hybrid": "outputs\\hierarchical_rag\\eval\\bge_rerank_hybrid_metrics.json",
+    "final_rag_context_pack": "outputs\\hierarchical_rag\\eval\\final_rag_context_metrics.json",
+    "rag_answer_generation": "outputs\\hierarchical_rag\\eval\\rag_answer_generation_metrics.json",
+    "rag_triad_proxy": "outputs\\hierarchical_rag\\eval\\rag_triad_proxy_metrics.json",
+    "local_llm_judge": "outputs\\hierarchical_rag\\eval\\local_llm_judge_metrics.json"
+  },
+  "retrieval_summary": {
+    "rows": [
+      {
+        "stage": "BM25 child",
+        "hit@10": 0.96,
+        "recall@10": 0.77,
+        "mrr@10": 0.7642222222222222,
+        "note": "Sparse lexical retrieval baseline."
+      },
+      {
+        "stage": "Parent BM25 + child expansion",
+        "hit@10": 1.0,
+        "recall@10": 0.9,
+        "mrr@10": 0.8056904761904762,
+        "note": "Hierarchical parent retrieval followed by child expansion."
+      },
+      {
+        "stage": "BGE embedding child",
+        "hit@10": 1.0,
+        "recall@10": 0.93,
+        "mrr@10": 0.964,
+        "note": "Dense semantic retrieval."
+      },
+      {
+        "stage": "Default Hybrid RRF",
+        "hit@10": 1.0,
+        "recall@10": 0.8666666666666667,
+        "mrr@10": 0.8822222222222222,
+        "note": "Initial weighted RRF fusion."
+      },
+      {
+        "stage": "Best Hybrid RRF",
+        "hit@10": 1.0,
+        "recall@10": 0.9466666666666667,
+        "mrr@10": 0.9123333333333333,
+        "note": "Grid-searched RRF weights."
+      },
+      {
+        "stage": "Best Hybrid RRF + BGE rerank",
+        "hit@10": 1.0,
+        "recall@10": 0.9466666666666667,
+        "mrr@10": 0.964,
+        "note": "Final retrieval pipeline."
+      }
+    ]
+  },
+  "generation_summary": {
+    "context_pack": {
+      "context_hit@5": 1.0,
+      "context_recall@5": 0.86,
+      "context_precision@5": 0.38,
+      "context_mrr@5": 0.964,
+      "context_hit@10": 1.0,
+      "context_recall@10": 0.9466666666666667,
+      "context_precision@10": 0.21000000000000002,
+      "context_mrr@10": 0.964
+    },
+    "answer_generation": {
+      "top5_exact_match": 0.12,
+      "top5_contains_match": 0.5,
+      "top5_avg_context_recall": 0.86,
+      "top10_exact_match": 0.14,
+      "top10_contains_match": 0.46,
+      "top10_avg_context_recall": 0.9466666666666667
+    }
+  },
+  "diagnostic_summary": {
+    "rag_triad_proxy": {
+      "top5_groundedness_proxy": 0.64,
+      "top5_answerability_proxy": 0.86,
+      "top5_soft_triad_pass": 0.34,
+      "top5_error_categories": {
+        "partial_or_format_correct": 19,
+        "exact_correct": 6,
+        "grounded_but_wrong": 11,
+        "retrieval_context_missing_answer": 5,
+        "ungrounded_generation": 9
+      },
+      "top10_groundedness_proxy": 0.78,
+      "top10_answerability_proxy": 0.94,
+      "top10_soft_triad_pass": 0.36,
+      "top10_error_categories": {
+        "grounded_but_wrong": 19,
+        "exact_correct": 7,
+        "partial_or_format_correct": 16,
+        "ungrounded_generation": 6,
+        "retrieval_context_missing_answer": 2
+      }
+    },
+    "local_llm_judge": {
+      "top5_llm_correctness": 0.1,
+      "top5_llm_groundedness": 0.1,
+      "top5_error_types": {
+        "wrong_reasoning": 45,
+        "unknown": 5
+      },
+      "top10_llm_correctness": 0.12,
+      "top10_llm_groundedness": 0.12,
+      "top10_error_types": {
+        "wrong_reasoning": 44,
+        "unknown": 6
+      },
+      "note": "The local 0.5B judge is used as a low-cost evaluation demo and should not be treated as a final authority."
+    }
+  },
+  "final_conclusions": [
+    "Retrieval optimization is effective: BM25 child Recall@10 improves to the final Best Hybrid RRF + BGE rerank Recall@10 of 0.9467.",
+    "Reranking improves evidence ordering: the final retrieval pipeline reaches MRR@10 of 0.9640.",
+    "Final context answerability is high, but answer generation with Qwen2.5-0.5B remains weak, indicating the bottleneck shifts from retrieval to generation.",
+    "Top10 has higher context recall than Top5, but also lower precision and more noise.",
+    "Local LLM-as-a-Judge is useful as a low-cost evaluation framework demo, but the 0.5B judge is not reliable enough for final authority-level evaluation."
+  ]
+}

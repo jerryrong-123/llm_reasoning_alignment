@@ -1,0 +1,14 @@
+{
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "limit": 10,
+  "sample_count": 10,
+  "sentiment_acc": 0.5,
+  "topic_acc": 0.8,
+  "parse_rate": 1.0,
+  "baseline_type": "prompt_based_llm_v2",
+  "notes": [
+    "Prompt v2 adds explicit sentiment and topic definitions.",
+    "The public dataset labels may contain noise because the dataset uses LLM-assisted annotation.",
+    "This result should be compared with rule baseline and prompt v1 baseline on the same samples."
+  ]
+}

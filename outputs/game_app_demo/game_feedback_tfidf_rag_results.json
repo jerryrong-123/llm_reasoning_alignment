@@ -1,0 +1,254 @@
+{
+  "input_path": "D:\\llm_reasoning_alignment\\data\\raw\\game_feedback_public_hf_200.jsonl",
+  "sample_count": 200,
+  "index_type": "tfidf",
+  "top_k": 5,
+  "query_count": 5,
+  "notes": [
+    "This is a lightweight retrieval baseline for game feedback analysis.",
+    "It retrieves similar historical public game comments and infers sentiment/topic from nearest neighbors.",
+    "Next step can replace TF-IDF with embedding retrieval and connect it to an Agent Tool Router."
+  ],
+  "results": [
+    {
+      "query_id": "q_001",
+      "query": "The game keeps lagging during online matches and the FPS drops badly in team fights.",
+      "retrieved_top_k": [
+        {
+          "score": 0.1816,
+          "id": "public_game_feedback_0023",
+          "text": "The biggest performance issue in DD2 was in cities. I have a 3060 and the open world was surprisingly good fps wise. Now in Wilds, my fps is between 35-50 fps without mention the game looks way blurier than DD2",
+          "expected_sentiment": "mixed",
+          "expected_topic": "performance",
+          "source_subreddit": "pcgaming"
+        },
+        {
+          "score": 0.1787,
+          "id": "public_game_feedback_0024",
+          "text": "Its significantly worse than in world at least it was during the beta for me.",
+          "expected_sentiment": "negative",
+          "expected_topic": "other",
+          "source_subreddit": "games"
+        },
+        {
+          "score": 0.1407,
+          "id": "public_game_feedback_0078",
+          "text": "Mario and Luigi Dream team",
+          "expected_sentiment": "neutral",
+          "expected_topic": "other",
+          "source_subreddit": "videogames"
+        },
+        {
+          "score": 0.1345,
+          "id": "public_game_feedback_0154",
+          "text": "I am absolutely garbage at fps games, so when I did play team based pvp fps games, I'd find alternate ways to contribute, but playing a healer, or in TF2, an engineer. I got so good at TF2 engineer that on capture the intelligence maps, the other team had to actually organize to get past just me. No single person could reliably pull it off. Spies couldn't take me down because they couldn't bait me out, and I knew the sound of one unblocking all too well. Their attempts to sap my sentry just ended with them getting whacked with a wrench.",
+          "expected_sentiment": "mixed",
+          "expected_topic": "performance",
+          "source_subreddit": "videogames"
+        },
+        {
+          "score": 0.1335,
+          "id": "public_game_feedback_0102",
+          "text": "Is there any information available on improving the absolutely horrible online shop? Or nintendo online functionality? Native voice chat, messaging or even streaming games?",
+          "expected_sentiment": "negative",
+          "expected_topic": "multiplayer",
+          "source_subreddit": "nintendoswitch"
+        }
+      ],
+      "rag_inferred_sentiment": "mixed",
+      "rag_inferred_topic": "performance"
+    },
+    {
+      "query_id": "q_002",
+      "query": "I want to buy this game on sale, but I am not sure whether it is worth the money.",
+      "retrieved_top_k": [
+        {
+          "score": 0.1696,
+          "id": "public_game_feedback_0132",
+          "text": "As sad as it is, releasing the original without OLED makes the most sense. I definitely would prefer to buy OLED than possibly buy it twice, but they want prices as low as is feasible to make as much money as possible when it releases They want the price point to be perfect and OLED screens aren't that. Since then either they take a hit or it is more expensive than some people will like.",
+          "expected_sentiment": "positive",
+          "expected_topic": "price",
+          "source_subreddit": "nintendoswitch"
+        },
+        {
+          "score": 0.1316,
+          "id": "public_game_feedback_0003",
+          "text": "7/10 game imo, worth finishing if you have the time since it is long as fuck, but the demo is the absolute peak of the game story wise. Gameplay wise there's some really good bosses.",
+          "expected_sentiment": "positive",
+          "expected_topic": "price",
+          "source_subreddit": "games"
+        },
+        {
+          "score": 0.1315,
+          "id": "public_game_feedback_0184",
+          "text": "Indeed I am trying to find my perfect formula to know what to play next, I am not focus on finishing my backlog because I currently have very limited time for gaming",
+          "expected_sentiment": "positive",
+          "expected_topic": "other",
+          "source_subreddit": "steam"
+        },
+        {
+          "score": 0.1295,
+          "id": "public_game_feedback_0054",
+          "text": "I am a new reddit user so I am facing a little problem I don't know how to use with it but I am trying okay I am facing a little problem on creating a new steam account whenever I enter my email id and verified through Gmail after pressing a verification in my Gmail box it redirect me to the app and here is asking me for a family view pin . I don't have because I never created one if you my no https://preview.redd.it/cf12si9fr2ee1.jpeg?width=1220&format=pjpg&auto=webp&s=4c966230da4ad4572e1789db8d1249e31a3157e7",
+          "expected_sentiment": "negative",
+          "expected_topic": "company_reputation",
+          "source_subreddit": "steam"
+        },
+        {
+          "score": 0.1271,
+          "id": "public_game_feedback_0012",
+          "text": "Sure, but Sony is calling the shots here.",
+          "expected_sentiment": "neutral",
+          "expected_topic": "other",
+          "source_subreddit": "gaming"
+        }
+      ],
+      "rag_inferred_sentiment": "positive",
+      "rag_inferred_topic": "price"
+    },
+    {
+      "query_id": "q_003",
+      "query": "The story is interesting, but the combat and boss fights feel repetitive.",
+      "retrieved_top_k": [
+        {
+          "score": 0.2007,
+          "id": "public_game_feedback_0032",
+          "text": "The game is a poor mans Ghost of Tsushima GOT had great story, characters, good combat but repetitive Ubisoft formula. This has ubisoft formula with none of the other redeeming qualities.",
+          "expected_sentiment": "mixed",
+          "expected_topic": "story",
+          "source_subreddit": "ps5"
+        },
+        {
+          "score": 0.1503,
+          "id": "public_game_feedback_0060",
+          "text": "I wasn't a fan of the combat, and I absolutely hated the story. I 100%ed it, minus the new rogue like portion because I was just done with it by that time. I agree that the landscapes did look nice, but it was all so empty. It felt like one of those walking simulators but somehow less interesting to me. I'm glad you enjoyed it, I just thought it was funny that the same game had the opposite effect on us.",
+          "expected_sentiment": "mixed",
+          "expected_topic": "graphics",
+          "source_subreddit": "games"
+        },
+        {
+          "score": 0.1378,
+          "id": "public_game_feedback_0096",
+          "text": "I started **Shadow of the Erdtree**, and about halfway through I realized I wasn’t having any fun with the ridiculously overturned boss fights and tedious amount of die-retry-repeat I was doing. I respec’d into blasphemous blade and have been fire slamming my way through everything. Am I basically cheating? Sure. Do I care? Absolutely not. I don’t think the bosses in this DLC are enjoyable to fight, but maybe I’m just sort of fatigued with the game and want to finish it.",
+          "expected_sentiment": "mixed",
+          "expected_topic": "gameplay",
+          "source_subreddit": "games"
+        },
+        {
+          "score": 0.1076,
+          "id": "public_game_feedback_0030",
+          "text": "Interesting that no one has mentioned LOL?! Is it because of the community on there? It’s still always installed for me and cs 2 at the moment .",
+          "expected_sentiment": "neutral",
+          "expected_topic": "other",
+          "source_subreddit": "gaming"
+        },
+        {
+          "score": 0.1074,
+          "id": "public_game_feedback_0190",
+          "text": "Totem fights were cool and genuinely challenges at different points. I really appreciated them after two decades of disappointing gym leaders. Otherwise yeah, I'm replaying it right now and holy crap, the game stops you every 15 minutes to do some unskippable story beat. I actively avoid the little checkmark flag on the map because I just want to explore.",
+          "expected_sentiment": "mixed",
+          "expected_topic": "story",
+          "source_subreddit": "games"
+        }
+      ],
+      "rag_inferred_sentiment": "mixed",
+      "rag_inferred_topic": "story"
+    },
+    {
+      "query_id": "q_004",
+      "query": "The game crashes after the latest update and some quests are broken.",
+      "retrieved_top_k": [
+        {
+          "score": 0.1466,
+          "id": "public_game_feedback_0137",
+          "text": "My launch switch is on its last legs it overheats and the screen is broken so will probably just put it in hospice in my room",
+          "expected_sentiment": "negative",
+          "expected_topic": "bugs",
+          "source_subreddit": "nintendoswitch"
+        },
+        {
+          "score": 0.1403,
+          "id": "public_game_feedback_0095",
+          "text": "I played the latest one based on word of mouth after also not touching it for 20 years. Still Hollywood cliches but kind of impressed how varied the levels were. The set pieces more than carry the ~15-20 hr campaign and make it fun even if the story is predictable and cliche.",
+          "expected_sentiment": "positive",
+          "expected_topic": "story",
+          "source_subreddit": "gaming"
+        },
+        {
+          "score": 0.0956,
+          "id": "public_game_feedback_0194",
+          "text": "PSOBB still has some active private servers. Still a great game to play!",
+          "expected_sentiment": "positive",
+          "expected_topic": "multiplayer",
+          "source_subreddit": "games"
+        },
+        {
+          "score": 0.0935,
+          "id": "public_game_feedback_0195",
+          "text": "Yall know tens of thousands of people will still order the $180 preorder bundle just cause it'll include some stupid shit like a limited edition map and a 48 hour early access to the game or some shit.",
+          "expected_sentiment": "negative",
+          "expected_topic": "price",
+          "source_subreddit": "videogames"
+        },
+        {
+          "score": 0.0851,
+          "id": "public_game_feedback_0003",
+          "text": "7/10 game imo, worth finishing if you have the time since it is long as fuck, but the demo is the absolute peak of the game story wise. Gameplay wise there's some really good bosses.",
+          "expected_sentiment": "positive",
+          "expected_topic": "price",
+          "source_subreddit": "games"
+        }
+      ],
+      "rag_inferred_sentiment": "positive",
+      "rag_inferred_topic": "price"
+    },
+    {
+      "query_id": "q_005",
+      "query": "The graphics look beautiful and the animation quality is much better than before.",
+      "retrieved_top_k": [
+        {
+          "score": 0.1974,
+          "id": "public_game_feedback_0075",
+          "text": "I've never said it was unpopular. My comment implied that the game is THAT MUCH BETTER than how popular it is. Maybe you should take another look at the image and focus on the RATIO and not the word \"popular\" to understand what I meant, before insulting my comment? :)",
+          "expected_sentiment": "positive",
+          "expected_topic": "graphics",
+          "source_subreddit": "videogames"
+        },
+        {
+          "score": 0.1752,
+          "id": "public_game_feedback_0039",
+          "text": "Easy to say that but not wanting to play because you feel like others guns and classes are all better than yours is no fun, this is why halo is better than cod imo, I say this as some1 whose been playing both for nearly 20 years",
+          "expected_sentiment": "positive",
+          "expected_topic": "gameplay",
+          "source_subreddit": "gaming"
+        },
+        {
+          "score": 0.1047,
+          "id": "public_game_feedback_0156",
+          "text": "Good decision. 6 months later, the recording quality from Steam is still trash. You get 5% sharp edges and 95% blur/smear. It's disgusting, and if somebody sent me files like this to edit, I'd charge them 2\\~4x the cost for the job.",
+          "expected_sentiment": "mixed",
+          "expected_topic": "price",
+          "source_subreddit": "steam"
+        },
+        {
+          "score": 0.0861,
+          "id": "public_game_feedback_0147",
+          "text": "I remember before the Switch releasing that I knew I would be playing in TV mode most of the time. I was wrong. Handheld is just too convenient, and the OLED gave me another reason. It also didn’t help that I had a 4K and most Switch games just didn’t look that good on it(mostly a screen size issue but yeah)",
+          "expected_sentiment": "mixed",
+          "expected_topic": "graphics",
+          "source_subreddit": "nintendoswitch"
+        },
+        {
+          "score": 0.0849,
+          "id": "public_game_feedback_0132",
+          "text": "As sad as it is, releasing the original without OLED makes the most sense. I definitely would prefer to buy OLED than possibly buy it twice, but they want prices as low as is feasible to make as much money as possible when it releases They want the price point to be perfect and OLED screens aren't that. Since then either they take a hit or it is more expensive than some people will like.",
+          "expected_sentiment": "positive",
+          "expected_topic": "price",
+          "source_subreddit": "nintendoswitch"
+        }
+      ],
+      "rag_inferred_sentiment": "positive",
+      "rag_inferred_topic": "graphics"
+    }
+  ]
+}

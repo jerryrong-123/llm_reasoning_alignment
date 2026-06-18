@@ -1,0 +1,30 @@
+{
+  "method": "rag_answer_generation",
+  "model": "Qwen2.5-0.5B-Instruct-local",
+  "model_path": "D:\\llm_reasoning_alignment_server_restored\\models\\qwen2.5-0.5b-instruct",
+  "device": "cpu",
+  "max_new_tokens": 64,
+  "max_input_tokens": 2048,
+  "limit": null,
+  "top5": {
+    "top_k_name": "top5",
+    "input_path": "data\\processed\\hierarchical_rag\\rag_inputs_top5.jsonl",
+    "output_path": "outputs\\hierarchical_rag\\generation\\rag_answers_top5_qwen05b.jsonl",
+    "query_count": 50,
+    "exact_match": 0.12,
+    "contains_match": 0.5,
+    "avg_context_recall": 0.86,
+    "avg_context_mrr": 0.964
+  },
+  "top10": {
+    "top_k_name": "top10",
+    "input_path": "data\\processed\\hierarchical_rag\\rag_inputs_top10.jsonl",
+    "output_path": "outputs\\hierarchical_rag\\generation\\rag_answers_top10_qwen05b.jsonl",
+    "query_count": 50,
+    "exact_match": 0.14,
+    "contains_match": 0.46,
+    "avg_context_recall": 0.9466666666666667,
+    "avg_context_mrr": 0.964
+  },
+  "bad_case_count": 87
+}

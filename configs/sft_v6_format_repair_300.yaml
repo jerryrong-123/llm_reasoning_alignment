@@ -1,0 +1,28 @@
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+train_file: data/processed/sft_v6_format_repair.jsonl
+output_dir: outputs/checkpoints/sft_lora_v6_format_repair_300
+
+max_seq_length: 512
+max_steps: 300
+
+per_device_train_batch_size: 4
+gradient_accumulation_steps: 1
+learning_rate: 0.000005
+
+lora_r: 8
+lora_alpha: 16
+lora_dropout: 0.05
+target_modules:
+- q_proj
+- k_proj
+- v_proj
+- o_proj
+- gate_proj
+- up_proj
+- down_proj
+
+logging_steps: 1
+save_steps: 100
+save_total_limit: 4
+
+dtype: bf16

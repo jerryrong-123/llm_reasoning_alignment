@@ -1,0 +1,16 @@
+stage,error_type,count,ratio
+sft_lora_small,correct,5,0.25
+sft_lora_small,strict_format_only_error,4,0.2
+sft_lora_small,answer_extraction_or_format_error,0,0.0
+sft_lora_small,reasoning_or_calc_error,11,0.55
+sft_lora_small,unknown,0,0.0
+dpo_lora_small,correct,3,0.15
+dpo_lora_small,strict_format_only_error,5,0.25
+dpo_lora_small,answer_extraction_or_format_error,1,0.05
+dpo_lora_small,reasoning_or_calc_error,11,0.55
+dpo_lora_small,unknown,0,0.0
+grpo_lora_small,correct,3,0.15
+grpo_lora_small,strict_format_only_error,5,0.25
+grpo_lora_small,answer_extraction_or_format_error,1,0.05
+grpo_lora_small,reasoning_or_calc_error,11,0.55
+grpo_lora_small,unknown,0,0.0

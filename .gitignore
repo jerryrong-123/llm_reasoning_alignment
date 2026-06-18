@@ -1,0 +1,69 @@
+venv/
+__pycache__/
+*.pyc
+
+data/raw/
+data/processed/
+
+outputs/checkpoints/
+outputs/logs/
+outputs/eval/
+outputs/bad_cases/
+
+external/
+
+.env
+.cache/
+data/samples/
+outputs/reports/lmeval_samples_preview.jsonl
+# Hugging Face cache and local model weights
+.hf_cache/
+models/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environments
+venv/
+.venv/
+
+# Large model/checkpoint files
+*.bin
+*.safetensors
+*.pt
+*.pth
+outputs/checkpoints/
+
+# Logs
+*.log
+wandb/
+runs/
+# Hugging Face cache and local model weights
+.hf_cache/
+models/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+venv/
+.venv/
+
+# Large model/checkpoint files
+*.bin
+*.safetensors
+*.pt
+*.pth
+*.ckpt
+outputs/checkpoints/
+
+# Logs
+*.log
+wandb/
+runs/
+
+# Raw large datasets
+data/raw/

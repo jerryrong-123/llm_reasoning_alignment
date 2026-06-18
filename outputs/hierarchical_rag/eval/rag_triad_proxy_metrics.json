@@ -1,0 +1,47 @@
+{
+  "method": "rag_triad_proxy",
+  "note": "This is a low-cost proxy evaluation, not an LLM judge.",
+  "top5": {
+    "top_k_name": "top5",
+    "query_count": 50,
+    "exact_match": 0.12,
+    "contains_match": 0.5,
+    "avg_context_recall": 0.86,
+    "avg_context_mrr": 0.964,
+    "context_relevance_max": 0.6027789111271291,
+    "context_relevance_mean": 0.4137686960396349,
+    "groundedness_proxy": 0.64,
+    "context_answerability_proxy": 0.86,
+    "strict_triad_pass": 0.1,
+    "soft_triad_pass": 0.34,
+    "error_category_counts": {
+      "partial_or_format_correct": 19,
+      "exact_correct": 6,
+      "grounded_but_wrong": 11,
+      "retrieval_context_missing_answer": 5,
+      "ungrounded_generation": 9
+    }
+  },
+  "top10": {
+    "top_k_name": "top10",
+    "query_count": 50,
+    "exact_match": 0.14,
+    "contains_match": 0.46,
+    "avg_context_recall": 0.9466666666666667,
+    "avg_context_mrr": 0.964,
+    "context_relevance_max": 0.6230011333493514,
+    "context_relevance_mean": 0.38191669252548305,
+    "groundedness_proxy": 0.78,
+    "context_answerability_proxy": 0.94,
+    "strict_triad_pass": 0.14,
+    "soft_triad_pass": 0.36,
+    "error_category_counts": {
+      "grounded_but_wrong": 19,
+      "exact_correct": 7,
+      "partial_or_format_correct": 16,
+      "ungrounded_generation": 6,
+      "retrieval_context_missing_answer": 2
+    }
+  },
+  "error_case_count": 87
+}

@@ -1,0 +1,90 @@
+{
+  "sample_path": "outputs/eval/sft_lora_v5_eval_style_completion_only_qwen25_15b_gsm8k_cot_limit100/outputs__checkpoints__sft_lora_v5_eval_style_completion_only/samples_gsm8k_cot_2026-06-15T19-25-00.509377.jsonl",
+  "raw_rows": 200,
+  "unique_doc_count": 100,
+  "filter_counts": {
+    "strict-match": 100,
+    "flexible-extract": 100
+  },
+  "official_lmeval_flexible_accuracy": 0.62,
+  "official_lmeval_strict_accuracy": 0.07,
+  "normalized_extract_count": 100,
+  "normalized_extract_rate": 1.0,
+  "normalized_correct_count": 62,
+  "normalized_accuracy": 0.62,
+  "normalized_format": "#### <extracted_answer>",
+  "examples_correct": [
+    {
+      "doc_id": 1,
+      "target": "3",
+      "normalized_pred": "3",
+      "normalized_output": "#### 3",
+      "raw_response_head": "If one bolt represents 1 unit of fiber, then 2 bolts represent 2 units of blue fiber.\n\nFor white fiber, which is half as much as blue fiber, we calculate:\n\n\\( \\frac{1}{2} \\times 2 = 1 \\) bolt\n\nSo, the total number of bolts needed is:\n\n\\( 2 \\text{ (blue)} + 1 \\text{ (white)} = 3 \\) bolts\n\nThe answer is 3 bolts."
+    },
+    {
+      "doc_id": 3,
+      "target": "540",
+      "normalized_pred": "540",
+      "normalized_output": "#### 540",
+      "raw_response_head": "James runs 3 sprints per session, so he runs \\(3 \\times 3 = 9\\) sessions per week.\nEach session consists of running 60 meters, so he runs \\(9 \\times 60 = 540\\) meters per week.\n\nThe answer is 540 meters."
+    },
+    {
+      "doc_id": 4,
+      "target": "20",
+      "normalized_pred": "20",
+      "normalized_output": "#### 20",
+      "raw_response_head": "Wendi feeds each chicken 3 cups of feed per day. With 20 chickens, she needs 20 * 3 = <<20*3=60>>60 cups of feed daily.\n\nIn the morning, she gives out 15 cups, and in the afternoon, she gives out 25 cups. That means she has already given out 15 + 25 = <<15+25=40>>40 cups of feed.\n\nSo, she still needs to give out 60 - 40 = <<60-40=20>>20 cups of feed in the final meal of the day."
+    },
+    {
+      "doc_id": 6,
+      "target": "260",
+      "normalized_pred": "260",
+      "normalized_output": "#### 260",
+      "raw_response_head": "First, we find out how many sheep Charleston has. Since Charleston has 4 times as many sheep as Seattle, and Seattle has 20 sheep, we calculate:\n\n\\[ \\text{Charleston's sheep} = 4 \\times 20 = 80 \\]\n\nNext, we determine how many sheep Toulouse has. Since Toulouse has twice as many sheep as Charleston, we calculate:\n\n\\[ \\text{Toulouse's sheep} = 2 \\times 80 = 160 \\]\n\nNow, we add up all the sheep:\n\n\\[ \\text{Total sheep} = \\text{Toulouse's sheep} + \\text{Charleston's sheep} + \\text{Seattle's sheep} \\]"
+    },
+    {
+      "doc_id": 9,
+      "target": "460",
+      "normalized_pred": "460",
+      "normalized_output": "#### 460",
+      "raw_response_head": "Eliza earns $10/hour for the first 40 hours, so for those hours, she earns 40 * $10 = $400.\n\nFor the remaining 5 hours (overtime), she earns 1.2 times her regular hourly rate, which is 1.2 * $10 = $12 per hour.\n\nSo for the overtime hours, she earns 5 * $12 = $60.\n\nTherefore, her total earnings for the week are $400 (regular hours) + $60 (overtime) = $460."
+    }
+  ],
+  "examples_wrong": [
+    {
+      "doc_id": 0,
+      "target": "18",
+      "normalized_pred": "-9",
+      "normalized_output": "#### -9",
+      "raw_response_head": "First, we calculate the total number of eggs laid by the ducks per day:\n\\[ \\text{Total eggs} = 16 \\text{ eggs/day} \\]\n\nNext, we determine how many eggs Janet eats for breakfast:\n\\[ \\text{Eggs eaten for breakfast} = 3 \\text{ eggs/day} \\times 5 \\text{ days} = 15 \\text{ eggs} \\]\n\nThen, we find out how many eggs she uses to bake muffins for her friends:\n\\[ \\text{Eggs used for muffins} = 4 \\text{ eggs/day} \\times 5 \\text{ days} = 20 \\text{ eggs} \\]\n\nNow, we subtract the eggs eaten for breakfast and b"
+    },
+    {
+      "doc_id": 2,
+      "target": "70000",
+      "normalized_pred": "2.5",
+      "normalized_output": "#### 2.5",
+      "raw_response_head": "First, we need to calculate the new value of the house after the repairs. The house was initially worth $80,000 and the repairs cost an additional $50,000, so the total increase in value due to the repairs is:\n\n$80,000 (original value) + $50,000 (repairs) = $130,000\n\nThis means the house's value increased by $130,000.\n\nSince this represents a 150% increase over the original value, we can set up the following equation to find the original value before the repairs:\n\n\\( \\text{Original Value} + (\\te"
+    },
+    {
+      "doc_id": 5,
+      "target": "64",
+      "normalized_pred": "16",
+      "normalized_output": "#### 16",
+      "raw_response_head": "The first glass costs $5.\nThe second glass costs 60% of $5, which is \\(5 \\times 0.60 = \\$3\\).\nFor the remaining 14 glasses (since one was already accounted for), each costs $5.\n\nSo, the cost for these 14 glasses is \\(14 \\times 5 = \\$70\\).\n\nAdding the cost of the first glass and the cost of the next 14 glasses gives us:\n\\(5 + 70 = \\$75\\)\n\nKylar needs to pay $75 for all 16 glasses."
+    },
+    {
+      "doc_id": 7,
+      "target": "160",
+      "normalized_pred": "70",
+      "normalized_output": "#### 70",
+      "raw_response_head": "First, we need to calculate how long it took Carla to download the first half of the file before the restart.\n\nThe full file size is 200 GB, so the first half would be:\n\\[ \\frac{200}{2} = 100 \\text{ GB} \\]\n\nCarla's normal download speed is 2 GB per minute, so for 100 GB, it would take:\n\\[ \\frac{100 \\text{ GB}}{2 \\text{ GB/minute}} = 50 \\text{ minutes} \\]\n\nAfter the restart, Carla needs to start over, so the time spent restarting is already accounted for as part of the initial calculation.\n\nNow, "
+    },
+    {
+      "doc_id": 8,
+      "target": "45",
+      "normalized_pred": "15",
+      "normalized_output": "#### 15",
+      "raw_response_head": "First, let's calculate the distance John drove initially:\n\\[ \\text{Distance} = \\text{Speed} \\times \\text{Time} = 60 \\, \\text{mph} \\times 3 \\, \\text{hours} = 180 \\, \\text{miles} \\]\n\nNext, we'll account for the time spent in traffic:\n\\[ \\text{Distance} = \\text{Speed} \\times \\text{Time} = 30 \\, \\text{mph} \\times 0.5 \\, \\text{hours} = 15 \\, \\text{miles} \\]\n\nNow, let's add these distances together to find out how far he was from home when he turned around:\n\\[ \\text{Total Distance Away} = 180 \\, \\text"
+    }
+  ]
+}

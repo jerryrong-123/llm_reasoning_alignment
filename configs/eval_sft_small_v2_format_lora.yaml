@@ -1,0 +1,11 @@
+﻿base_model: Qwen/Qwen2.5-1.5B-Instruct
+peft_path: outputs/checkpoints/sft_lora_small_v2_format
+
+tasks: gsm8k_cot
+limit: 20
+batch_size: 1
+device: cpu
+dtype: float32
+apply_chat_template: true
+
+output_name: sft_lora_small_v2_format_qwen25_15b_gsm8k_cot_limit20

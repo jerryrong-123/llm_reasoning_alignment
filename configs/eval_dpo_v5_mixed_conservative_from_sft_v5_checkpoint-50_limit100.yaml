@@ -1,0 +1,11 @@
+base_model: /root/autodl-tmp/hf_cache/hub/models--Qwen--Qwen2.5-1.5B-Instruct/snapshots/989aa7980e4cf806f80c7fef2b1adb7bc71aa306
+peft_path: outputs/checkpoints/dpo_v5_mixed_conservative_from_sft_v5/checkpoint-50
+
+tasks: gsm8k_cot
+limit: 100
+batch_size: 1
+device: cuda
+dtype: bfloat16
+apply_chat_template: true
+
+output_name: dpo_v5_mixed_conservative_from_sft_v5_checkpoint-50_qwen25_15b_gsm8k_cot_limit100

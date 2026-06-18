@@ -1,0 +1,98 @@
+{
+  "demo_type": "agent_tool_router",
+  "tools": [
+    "feedback_classification",
+    "feedback_retrieval"
+  ],
+  "sample_count": 200,
+  "request_count": 4,
+  "notes": [
+    "This is a lightweight rule-based Tool Router demo.",
+    "It routes game-related user requests to feedback classification or retrieval tools.",
+    "The next step can add RAG QA and UGC moderation tools."
+  ],
+  "results": [
+    {
+      "request_id": "req_001",
+      "user_input": "玩家说游戏团战时 FPS 掉得很厉害，还经常延迟，帮我找相似反馈。",
+      "selected_tool": "feedback_retrieval",
+      "tool_result": {
+        "tool": "feedback_retrieval",
+        "retrieved_top_k": [
+          {
+            "score": 0.513,
+            "id": "public_game_feedback_0023",
+            "text": "The biggest performance issue in DD2 was in cities. I have a 3060 and the open world was surprisingly good fps wise. Now in Wilds, my fps is between 35-50 fps without mention the game looks way blurier than DD2",
+            "expected_sentiment": "mixed",
+            "expected_topic": "performance"
+          },
+          {
+            "score": 0.3397,
+            "id": "public_game_feedback_0152",
+            "text": "Just give me a 60 fps patch for Bloodborne and RDR2 on PS4/5",
+            "expected_sentiment": "neutral",
+            "expected_topic": "other"
+          },
+          {
+            "score": 0.2724,
+            "id": "public_game_feedback_0101",
+            "text": "Tbh, people aren’t that great at actually setting up games and knowing what they are looking at. Cyberpunk by default has mouse acceleration and smoothing on. That alone makes the game feel laggy however turning it off is like night and day regarding responsiveness. So, does Frame Gen make noticeable input lag? Yes and no. It really depends on what the base frames are. If you are at 60fps in Cyberpunk and you enable FG, it will actually make 45 real frames and FG up to 90ish. It feels extremely shitty because you have the input latency of 45fps but perceiving 90fps. I mean, it’s more sluggish than RDR2’s animations. But, if you have 120fps and then enable FG you’ll barely feel the difference. Input lag and FG is better viewed from a “what percentage of latency did it increase” rather than “how many ms did latency increase.” In other words, you’re unlikely to feel a 5% difference but you will definitely feel a 20% difference.",
+            "expected_sentiment": "mixed",
+            "expected_topic": "performance"
+          }
+        ]
+      }
+    },
+    {
+      "request_id": "req_002",
+      "user_input": "这个评论像什么问题：The game crashes after the latest patch and some quests are broken.",
+      "selected_tool": "feedback_classification",
+      "tool_result": {
+        "tool": "feedback_classification",
+        "pred_sentiment": "negative",
+        "pred_topic": "bugs"
+      }
+    },
+    {
+      "request_id": "req_003",
+      "user_input": "我想知道最近玩家关于价格和打折是否值得买的反馈。",
+      "selected_tool": "feedback_retrieval",
+      "tool_result": {
+        "tool": "feedback_retrieval",
+        "retrieved_top_k": [
+          {
+            "score": 0.0,
+            "id": "public_game_feedback_0001",
+            "text": "I love this earbuds, the only way to me is return these (because the ones I have are defective) and buy the same model again.",
+            "expected_sentiment": "positive",
+            "expected_topic": "other"
+          },
+          {
+            "score": 0.0,
+            "id": "public_game_feedback_0002",
+            "text": "*edition. Nothing. I kind of want it for the bigger screen alone. Games are a +.",
+            "expected_sentiment": "neutral",
+            "expected_topic": "other"
+          },
+          {
+            "score": 0.0,
+            "id": "public_game_feedback_0003",
+            "text": "7/10 game imo, worth finishing if you have the time since it is long as fuck, but the demo is the absolute peak of the game story wise. Gameplay wise there's some really good bosses.",
+            "expected_sentiment": "positive",
+            "expected_topic": "price"
+          }
+        ]
+      }
+    },
+    {
+      "request_id": "req_004",
+      "user_input": "这个玩家反馈需要分类：The story is great but the combat feels repetitive and boring.",
+      "selected_tool": "feedback_classification",
+      "tool_result": {
+        "tool": "feedback_classification",
+        "pred_sentiment": "mixed",
+        "pred_topic": "gameplay"
+      }
+    }
+  ]
+}

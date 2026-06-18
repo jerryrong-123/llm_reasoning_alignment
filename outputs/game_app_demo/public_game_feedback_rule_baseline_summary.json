@@ -1,0 +1,51 @@
+{
+  "input_path": "D:\\llm_reasoning_alignment\\data\\raw\\game_feedback_public_hf_200.jsonl",
+  "sample_count": 200,
+  "sentiment_acc": 0.73,
+  "topic_acc": 0.355,
+  "badcase_count": 146,
+  "expected_sentiment_distribution": {
+    "mixed": 41,
+    "negative": 52,
+    "neutral": 61,
+    "positive": 46
+  },
+  "pred_sentiment_distribution": {
+    "mixed": 28,
+    "negative": 39,
+    "neutral": 81,
+    "positive": 52
+  },
+  "expected_topic_distribution": {
+    "bugs": 5,
+    "company_reputation": 7,
+    "gameplay": 14,
+    "graphics": 14,
+    "monetization": 5,
+    "multiplayer": 14,
+    "other": 93,
+    "performance": 11,
+    "price": 14,
+    "story": 16,
+    "updates_support": 7
+  },
+  "pred_topic_distribution": {
+    "bugs": 11,
+    "company_reputation": 45,
+    "gameplay": 29,
+    "graphics": 12,
+    "monetization": 7,
+    "multiplayer": 9,
+    "other": 34,
+    "performance": 17,
+    "price": 12,
+    "story": 15,
+    "updates_support": 9
+  },
+  "baseline_type": "rule_based",
+  "notes": [
+    "This is a rule-based baseline, not an LLM result.",
+    "The public dataset labels may contain noise because the dataset uses LLM-assisted annotation.",
+    "Next step should compare this baseline with prompt-based LLM classification."
+  ]
+}

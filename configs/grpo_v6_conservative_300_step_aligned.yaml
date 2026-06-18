@@ -1,0 +1,24 @@
+base_model: /root/autodl-tmp/hf_cache/hub/models--Qwen--Qwen2.5-1.5B-Instruct/snapshots/989aa7980e4cf806f80c7fef2b1adb7bc71aa306
+
+start_adapter_path: outputs/checkpoints/sft_lora_v5_eval_style_completion_only
+train_file: data/processed/grpo_v5_mixed_replay_from_sft_v5.jsonl
+output_dir: outputs/checkpoints/grpo_lora_v6_conservative_300_step_aligned
+
+max_prompt_length: 320
+max_completion_length: 384
+
+max_steps: 300
+
+per_device_train_batch_size: 4
+gradient_accumulation_steps: 1
+learning_rate: 0.000001
+
+num_generations: 4
+temperature: 0.7
+beta: 0.5
+
+logging_steps: 1
+save_steps: 50
+save_total_limit: 6
+
+dtype: bf16

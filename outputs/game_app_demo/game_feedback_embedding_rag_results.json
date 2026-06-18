@@ -1,0 +1,261 @@
+{
+  "input_path": "D:\\llm_reasoning_alignment\\data\\raw\\game_feedback_public_hf_200.jsonl",
+  "sample_count": 200,
+  "index_type": "embedding",
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "top_k": 5,
+  "query_count": 5,
+  "notes": [
+    "This is an embedding-based retrieval baseline for game feedback analysis.",
+    "It retrieves semantically similar historical game feedback using sentence-transformer embeddings.",
+    "This baseline is intended to be compared with the earlier TF-IDF RAG baseline.",
+    "The public dataset labels may contain noise because the dataset uses LLM-assisted annotation."
+  ],
+  "results": [
+    {
+      "query_id": "q_001",
+      "query": "The game keeps lagging during online matches and the FPS drops badly in team fights.",
+      "expected_topic_hint": "performance",
+      "retrieved_top_k": [
+        {
+          "score": 0.4686,
+          "id": "public_game_feedback_0101",
+          "text": "Tbh, people aren’t that great at actually setting up games and knowing what they are looking at. Cyberpunk by default has mouse acceleration and smoothing on. That alone makes the game feel laggy however turning it off is like night and day regarding responsiveness. So, does Frame Gen make noticeable input lag? Yes and no. It really depends on what the base frames are. If you are at 60fps in Cyberpunk and you enable FG, it will actually make 45 real frames and FG up to 90ish. It feels extremely shitty because you have the input latency of 45fps but perceiving 90fps. I mean, it’s more sluggish than RDR2’s animations. But, if you have 120fps and then enable FG you’ll barely feel the difference. Input lag and FG is better viewed from a “what percentage of latency did it increase” rather than “how many ms did latency increase.” In other words, you’re unlikely to feel a 5% difference but you will definitely feel a 20% difference.",
+          "expected_sentiment": "mixed",
+          "expected_topic": "performance",
+          "source_subreddit": "gaming"
+        },
+        {
+          "score": 0.4233,
+          "id": "public_game_feedback_0020",
+          "text": "This is the case for majority of the ULTRA settings in games nowadays. But people still turn the settings all the way up and cry about optimization.",
+          "expected_sentiment": "neutral",
+          "expected_topic": "other",
+          "source_subreddit": "pcgaming"
+        },
+        {
+          "score": 0.4138,
+          "id": "public_game_feedback_0023",
+          "text": "The biggest performance issue in DD2 was in cities. I have a 3060 and the open world was surprisingly good fps wise. Now in Wilds, my fps is between 35-50 fps without mention the game looks way blurier than DD2",
+          "expected_sentiment": "mixed",
+          "expected_topic": "performance",
+          "source_subreddit": "pcgaming"
+        },
+        {
+          "score": 0.4132,
+          "id": "public_game_feedback_0010",
+          "text": "But the technique used for this frame gen is new so you have no point of refrence. Not even mentioning the sheer fact that this massive lag is only apparent if you were natively running at low fps. There is literally no situation where turning dlss framegen will be worse than not turning it on",
+          "expected_sentiment": "negative",
+          "expected_topic": "performance",
+          "source_subreddit": "pcgaming"
+        },
+        {
+          "score": 0.4073,
+          "id": "public_game_feedback_0152",
+          "text": "Just give me a 60 fps patch for Bloodborne and RDR2 on PS4/5",
+          "expected_sentiment": "neutral",
+          "expected_topic": "other",
+          "source_subreddit": "videogames"
+        }
+      ],
+      "embedding_rag_inferred_sentiment": "mixed",
+      "embedding_rag_inferred_topic": "performance"
+    },
+    {
+      "query_id": "q_002",
+      "query": "I want to buy this game on sale, but I am not sure whether it is worth the money.",
+      "expected_topic_hint": "price",
+      "retrieved_top_k": [
+        {
+          "score": 0.5545,
+          "id": "public_game_feedback_0059",
+          "text": "Then I won't buy it though I wasn't exclusively talking about Monster Hunter. Overall my point though is that I am not paying triple a prices for a game that intentionally forgoes optimisation by crutching on a technology that actively makes the game feel worse when used that way.",
+          "expected_sentiment": "negative",
+          "expected_topic": "price",
+          "source_subreddit": "games"
+        },
+        {
+          "score": 0.4891,
+          "id": "public_game_feedback_0043",
+          "text": "I buy it for the story but my main issues really was the character roster was worse than 9, 10 or 11 and I didn't like the gameplay changes, expecially the cameo (kameo?) thing.",
+          "expected_sentiment": "negative",
+          "expected_topic": "story",
+          "source_subreddit": "games"
+        },
+        {
+          "score": 0.4597,
+          "id": "public_game_feedback_0003",
+          "text": "7/10 game imo, worth finishing if you have the time since it is long as fuck, but the demo is the absolute peak of the game story wise. Gameplay wise there's some really good bosses.",
+          "expected_sentiment": "positive",
+          "expected_topic": "price",
+          "source_subreddit": "games"
+        },
+        {
+          "score": 0.4579,
+          "id": "public_game_feedback_0004",
+          "text": "Should I buy Metroid Prime Remastered now or wait for Metroid Prime 4? I've been looking for a game like Doom Eternal on the switch but I can't seem to find it in my country",
+          "expected_sentiment": "neutral",
+          "expected_topic": "other",
+          "source_subreddit": "nintendoswitch"
+        },
+        {
+          "score": 0.4476,
+          "id": "public_game_feedback_0164",
+          "text": "i love it so much and as someone who grew up on Mario, it provides such a different kind of gameplay, problem solving and way of thinking. i think that one will keep me entertained for a while!",
+          "expected_sentiment": "mixed",
+          "expected_topic": "gameplay",
+          "source_subreddit": "nintendoswitch"
+        }
+      ],
+      "embedding_rag_inferred_sentiment": "negative",
+      "embedding_rag_inferred_topic": "price"
+    },
+    {
+      "query_id": "q_003",
+      "query": "The story is interesting, but the combat and boss fights feel repetitive.",
+      "expected_topic_hint": "story_or_gameplay",
+      "retrieved_top_k": [
+        {
+          "score": 0.5311,
+          "id": "public_game_feedback_0060",
+          "text": "I wasn't a fan of the combat, and I absolutely hated the story. I 100%ed it, minus the new rogue like portion because I was just done with it by that time. I agree that the landscapes did look nice, but it was all so empty. It felt like one of those walking simulators but somehow less interesting to me. I'm glad you enjoyed it, I just thought it was funny that the same game had the opposite effect on us.",
+          "expected_sentiment": "mixed",
+          "expected_topic": "graphics",
+          "source_subreddit": "games"
+        },
+        {
+          "score": 0.4708,
+          "id": "public_game_feedback_0096",
+          "text": "I started **Shadow of the Erdtree**, and about halfway through I realized I wasn’t having any fun with the ridiculously overturned boss fights and tedious amount of die-retry-repeat I was doing. I respec’d into blasphemous blade and have been fire slamming my way through everything. Am I basically cheating? Sure. Do I care? Absolutely not. I don’t think the bosses in this DLC are enjoyable to fight, but maybe I’m just sort of fatigued with the game and want to finish it.",
+          "expected_sentiment": "mixed",
+          "expected_topic": "gameplay",
+          "source_subreddit": "games"
+        },
+        {
+          "score": 0.4659,
+          "id": "public_game_feedback_0190",
+          "text": "Totem fights were cool and genuinely challenges at different points. I really appreciated them after two decades of disappointing gym leaders. Otherwise yeah, I'm replaying it right now and holy crap, the game stops you every 15 minutes to do some unskippable story beat. I actively avoid the little checkmark flag on the map because I just want to explore.",
+          "expected_sentiment": "mixed",
+          "expected_topic": "story",
+          "source_subreddit": "games"
+        },
+        {
+          "score": 0.4586,
+          "id": "public_game_feedback_0003",
+          "text": "7/10 game imo, worth finishing if you have the time since it is long as fuck, but the demo is the absolute peak of the game story wise. Gameplay wise there's some really good bosses.",
+          "expected_sentiment": "positive",
+          "expected_topic": "price",
+          "source_subreddit": "games"
+        },
+        {
+          "score": 0.4474,
+          "id": "public_game_feedback_0032",
+          "text": "The game is a poor mans Ghost of Tsushima GOT had great story, characters, good combat but repetitive Ubisoft formula. This has ubisoft formula with none of the other redeeming qualities.",
+          "expected_sentiment": "mixed",
+          "expected_topic": "story",
+          "source_subreddit": "ps5"
+        }
+      ],
+      "embedding_rag_inferred_sentiment": "mixed",
+      "embedding_rag_inferred_topic": "story"
+    },
+    {
+      "query_id": "q_004",
+      "query": "The game crashes after the latest update and some quests are broken.",
+      "expected_topic_hint": "bugs_or_updates_support",
+      "retrieved_top_k": [
+        {
+          "score": 0.4206,
+          "id": "public_game_feedback_0121",
+          "text": "Had no idea gameinformer shut down that sucks I had that for years",
+          "expected_sentiment": "negative",
+          "expected_topic": "updates_support",
+          "source_subreddit": "pcgaming"
+        },
+        {
+          "score": 0.4026,
+          "id": "public_game_feedback_0035",
+          "text": "Wasn't this issue fixed in a patch?",
+          "expected_sentiment": "negative",
+          "expected_topic": "updates_support",
+          "source_subreddit": "ps5"
+        },
+        {
+          "score": 0.3766,
+          "id": "public_game_feedback_0170",
+          "text": "I have had to delete this game from my Ps5 console as I have used my gun on a mission and it won’t go back in its holster and now I can’t do anymore missions as it won’t let me I have tried everything to fix it but it is saved and keeps going back to the same thing so frustrating as hell it’s a shame as it was not that bad of game but if anyone has the same problem or knows how to fix it that would be great",
+          "expected_sentiment": "mixed",
+          "expected_topic": "other",
+          "source_subreddit": "ps5"
+        },
+        {
+          "score": 0.3753,
+          "id": "public_game_feedback_0103",
+          "text": "Servers are down. U can check at [steamstat.us](http://steamstat.us) if it's ur problem or server-side",
+          "expected_sentiment": "negative",
+          "expected_topic": "multiplayer",
+          "source_subreddit": "steam"
+        },
+        {
+          "score": 0.3381,
+          "id": "public_game_feedback_0182",
+          "text": "Go to help, support then click on the game and see if it says \"Game isn't in my library\" it means the user removed the game themselves",
+          "expected_sentiment": "neutral",
+          "expected_topic": "other",
+          "source_subreddit": "steam"
+        }
+      ],
+      "embedding_rag_inferred_sentiment": "negative",
+      "embedding_rag_inferred_topic": "updates_support"
+    },
+    {
+      "query_id": "q_005",
+      "query": "The graphics look beautiful and the animation quality is much better than before.",
+      "expected_topic_hint": "graphics",
+      "retrieved_top_k": [
+        {
+          "score": 0.4673,
+          "id": "public_game_feedback_0060",
+          "text": "I wasn't a fan of the combat, and I absolutely hated the story. I 100%ed it, minus the new rogue like portion because I was just done with it by that time. I agree that the landscapes did look nice, but it was all so empty. It felt like one of those walking simulators but somehow less interesting to me. I'm glad you enjoyed it, I just thought it was funny that the same game had the opposite effect on us.",
+          "expected_sentiment": "mixed",
+          "expected_topic": "graphics",
+          "source_subreddit": "games"
+        },
+        {
+          "score": 0.4344,
+          "id": "public_game_feedback_0063",
+          "text": "Yeah, I ended up enjoying it but it took a very long time because I was getting fed up with all the cutscenes and not being able to do much.",
+          "expected_sentiment": "negative",
+          "expected_topic": "story",
+          "source_subreddit": "games"
+        },
+        {
+          "score": 0.4294,
+          "id": "public_game_feedback_0014",
+          "text": "The art style is interesting though I think the map looks so lifeless. The buildings look drab and everything has this washed out look, it needs some life and colour. I'm guessing like Dota they're going to put in those little details like maybe average citizens walking around in the side sections. I remember going past the a newsstand outside the base, and it seemed genuinely interesting with the voicelines talking about news in the world of the game. But blink and you'd miss it with all the drab surrounds. My main issue with how the game looks from an art perspective, and basic UI perspective is the buy menu, which is genuinely just text boxes at this point. Not only does the buy menu look confusing and not intuitive, it also looks like a trashy text box UI made out of Word. The game is just too early to be in what's pretty much an unannounced beta. Take it away for a year, figure out what to do gameplay wise (cause currently the game design is still in flux) and be a little further along on the polish, and then rerelease. I can see why people try it for a month or so then bail. Deadlock is nowhere near close to even beta yet.",
+          "expected_sentiment": "negative",
+          "expected_topic": "bugs",
+          "source_subreddit": "games"
+        },
+        {
+          "score": 0.4232,
+          "id": "public_game_feedback_0169",
+          "text": "Yeah on a high end oled display in hdr it will look amazing.",
+          "expected_sentiment": "positive",
+          "expected_topic": "graphics",
+          "source_subreddit": "pcgaming"
+        },
+        {
+          "score": 0.3898,
+          "id": "public_game_feedback_0032",
+          "text": "The game is a poor mans Ghost of Tsushima GOT had great story, characters, good combat but repetitive Ubisoft formula. This has ubisoft formula with none of the other redeeming qualities.",
+          "expected_sentiment": "mixed",
+          "expected_topic": "story",
+          "source_subreddit": "ps5"
+        }
+      ],
+      "embedding_rag_inferred_sentiment": "mixed",
+      "embedding_rag_inferred_topic": "graphics"
+    }
+  ]
+}
