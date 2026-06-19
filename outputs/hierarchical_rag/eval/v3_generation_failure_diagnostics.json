@@ -1,0 +1,76 @@
+{
+  "method": "diagnose_v3_generation_failure",
+  "max_input_tokens": 2048,
+  "summary": {
+    "top10_original_recheck": {
+      "query_count": 50,
+      "exact_match": 0.06,
+      "contains_match": 0.08,
+      "groundedness_proxy": 0.16,
+      "prompt_truncated_rate": 0.0,
+      "avg_full_prompt_tokens": 1152.18,
+      "model_visible_answerability": 0.96,
+      "original_answerability": 0.94,
+      "prediction_type_counts": {
+        "short_phrase": 4,
+        "single_token_or_entity": 2,
+        "yes_no_yes": 27,
+        "not_supported_like": 13,
+        "yes_no_no": 4
+      },
+      "error_category_counts": {
+        "ungrounded_generation": 38,
+        "exact_correct": 3,
+        "grounded_but_wrong": 5,
+        "partial_or_format_correct": 1,
+        "retrieval_context_missing_answer": 3
+      }
+    },
+    "top10_soft_cap2_compressed": {
+      "query_count": 50,
+      "exact_match": 0.08,
+      "contains_match": 0.08,
+      "groundedness_proxy": 0.16,
+      "prompt_truncated_rate": 0.0,
+      "avg_full_prompt_tokens": 980.06,
+      "model_visible_answerability": 0.94,
+      "original_answerability": 0.92,
+      "prediction_type_counts": {
+        "short_phrase": 4,
+        "single_token_or_entity": 1,
+        "yes_no_yes": 27,
+        "not_supported_like": 14,
+        "yes_no_no": 4
+      },
+      "error_category_counts": {
+        "ungrounded_generation": 38,
+        "exact_correct": 4,
+        "grounded_but_wrong": 5,
+        "retrieval_context_missing_answer": 3
+      }
+    },
+    "top7_soft_cap2_compressed": {
+      "query_count": 50,
+      "exact_match": 0.06,
+      "contains_match": 0.06,
+      "groundedness_proxy": 0.08,
+      "prompt_truncated_rate": 0.0,
+      "avg_full_prompt_tokens": 755,
+      "model_visible_answerability": 0.94,
+      "original_answerability": 0.92,
+      "prediction_type_counts": {
+        "short_phrase": 2,
+        "single_token_or_entity": 4,
+        "yes_no_yes": 32,
+        "not_supported_like": 11,
+        "yes_no_no": 1
+      },
+      "error_category_counts": {
+        "ungrounded_generation": 42,
+        "exact_correct": 3,
+        "grounded_but_wrong": 2,
+        "retrieval_context_missing_answer": 3
+      }
+    }
+  }
+}

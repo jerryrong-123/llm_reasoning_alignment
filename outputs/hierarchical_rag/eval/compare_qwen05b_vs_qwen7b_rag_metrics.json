@@ -1,0 +1,209 @@
+{
+  "method": "compare_qwen05b_vs_qwen25_7b_rag",
+  "qwen05b_metrics_path": "outputs/hierarchical_rag/eval/rag_answer_generation_v4_balanced_prompt_metrics.json",
+  "qwen7b_metrics_path": "outputs/hierarchical_rag/eval/rag_answer_generation_qwen25_7b_autodl_metrics.json",
+  "variants": {
+    "top10_original_recheck": {
+      "qwen05b": {
+        "variant": "top10_original_recheck",
+        "input_path": "data\\processed\\hierarchical_rag\\rag_inputs_v3_top10_original_recheck.jsonl",
+        "output_path": "outputs\\hierarchical_rag\\generation\\rag_answers_v4_top10_original_recheck_qwen05b.jsonl",
+        "query_count": 50,
+        "exact_match": 0.16,
+        "contains_match": 0.18,
+        "avg_context_recall": 0.9466666666666667,
+        "avg_context_precision": 0.21000000000000002,
+        "avg_context_mrr": 0.964,
+        "groundedness_proxy": 0.52,
+        "answerability_proxy": 0.94,
+        "strict_triad_pass": 0.16,
+        "soft_triad_pass": 0.18,
+        "prediction_type_counts": {
+          "yes_no_no": 1,
+          "yes_no_yes": 24,
+          "not_supported_like": 2,
+          "short_phrase": 13,
+          "single_token_or_entity": 10
+        },
+        "error_category_counts": {
+          "ungrounded_generation": 23,
+          "exact_correct": 8,
+          "grounded_but_wrong": 16,
+          "retrieval_context_missing_answer": 2,
+          "partial_or_format_correct": 1
+        }
+      },
+      "qwen7b": {
+        "variant": "top10_original_recheck",
+        "input_path": "data/processed/hierarchical_rag/rag_inputs_v3_top10_original_recheck.jsonl",
+        "output_path": "outputs/hierarchical_rag/generation/rag_answers_qwen25_7b_top10_original_recheck_autodl.jsonl",
+        "query_count": 50,
+        "exact_match": 0.64,
+        "contains_match": 0.74,
+        "avg_context_recall": 0.9466666666666667,
+        "avg_context_precision": 0.21000000000000002,
+        "avg_context_mrr": 0.964,
+        "groundedness_proxy": 0.96,
+        "answerability_proxy": 0.94,
+        "strict_triad_pass": 0.64,
+        "soft_triad_pass": 0.74,
+        "prediction_type_counts": {
+          "short_phrase": 23,
+          "single_token_or_entity": 21,
+          "not_supported_like": 2,
+          "yes_no_no": 3,
+          "yes_no_yes": 1
+        },
+        "error_category_counts": {
+          "exact_correct": 32,
+          "partial_or_format_correct": 5,
+          "grounded_but_wrong": 9,
+          "ungrounded_generation": 2,
+          "retrieval_context_missing_answer": 2
+        }
+      },
+      "delta": {
+        "exact_match": 0.48,
+        "contains_match": 0.56,
+        "groundedness_proxy": 0.43999999999999995,
+        "strict_triad_pass": 0.48,
+        "soft_triad_pass": 0.56
+      }
+    },
+    "top10_soft_cap2_compressed": {
+      "qwen05b": {
+        "variant": "top10_soft_cap2_compressed",
+        "input_path": "data\\processed\\hierarchical_rag\\rag_inputs_v3_top10_soft_cap2_compressed.jsonl",
+        "output_path": "outputs\\hierarchical_rag\\generation\\rag_answers_v4_top10_soft_cap2_compressed_qwen05b.jsonl",
+        "query_count": 50,
+        "exact_match": 0.16,
+        "contains_match": 0.2,
+        "avg_context_recall": 0.9466666666666667,
+        "avg_context_precision": 0.21711111111111112,
+        "avg_context_mrr": 0.964,
+        "groundedness_proxy": 0.44,
+        "answerability_proxy": 0.92,
+        "strict_triad_pass": 0.16,
+        "soft_triad_pass": 0.2,
+        "prediction_type_counts": {
+          "yes_no_yes": 27,
+          "single_token_or_entity": 11,
+          "not_supported_like": 1,
+          "short_phrase": 10,
+          "long_answer": 1
+        },
+        "error_category_counts": {
+          "ungrounded_generation": 26,
+          "exact_correct": 8,
+          "grounded_but_wrong": 11,
+          "retrieval_context_missing_answer": 3,
+          "partial_or_format_correct": 2
+        }
+      },
+      "qwen7b": {
+        "variant": "top10_soft_cap2_compressed",
+        "input_path": "data/processed/hierarchical_rag/rag_inputs_v3_top10_soft_cap2_compressed.jsonl",
+        "output_path": "outputs/hierarchical_rag/generation/rag_answers_qwen25_7b_top10_soft_cap2_compressed_autodl.jsonl",
+        "query_count": 50,
+        "exact_match": 0.64,
+        "contains_match": 0.72,
+        "avg_context_recall": 0.9466666666666667,
+        "avg_context_precision": 0.21711111111111112,
+        "avg_context_mrr": 0.964,
+        "groundedness_proxy": 0.94,
+        "answerability_proxy": 0.92,
+        "strict_triad_pass": 0.64,
+        "soft_triad_pass": 0.72,
+        "prediction_type_counts": {
+          "short_phrase": 25,
+          "single_token_or_entity": 18,
+          "not_supported_like": 3,
+          "yes_no_no": 3,
+          "yes_no_yes": 1
+        },
+        "error_category_counts": {
+          "exact_correct": 32,
+          "partial_or_format_correct": 4,
+          "grounded_but_wrong": 9,
+          "ungrounded_generation": 2,
+          "retrieval_context_missing_answer": 3
+        }
+      },
+      "delta": {
+        "exact_match": 0.48,
+        "contains_match": 0.52,
+        "groundedness_proxy": 0.49999999999999994,
+        "strict_triad_pass": 0.48,
+        "soft_triad_pass": 0.52
+      }
+    },
+    "top7_soft_cap2_compressed": {
+      "qwen05b": {
+        "variant": "top7_soft_cap2_compressed",
+        "input_path": "data\\processed\\hierarchical_rag\\rag_inputs_v3_top7_soft_cap2_compressed.jsonl",
+        "output_path": "outputs\\hierarchical_rag\\generation\\rag_answers_v4_top7_soft_cap2_compressed_qwen05b.jsonl",
+        "query_count": 50,
+        "exact_match": 0.1,
+        "contains_match": 0.12,
+        "avg_context_recall": 0.9233333333333333,
+        "avg_context_precision": 0.2914285714285714,
+        "avg_context_mrr": 0.964,
+        "groundedness_proxy": 0.38,
+        "answerability_proxy": 0.92,
+        "strict_triad_pass": 0.1,
+        "soft_triad_pass": 0.12,
+        "prediction_type_counts": {
+          "yes_no_no": 1,
+          "yes_no_yes": 31,
+          "not_supported_like": 2,
+          "short_phrase": 6,
+          "single_token_or_entity": 9,
+          "long_answer": 1
+        },
+        "error_category_counts": {
+          "ungrounded_generation": 30,
+          "grounded_but_wrong": 11,
+          "exact_correct": 5,
+          "retrieval_context_missing_answer": 3,
+          "partial_or_format_correct": 1
+        }
+      },
+      "qwen7b": {
+        "variant": "top7_soft_cap2_compressed",
+        "input_path": "data/processed/hierarchical_rag/rag_inputs_v3_top7_soft_cap2_compressed.jsonl",
+        "output_path": "outputs/hierarchical_rag/generation/rag_answers_qwen25_7b_top7_soft_cap2_compressed_autodl.jsonl",
+        "query_count": 50,
+        "exact_match": 0.62,
+        "contains_match": 0.72,
+        "avg_context_recall": 0.9233333333333333,
+        "avg_context_precision": 0.2914285714285714,
+        "avg_context_mrr": 0.964,
+        "groundedness_proxy": 0.94,
+        "answerability_proxy": 0.92,
+        "strict_triad_pass": 0.62,
+        "soft_triad_pass": 0.72,
+        "prediction_type_counts": {
+          "short_phrase": 26,
+          "single_token_or_entity": 17,
+          "not_supported_like": 3,
+          "yes_no_no": 3,
+          "yes_no_yes": 1
+        },
+        "error_category_counts": {
+          "exact_correct": 31,
+          "partial_or_format_correct": 5,
+          "grounded_but_wrong": 9,
+          "ungrounded_generation": 2,
+          "retrieval_context_missing_answer": 3
+        }
+      },
+      "delta": {
+        "exact_match": 0.52,
+        "contains_match": 0.6,
+        "groundedness_proxy": 0.5599999999999999,
+        "strict_triad_pass": 0.52,
+        "soft_triad_pass": 0.6
+      }
+    }
+  }
+}

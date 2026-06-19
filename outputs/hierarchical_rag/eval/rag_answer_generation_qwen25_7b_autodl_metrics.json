@@ -1,0 +1,94 @@
+{
+  "method": "qwen25_7b_rag_generation_autodl_baseline",
+  "model": "/root/autodl-tmp/models/Qwen/Qwen2___5-7B-Instruct",
+  "note": "Uses Context Pack v3 with a softer balanced prompt and yes/no-aware groundedness proxy.",
+  "variants": {
+    "top10_original_recheck": {
+      "variant": "top10_original_recheck",
+      "input_path": "data/processed/hierarchical_rag/rag_inputs_v3_top10_original_recheck.jsonl",
+      "output_path": "outputs/hierarchical_rag/generation/rag_answers_qwen25_7b_top10_original_recheck_autodl.jsonl",
+      "query_count": 50,
+      "exact_match": 0.64,
+      "contains_match": 0.74,
+      "avg_context_recall": 0.9466666666666667,
+      "avg_context_precision": 0.21000000000000002,
+      "avg_context_mrr": 0.964,
+      "groundedness_proxy": 0.96,
+      "answerability_proxy": 0.94,
+      "strict_triad_pass": 0.64,
+      "soft_triad_pass": 0.74,
+      "prediction_type_counts": {
+        "short_phrase": 23,
+        "single_token_or_entity": 21,
+        "not_supported_like": 2,
+        "yes_no_no": 3,
+        "yes_no_yes": 1
+      },
+      "error_category_counts": {
+        "exact_correct": 32,
+        "partial_or_format_correct": 5,
+        "grounded_but_wrong": 9,
+        "ungrounded_generation": 2,
+        "retrieval_context_missing_answer": 2
+      }
+    },
+    "top10_soft_cap2_compressed": {
+      "variant": "top10_soft_cap2_compressed",
+      "input_path": "data/processed/hierarchical_rag/rag_inputs_v3_top10_soft_cap2_compressed.jsonl",
+      "output_path": "outputs/hierarchical_rag/generation/rag_answers_qwen25_7b_top10_soft_cap2_compressed_autodl.jsonl",
+      "query_count": 50,
+      "exact_match": 0.64,
+      "contains_match": 0.72,
+      "avg_context_recall": 0.9466666666666667,
+      "avg_context_precision": 0.21711111111111112,
+      "avg_context_mrr": 0.964,
+      "groundedness_proxy": 0.94,
+      "answerability_proxy": 0.92,
+      "strict_triad_pass": 0.64,
+      "soft_triad_pass": 0.72,
+      "prediction_type_counts": {
+        "short_phrase": 25,
+        "single_token_or_entity": 18,
+        "not_supported_like": 3,
+        "yes_no_no": 3,
+        "yes_no_yes": 1
+      },
+      "error_category_counts": {
+        "exact_correct": 32,
+        "partial_or_format_correct": 4,
+        "grounded_but_wrong": 9,
+        "ungrounded_generation": 2,
+        "retrieval_context_missing_answer": 3
+      }
+    },
+    "top7_soft_cap2_compressed": {
+      "variant": "top7_soft_cap2_compressed",
+      "input_path": "data/processed/hierarchical_rag/rag_inputs_v3_top7_soft_cap2_compressed.jsonl",
+      "output_path": "outputs/hierarchical_rag/generation/rag_answers_qwen25_7b_top7_soft_cap2_compressed_autodl.jsonl",
+      "query_count": 50,
+      "exact_match": 0.62,
+      "contains_match": 0.72,
+      "avg_context_recall": 0.9233333333333333,
+      "avg_context_precision": 0.2914285714285714,
+      "avg_context_mrr": 0.964,
+      "groundedness_proxy": 0.94,
+      "answerability_proxy": 0.92,
+      "strict_triad_pass": 0.62,
+      "soft_triad_pass": 0.72,
+      "prediction_type_counts": {
+        "short_phrase": 26,
+        "single_token_or_entity": 17,
+        "not_supported_like": 3,
+        "yes_no_no": 3,
+        "yes_no_yes": 1
+      },
+      "error_category_counts": {
+        "exact_correct": 31,
+        "partial_or_format_correct": 5,
+        "grounded_but_wrong": 9,
+        "ungrounded_generation": 2,
+        "retrieval_context_missing_answer": 3
+      }
+    }
+  }
+}
