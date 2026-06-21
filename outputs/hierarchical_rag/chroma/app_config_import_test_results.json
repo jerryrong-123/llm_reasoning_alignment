@@ -1,0 +1,20 @@
+{
+  "app_import_ok": true,
+  "pipeline_exists": true,
+  "fastapi_app_exists": true,
+  "config_path": "D:\\llm_reasoning_alignment_server_restored\\industrial_rag_service\\config.yaml",
+  "config_path_exists": true,
+  "config_backend": "faiss",
+  "health_backend": "faiss",
+  "pipeline_loaded": false,
+  "model_loading_triggered": false,
+  "health_output": {
+    "status": "ok",
+    "service": "industrial_hierarchical_rag_service",
+    "pipeline_loaded": false,
+    "backend": "faiss",
+    "config_path": "D:\\llm_reasoning_alignment_server_restored\\industrial_rag_service\\config.yaml"
+  },
+  "elapsed_ms": 1650.6907939910889,
+  "overall_pass": true
+}

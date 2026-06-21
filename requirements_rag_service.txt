@@ -5,6 +5,7 @@ fastapi
 uvicorn
 pydantic
 faiss-cpu
+chromadb
 sentence-transformers
 transformers
 accelerate

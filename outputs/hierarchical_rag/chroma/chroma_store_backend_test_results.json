@@ -1,0 +1,60 @@
+{
+  "chroma_persist_dir": "D:\\llm_reasoning_alignment_server_restored\\outputs\\hierarchical_rag\\chroma\\chroma_child_store",
+  "collection_name": "hierarchical_rag_child_chunks",
+  "collection_count": 944,
+  "query_index_id": 0,
+  "expected_child_id": "chunk_000001_000_000",
+  "top1_child_id": "chunk_000001_000_000",
+  "top1_matches_expected": true,
+  "result_type_check": true,
+  "returned_count": 5,
+  "latency_ms": 645.2724933624268,
+  "overall_pass": true,
+  "top_results": [
+    {
+      "rank": 1,
+      "score": 1.0,
+      "index_id": 0,
+      "child_id": "chunk_000001_000_000",
+      "parent_id": "parent_000001_000",
+      "title": "Radio City (Indian radio station)",
+      "text_preview": "Radio City is India's first private FM radio station and was started on 3 July 2001. It broadcasts on 91.1 (earlier 91.0 in most cities) megahertz from Mumbai (where it was started in 2004), Bengaluru (started first in 2..."
+    },
+    {
+      "rank": 2,
+      "score": 0.7334737992406587,
+      "index_id": 1,
+      "child_id": "chunk_000001_000_001",
+      "parent_id": "parent_000001_000",
+      "title": "Radio City (Indian radio station)",
+      "text_preview": "It plays Hindi, English and regional songs. It was launched in Hyderabad in March 2006, in Chennai on 7 July 2006 and in Visakhapatnam October 2007. Radio City recently forayed into New Media in May 2008 with the launch..."
+    },
+    {
+      "rank": 3,
+      "score": 0.6714425976797929,
+      "index_id": 2,
+      "child_id": "chunk_000001_000_002",
+      "parent_id": "parent_000001_000",
+      "title": "Radio City (Indian radio station)",
+      "text_preview": "Radio City recently forayed into New Media in May 2008 with the launch of a music portal - PlanetRadiocity.com that offers music related news, videos, songs, and other music-related features. The Radio station currently..."
+    },
+    {
+      "rank": 4,
+      "score": 0.5569841533956507,
+      "index_id": 637,
+      "child_id": "chunk_000033_000_000",
+      "parent_id": "parent_000033_000",
+      "title": "List of magazines in Malaysia",
+      "text_preview": "The first women's magazine was published in Malaysia in 1932. In the 2000s there were nearly fifty local titles addressing women in the country. These magazines also include those having an Islamic perspective."
+    },
+    {
+      "rank": 5,
+      "score": 0.556789675101129,
+      "index_id": 136,
+      "child_id": "chunk_000007_000_000",
+      "parent_id": "parent_000007_000",
+      "title": "India",
+      "text_preview": "India, officially the Republic of India (\"Bhārat Gaṇarājya\"), is a country in South Asia. It is the seventh-largest country by area, the second-most populous country (with over 1.2 billion people), and the most populous..."
+    }
+  ]
+}

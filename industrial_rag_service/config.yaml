@@ -1,6 +1,6 @@
 ﻿service:
   name: "industrial_hierarchical_rag_service"
-  version: "0.1.0"
+  version: "0.2.0"
   host: "127.0.0.1"
   port: 8000
   log_level: "INFO"
@@ -15,6 +15,9 @@ paths:
   faiss_index_path: "outputs/hierarchical_rag/index/faiss_child.index"
   faiss_meta_path: "outputs/hierarchical_rag/index/faiss_child_meta.json"
 
+  chroma_dir: "outputs/hierarchical_rag/chroma"
+  chroma_persist_dir: "outputs/hierarchical_rag/chroma/chroma_child_store"
+
   api_test_dir: "outputs/hierarchical_rag/api_tests"
   concurrency_test_dir: "outputs/hierarchical_rag/concurrency"
   log_dir: "outputs/hierarchical_rag/logs"
@@ -28,9 +31,11 @@ query_processing:
   max_search_queries: 4
 
 retrieval:
+  # Supported backends: faiss, chroma
   backend: "faiss"
+  chroma_collection_name: "hierarchical_rag_child_chunks"
   top_k_per_query: 10
-  final_top_k: 10
+  final_top_k: 20
   fusion_method: "rrf"
   rrf_k: 60
   enable_parent_expansion: true
@@ -39,8 +44,15 @@ retrieval:
 embedding:
   model_name: "BAAI/bge-small-en-v1.5"
   normalize_embeddings: true
-  batch_size: 32
   device: "cpu"
+
+reranking:
+  enabled: true
+  model_name: "/root/autodl-tmp/hf_models/bge-reranker-base"
+  top_k: 7
+  batch_size: 16
+  max_length: 512
+  device: "cuda"
 
 context_packing:
   strategy: "top7_soft_cap2_compressed"
@@ -49,13 +61,15 @@ context_packing:
   max_chunks_per_parent: 2
   include_title: true
   include_scores: true
+  min_score: 0.01
 
 generation:
-  mode: "extractive_mock"
-  model_name: "Qwen/Qwen2.5-7B-Instruct"
+  mode: "qwen_local"
+  model_name: "/root/autodl-tmp/models/Qwen/Qwen2___5-7B-Instruct"
   lora_path: "outputs/hierarchical_rag/checkpoints/qwen25_7b_rag_sft_lora"
   max_new_tokens: 128
   temperature: 0.0
+  device: "cuda"
 
 api:
   default_search_top_k: 10

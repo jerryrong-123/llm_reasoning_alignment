@@ -1,0 +1,29 @@
+{
+  "config_path": "D:\\llm_reasoning_alignment_server_restored\\industrial_rag_service\\config.yaml",
+  "current_config_backend": "faiss",
+  "tested_backends": [
+    "faiss",
+    "chroma"
+  ],
+  "overall_pass": true,
+  "backend_results": [
+    {
+      "backend": "faiss",
+      "expected_class": "FAISSVectorStore",
+      "actual_class": "FAISSVectorStore",
+      "is_vector_store": true,
+      "matches_expected_class": true,
+      "latency_ms": 46.12159729003906,
+      "overall_pass": true
+    },
+    {
+      "backend": "chroma",
+      "expected_class": "ChromaVectorStore",
+      "actual_class": "ChromaVectorStore",
+      "is_vector_store": true,
+      "matches_expected_class": true,
+      "latency_ms": 0.0,
+      "overall_pass": true
+    }
+  ]
+}

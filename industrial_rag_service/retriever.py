@@ -5,9 +5,8 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from industrial_rag_service.faiss_store import FAISSVectorStore
 from industrial_rag_service.query_processor import ProcessedQuery, QueryProcessor
-from industrial_rag_service.vector_store import VectorSearchResult
+from industrial_rag_service.vector_store import VectorSearchResult, VectorStore
 
 
 @dataclass
@@ -35,7 +34,7 @@ class RetrievalOutput:
 class HierarchicalRetriever:
     def __init__(
         self,
-        vector_store: FAISSVectorStore,
+        vector_store: VectorStore,
         query_processor: QueryProcessor,
         top_k_per_query: int = 10,
         final_top_k: int = 10,
@@ -185,8 +184,9 @@ def truncate_text(text: str, max_chars: int = 220) -> str:
         return text
     return text[:max_chars].rstrip() + "..."
 
-
 def main() -> None:
+    from industrial_rag_service.faiss_store import FAISSVectorStore
+
     project_root = Path(__file__).resolve().parents[1]
 
     index_path = project_root / "outputs" / "hierarchical_rag" / "index" / "faiss_child.index"

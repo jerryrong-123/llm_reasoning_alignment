@@ -1,0 +1,20 @@
+{
+  "source_faiss_index": "D:\\llm_reasoning_alignment_server_restored\\outputs\\hierarchical_rag\\index\\faiss_child.index",
+  "source_faiss_meta": "D:\\llm_reasoning_alignment_server_restored\\outputs\\hierarchical_rag\\index\\faiss_child_meta.json",
+  "persist_dir": "D:\\llm_reasoning_alignment_server_restored\\outputs\\hierarchical_rag\\chroma\\chroma_child_store",
+  "collection_name": "hierarchical_rag_child_chunks",
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "normalize_embeddings": true,
+  "loaded_child_chunks": 944,
+  "vector_count": 944,
+  "vector_dim": 384,
+  "chroma_collection_count": 944,
+  "rebuild": true,
+  "elapsed_seconds": 1.3459336757659912,
+  "first_child": {
+    "child_id": "chunk_000001_000_000",
+    "parent_id": "parent_000001_000",
+    "title": "Radio City (Indian radio station)"
+  },
+  "overall_pass": true
+}

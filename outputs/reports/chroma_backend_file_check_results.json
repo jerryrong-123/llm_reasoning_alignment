@@ -1,0 +1,309 @@
+{
+  "summary": {
+    "total_expected_files": 25,
+    "total_existing_files": 25,
+    "total_missing_files": 0,
+    "python_compile_total": 10,
+    "python_compile_ok": 10,
+    "python_compile_errors": 0,
+    "result_json_total": 5,
+    "result_json_pass": 5,
+    "result_json_fail": 0,
+    "overall_pass": true
+  },
+  "expected_files": [
+    {
+      "path": "industrial_rag_service/app.py",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 13146
+    },
+    {
+      "path": "industrial_rag_service/config.yaml",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 2180
+    },
+    {
+      "path": "industrial_rag_service/retriever.py",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 8125
+    },
+    {
+      "path": "industrial_rag_service/chroma_store.py",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 9858
+    },
+    {
+      "path": "industrial_rag_service/vector_store_factory.py",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 3205
+    },
+    {
+      "path": "industrial_rag_service/vector_store.py",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 1741
+    },
+    {
+      "path": "industrial_rag_service/faiss_store.py",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 6866
+    },
+    {
+      "path": "requirements_rag_service.txt",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 244
+    },
+    {
+      "path": "scripts/131_build_chroma_child_index.py",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 9366
+    },
+    {
+      "path": "scripts/132_test_chroma_vector_search.py",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 8047
+    },
+    {
+      "path": "scripts/133_test_chroma_store_backend.py",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 8302
+    },
+    {
+      "path": "scripts/134_test_vector_store_factory_backend_switch.py",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 6226
+    },
+    {
+      "path": "scripts/135_test_app_config_import.py",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 5042
+    },
+    {
+      "path": "scripts/136_check_chroma_backend_files.py",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 16133
+    },
+    {
+      "path": "outputs/hierarchical_rag/chroma/chroma_child_store/chroma.sqlite3",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 8568832
+    },
+    {
+      "path": "outputs/hierarchical_rag/chroma/chroma_index_build_results.json",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 867
+    },
+    {
+      "path": "outputs/hierarchical_rag/chroma/chroma_index_build_report.md",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 1149
+    },
+    {
+      "path": "outputs/hierarchical_rag/chroma/chroma_vector_search_test_results.json",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 2892
+    },
+    {
+      "path": "outputs/hierarchical_rag/chroma/chroma_vector_search_test_report.md",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 2681
+    },
+    {
+      "path": "outputs/hierarchical_rag/chroma/chroma_store_backend_test_results.json",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 2834
+    },
+    {
+      "path": "outputs/hierarchical_rag/chroma/chroma_store_backend_test_report.md",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 2880
+    },
+    {
+      "path": "outputs/hierarchical_rag/chroma/vector_store_factory_backend_switch_results.json",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 782
+    },
+    {
+      "path": "outputs/hierarchical_rag/chroma/vector_store_factory_backend_switch_report.md",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 961
+    },
+    {
+      "path": "outputs/hierarchical_rag/chroma/app_config_import_test_results.json",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 672
+    },
+    {
+      "path": "outputs/hierarchical_rag/chroma/app_config_import_test_report.md",
+      "exists": true,
+      "is_file": true,
+      "size_bytes": 787
+    }
+  ],
+  "python_compile": [
+    {
+      "path": "industrial_rag_service/app.py",
+      "compile_ok": true,
+      "error": null
+    },
+    {
+      "path": "industrial_rag_service/retriever.py",
+      "compile_ok": true,
+      "error": null
+    },
+    {
+      "path": "industrial_rag_service/chroma_store.py",
+      "compile_ok": true,
+      "error": null
+    },
+    {
+      "path": "industrial_rag_service/vector_store_factory.py",
+      "compile_ok": true,
+      "error": null
+    },
+    {
+      "path": "scripts/131_build_chroma_child_index.py",
+      "compile_ok": true,
+      "error": null
+    },
+    {
+      "path": "scripts/132_test_chroma_vector_search.py",
+      "compile_ok": true,
+      "error": null
+    },
+    {
+      "path": "scripts/133_test_chroma_store_backend.py",
+      "compile_ok": true,
+      "error": null
+    },
+    {
+      "path": "scripts/134_test_vector_store_factory_backend_switch.py",
+      "compile_ok": true,
+      "error": null
+    },
+    {
+      "path": "scripts/135_test_app_config_import.py",
+      "compile_ok": true,
+      "error": null
+    },
+    {
+      "path": "scripts/136_check_chroma_backend_files.py",
+      "compile_ok": true,
+      "error": null
+    }
+  ],
+  "result_jsons": [
+    {
+      "path": "outputs/hierarchical_rag/chroma/chroma_index_build_results.json",
+      "exists": true,
+      "overall_pass": true,
+      "collection_count": null,
+      "top1_matches_expected": null,
+      "result_type_check": null,
+      "current_config_backend": null,
+      "config_backend": null,
+      "health_backend": null,
+      "error": null
+    },
+    {
+      "path": "outputs/hierarchical_rag/chroma/chroma_vector_search_test_results.json",
+      "exists": true,
+      "overall_pass": true,
+      "collection_count": 944,
+      "top1_matches_expected": true,
+      "result_type_check": null,
+      "current_config_backend": null,
+      "config_backend": null,
+      "health_backend": null,
+      "error": null
+    },
+    {
+      "path": "outputs/hierarchical_rag/chroma/chroma_store_backend_test_results.json",
+      "exists": true,
+      "overall_pass": true,
+      "collection_count": 944,
+      "top1_matches_expected": true,
+      "result_type_check": true,
+      "current_config_backend": null,
+      "config_backend": null,
+      "health_backend": null,
+      "error": null
+    },
+    {
+      "path": "outputs/hierarchical_rag/chroma/vector_store_factory_backend_switch_results.json",
+      "exists": true,
+      "overall_pass": true,
+      "collection_count": null,
+      "top1_matches_expected": null,
+      "result_type_check": null,
+      "current_config_backend": "faiss",
+      "config_backend": null,
+      "health_backend": null,
+      "error": null
+    },
+    {
+      "path": "outputs/hierarchical_rag/chroma/app_config_import_test_results.json",
+      "exists": true,
+      "overall_pass": true,
+      "collection_count": null,
+      "top1_matches_expected": null,
+      "result_type_check": null,
+      "current_config_backend": null,
+      "config_backend": "faiss",
+      "health_backend": "faiss",
+      "error": null
+    }
+  ],
+  "config_check": {
+    "config_path": "industrial_rag_service/config.yaml",
+    "service_version": "0.2.0",
+    "backend": "faiss",
+    "backend_supported_value": true,
+    "has_chroma_persist_dir": true,
+    "chroma_persist_dir": "outputs/hierarchical_rag/chroma/chroma_child_store",
+    "has_chroma_collection_name": true,
+    "chroma_collection_name": "hierarchical_rag_child_chunks",
+    "embedding_model": "BAAI/bge-small-en-v1.5",
+    "overall_pass": true
+  },
+  "requirements_check": {
+    "path": "requirements_rag_service.txt",
+    "has_fastapi": true,
+    "has_faiss_cpu": true,
+    "has_chromadb": true,
+    "has_sentence_transformers": true,
+    "overall_pass": true
+  },
+  "app_backend_wiring": {
+    "path": "industrial_rag_service/app.py",
+    "has_create_vector_store": true,
+    "has_vector_store_backend_print": true,
+    "has_yaml_safe_load": true,
+    "imports_faiss_vector_store_directly": false,
+    "instantiates_faiss_vector_store_directly": false,
+    "overall_pass": true
+  }
+}
