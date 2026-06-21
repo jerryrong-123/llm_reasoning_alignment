@@ -1,0 +1,13 @@
+# Industrial Hierarchical RAG service dependencies
+# This file records the extra dependencies needed by the FastAPI RAG serving stage.
+
+fastapi
+uvicorn
+pydantic
+faiss-cpu
+sentence-transformers
+transformers
+accelerate
+torch
+numpy
+pyyaml

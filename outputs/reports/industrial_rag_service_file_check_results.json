@@ -1,0 +1,281 @@
+{
+  "time": "2026-06-21T23:16:11",
+  "project_root": "D:\\llm_reasoning_alignment_server_restored",
+  "summary": {
+    "total_expected_files": 28,
+    "total_existing_files": 28,
+    "total_missing_files": 0,
+    "python_compile_total": 14,
+    "python_compile_ok": 14,
+    "python_compile_errors": 0,
+    "overall_pass": true
+  },
+  "file_checks": {
+    "core_service_files": {
+      "total": 10,
+      "exists_count": 10,
+      "missing_count": 0,
+      "items": [
+        {
+          "path": "industrial_rag_service/__init__.py",
+          "exists": true,
+          "size_bytes": 0
+        },
+        {
+          "path": "industrial_rag_service/query_processor.py",
+          "exists": true,
+          "size_bytes": 6015
+        },
+        {
+          "path": "industrial_rag_service/schemas.py",
+          "exists": true,
+          "size_bytes": 1335
+        },
+        {
+          "path": "industrial_rag_service/vector_store.py",
+          "exists": true,
+          "size_bytes": 1741
+        },
+        {
+          "path": "industrial_rag_service/faiss_store.py",
+          "exists": true,
+          "size_bytes": 6866
+        },
+        {
+          "path": "industrial_rag_service/retriever.py",
+          "exists": true,
+          "size_bytes": 8113
+        },
+        {
+          "path": "industrial_rag_service/reranker.py",
+          "exists": true,
+          "size_bytes": 8009
+        },
+        {
+          "path": "industrial_rag_service/context_packer.py",
+          "exists": true,
+          "size_bytes": 11409
+        },
+        {
+          "path": "industrial_rag_service/generator.py",
+          "exists": true,
+          "size_bytes": 9952
+        },
+        {
+          "path": "industrial_rag_service/app.py",
+          "exists": true,
+          "size_bytes": 10299
+        }
+      ]
+    },
+    "engineering_scripts": {
+      "total": 5,
+      "exists_count": 5,
+      "missing_count": 0,
+      "items": [
+        {
+          "path": "scripts/126_build_faiss_child_index.py",
+          "exists": true,
+          "size_bytes": 9050
+        },
+        {
+          "path": "scripts/127_test_faiss_search.py",
+          "exists": true,
+          "size_bytes": 8361
+        },
+        {
+          "path": "scripts/128_test_rag_api.py",
+          "exists": true,
+          "size_bytes": 9077
+        },
+        {
+          "path": "scripts/129_benchmark_rag_api_concurrent.py",
+          "exists": true,
+          "size_bytes": 11808
+        },
+        {
+          "path": "scripts/130_check_industrial_rag_service_files.py",
+          "exists": true,
+          "size_bytes": 9538
+        }
+      ]
+    },
+    "faiss_index_outputs": {
+      "total": 5,
+      "exists_count": 5,
+      "missing_count": 0,
+      "items": [
+        {
+          "path": "outputs/hierarchical_rag/index/faiss_child.index",
+          "exists": true,
+          "size_bytes": 1450029
+        },
+        {
+          "path": "outputs/hierarchical_rag/index/faiss_child_meta.json",
+          "exists": true,
+          "size_bytes": 936312
+        },
+        {
+          "path": "outputs/hierarchical_rag/index/faiss_index_build_report.md",
+          "exists": true,
+          "size_bytes": 1381
+        },
+        {
+          "path": "outputs/hierarchical_rag/index/faiss_search_test_results.json",
+          "exists": true,
+          "size_bytes": 16474
+        },
+        {
+          "path": "outputs/hierarchical_rag/index/faiss_search_test_report.md",
+          "exists": true,
+          "size_bytes": 7149
+        }
+      ]
+    },
+    "api_test_outputs": {
+      "total": 4,
+      "exists_count": 4,
+      "missing_count": 0,
+      "items": [
+        {
+          "path": "outputs/hierarchical_rag/api_tests/rag_api_function_test_results.json",
+          "exists": true,
+          "size_bytes": 8801
+        },
+        {
+          "path": "outputs/hierarchical_rag/api_tests/rag_api_function_test_report.md",
+          "exists": true,
+          "size_bytes": 2342
+        },
+        {
+          "path": "outputs/hierarchical_rag/api_tests/rag_api_concurrency_test_results.json",
+          "exists": true,
+          "size_bytes": 4459
+        },
+        {
+          "path": "outputs/hierarchical_rag/api_tests/rag_api_concurrency_test_report.md",
+          "exists": true,
+          "size_bytes": 1208
+        }
+      ]
+    },
+    "chinese_reports": {
+      "total": 4,
+      "exists_count": 4,
+      "missing_count": 0,
+      "items": [
+        {
+          "path": "outputs/reports/industrial_rag_service_engineering_summary.md",
+          "exists": true,
+          "size_bytes": 17751
+        },
+        {
+          "path": "outputs/reports/industrial_rag_service_readme_section_cn.md",
+          "exists": true,
+          "size_bytes": 8439
+        },
+        {
+          "path": "outputs/reports/industrial_rag_service_runbook_cn.md",
+          "exists": true,
+          "size_bytes": 11355
+        },
+        {
+          "path": "outputs/reports/industrial_rag_service_interview_explanation_cn.md",
+          "exists": true,
+          "size_bytes": 11757
+        }
+      ]
+    }
+  },
+  "compile_checks": {
+    "total": 14,
+    "compile_ok_count": 14,
+    "compile_error_count": 0,
+    "items": [
+      {
+        "path": "industrial_rag_service/query_processor.py",
+        "exists": true,
+        "compile_ok": true,
+        "error": null
+      },
+      {
+        "path": "industrial_rag_service/schemas.py",
+        "exists": true,
+        "compile_ok": true,
+        "error": null
+      },
+      {
+        "path": "industrial_rag_service/vector_store.py",
+        "exists": true,
+        "compile_ok": true,
+        "error": null
+      },
+      {
+        "path": "industrial_rag_service/faiss_store.py",
+        "exists": true,
+        "compile_ok": true,
+        "error": null
+      },
+      {
+        "path": "industrial_rag_service/retriever.py",
+        "exists": true,
+        "compile_ok": true,
+        "error": null
+      },
+      {
+        "path": "industrial_rag_service/reranker.py",
+        "exists": true,
+        "compile_ok": true,
+        "error": null
+      },
+      {
+        "path": "industrial_rag_service/context_packer.py",
+        "exists": true,
+        "compile_ok": true,
+        "error": null
+      },
+      {
+        "path": "industrial_rag_service/generator.py",
+        "exists": true,
+        "compile_ok": true,
+        "error": null
+      },
+      {
+        "path": "industrial_rag_service/app.py",
+        "exists": true,
+        "compile_ok": true,
+        "error": null
+      },
+      {
+        "path": "scripts/126_build_faiss_child_index.py",
+        "exists": true,
+        "compile_ok": true,
+        "error": null
+      },
+      {
+        "path": "scripts/127_test_faiss_search.py",
+        "exists": true,
+        "compile_ok": true,
+        "error": null
+      },
+      {
+        "path": "scripts/128_test_rag_api.py",
+        "exists": true,
+        "compile_ok": true,
+        "error": null
+      },
+      {
+        "path": "scripts/129_benchmark_rag_api_concurrent.py",
+        "exists": true,
+        "compile_ok": true,
+        "error": null
+      },
+      {
+        "path": "scripts/130_check_industrial_rag_service_files.py",
+        "exists": true,
+        "compile_ok": true,
+        "error": null
+      }
+    ]
+  }
+}

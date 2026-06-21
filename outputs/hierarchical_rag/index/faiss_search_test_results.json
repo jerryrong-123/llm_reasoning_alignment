@@ -1,0 +1,239 @@
+{
+  "index_path": "/root/autodl-tmp/llm_reasoning_alignment_server_restored/outputs/hierarchical_rag/index/faiss_child.index",
+  "meta_path": "/root/autodl-tmp/llm_reasoning_alignment_server_restored/outputs/hierarchical_rag/index/faiss_child_meta.json",
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "index_ntotal": 944,
+  "metadata_chunk_count": 944,
+  "top_k": 5,
+  "queries": [
+    {
+      "query": "Which magazine was started first Arthur's Magazine or First for Women?",
+      "top_k": 5,
+      "latency_ms": 303.6165237426758,
+      "results": [
+        {
+          "rank": 1,
+          "score": 0.7517054080963135,
+          "index_id": 640,
+          "child_id": "chunk_000033_001_000",
+          "parent_id": "parent_000033_001",
+          "title": "First for Women",
+          "text": "First for Women is a woman's magazine published by Bauer Media Group in the USA.  The magazine was started in 1989.  It is based in Englewood Cliffs, New Jersey.",
+          "text_preview": "First for Women is a woman's magazine published by Bauer Media Group in the USA. The magazine was started in 1989. It is based in Englewood Cliffs, New Jersey."
+        },
+        {
+          "rank": 2,
+          "score": 0.7517054080963135,
+          "index_id": 15,
+          "child_id": "chunk_000001_007_000",
+          "parent_id": "parent_000001_007",
+          "title": "First for Women",
+          "text": "First for Women is a woman's magazine published by Bauer Media Group in the USA.  The magazine was started in 1989.  It is based in Englewood Cliffs, New Jersey.",
+          "text_preview": "First for Women is a woman's magazine published by Bauer Media Group in the USA. The magazine was started in 1989. It is based in Englewood Cliffs, New Jersey."
+        },
+        {
+          "rank": 3,
+          "score": 0.7513422966003418,
+          "index_id": 12,
+          "child_id": "chunk_000001_005_000",
+          "parent_id": "parent_000001_005",
+          "title": "Arthur's Magazine",
+          "text": "Arthur's Magazine (1844–1846) was an American literary periodical published in Philadelphia in the 19th century.  Edited by T.S. Arthur, it featured work by Edgar A. Poe, J.H. Ingraham, Sarah Josepha Hale, Thomas G. Spear, and others.  In May 1846 it was merged into \"Godey's Lady's Book\".",
+          "text_preview": "Arthur's Magazine (1844–1846) was an American literary periodical published in Philadelphia in the 19th century. Edited by T.S. Arthur, it featured work by Edgar A. Poe, J.H. Ingraham, Sarah Josepha Hale, Thomas G. Spear, and others. In May 1846 it was merged..."
+        },
+        {
+          "rank": 4,
+          "score": 0.6882519125938416,
+          "index_id": 660,
+          "child_id": "chunk_000033_009_000",
+          "parent_id": "parent_000033_009",
+          "title": "List of magazines in China",
+          "text": "In 1898 the first women's magazine was published in China.  The number of women's magazines has increased in the country since the late 1980s.  In addition to national titles international magazines are also published in the country. \"",
+          "text_preview": "In 1898 the first women's magazine was published in China. The number of women's magazines has increased in the country since the late 1980s. In addition to national titles international magazines are also published in the country. \""
+        },
+        {
+          "rank": 5,
+          "score": 0.666693925857544,
+          "index_id": 637,
+          "child_id": "chunk_000033_000_000",
+          "parent_id": "parent_000033_000",
+          "title": "List of magazines in Malaysia",
+          "text": "The first women's magazine was published in Malaysia in 1932.  In the 2000s there were nearly fifty local titles addressing women in the country.  These magazines also include those having an Islamic perspective.",
+          "text_preview": "The first women's magazine was published in Malaysia in 1932. In the 2000s there were nearly fifty local titles addressing women in the country. These magazines also include those having an Islamic perspective."
+        }
+      ]
+    },
+    {
+      "query": "Arthur's Magazine start date",
+      "top_k": 5,
+      "latency_ms": 14.769554138183594,
+      "results": [
+        {
+          "rank": 1,
+          "score": 0.7135061025619507,
+          "index_id": 12,
+          "child_id": "chunk_000001_005_000",
+          "parent_id": "parent_000001_005",
+          "title": "Arthur's Magazine",
+          "text": "Arthur's Magazine (1844–1846) was an American literary periodical published in Philadelphia in the 19th century.  Edited by T.S. Arthur, it featured work by Edgar A. Poe, J.H. Ingraham, Sarah Josepha Hale, Thomas G. Spear, and others.  In May 1846 it was merged into \"Godey's Lady's Book\".",
+          "text_preview": "Arthur's Magazine (1844–1846) was an American literary periodical published in Philadelphia in the 19th century. Edited by T.S. Arthur, it featured work by Edgar A. Poe, J.H. Ingraham, Sarah Josepha Hale, Thomas G. Spear, and others. In May 1846 it was merged..."
+        },
+        {
+          "rank": 2,
+          "score": 0.61911940574646,
+          "index_id": 57,
+          "child_id": "chunk_000003_005_003",
+          "parent_id": "parent_000003_005",
+          "title": "Los Angeles Reader",
+          "text": "It is famous for being the first newspaper to publish Matt Groening's cartoon strip, Life in Hell on April 25, 1980.  James Vowell hired Matt Groening as his assistant editor in 1979.  Groening was also originally a Reader music critic.",
+          "text_preview": "It is famous for being the first newspaper to publish Matt Groening's cartoon strip, Life in Hell on April 25, 1980. James Vowell hired Matt Groening as his assistant editor in 1979. Groening was also originally a Reader music critic."
+        },
+        {
+          "rank": 3,
+          "score": 0.5903614163398743,
+          "index_id": 640,
+          "child_id": "chunk_000033_001_000",
+          "parent_id": "parent_000033_001",
+          "title": "First for Women",
+          "text": "First for Women is a woman's magazine published by Bauer Media Group in the USA.  The magazine was started in 1989.  It is based in Englewood Cliffs, New Jersey.",
+          "text_preview": "First for Women is a woman's magazine published by Bauer Media Group in the USA. The magazine was started in 1989. It is based in Englewood Cliffs, New Jersey."
+        },
+        {
+          "rank": 4,
+          "score": 0.5903614163398743,
+          "index_id": 15,
+          "child_id": "chunk_000001_007_000",
+          "parent_id": "parent_000001_007",
+          "title": "First for Women",
+          "text": "First for Women is a woman's magazine published by Bauer Media Group in the USA.  The magazine was started in 1989.  It is based in Englewood Cliffs, New Jersey.",
+          "text_preview": "First for Women is a woman's magazine published by Bauer Media Group in the USA. The magazine was started in 1989. It is based in Englewood Cliffs, New Jersey."
+        },
+        {
+          "rank": 5,
+          "score": 0.5879207253456116,
+          "index_id": 660,
+          "child_id": "chunk_000033_009_000",
+          "parent_id": "parent_000033_009",
+          "title": "List of magazines in China",
+          "text": "In 1898 the first women's magazine was published in China.  The number of women's magazines has increased in the country since the late 1980s.  In addition to national titles international magazines are also published in the country. \"",
+          "text_preview": "In 1898 the first women's magazine was published in China. The number of women's magazines has increased in the country since the late 1980s. In addition to national titles international magazines are also published in the country. \""
+        }
+      ]
+    },
+    {
+      "query": "First for Women start date",
+      "top_k": 5,
+      "latency_ms": 9.406566619873047,
+      "results": [
+        {
+          "rank": 1,
+          "score": 0.6947579383850098,
+          "index_id": 640,
+          "child_id": "chunk_000033_001_000",
+          "parent_id": "parent_000033_001",
+          "title": "First for Women",
+          "text": "First for Women is a woman's magazine published by Bauer Media Group in the USA.  The magazine was started in 1989.  It is based in Englewood Cliffs, New Jersey.",
+          "text_preview": "First for Women is a woman's magazine published by Bauer Media Group in the USA. The magazine was started in 1989. It is based in Englewood Cliffs, New Jersey."
+        },
+        {
+          "rank": 2,
+          "score": 0.6947579383850098,
+          "index_id": 15,
+          "child_id": "chunk_000001_007_000",
+          "parent_id": "parent_000001_007",
+          "title": "First for Women",
+          "text": "First for Women is a woman's magazine published by Bauer Media Group in the USA.  The magazine was started in 1989.  It is based in Englewood Cliffs, New Jersey.",
+          "text_preview": "First for Women is a woman's magazine published by Bauer Media Group in the USA. The magazine was started in 1989. It is based in Englewood Cliffs, New Jersey."
+        },
+        {
+          "rank": 3,
+          "score": 0.5977182984352112,
+          "index_id": 637,
+          "child_id": "chunk_000033_000_000",
+          "parent_id": "parent_000033_000",
+          "title": "List of magazines in Malaysia",
+          "text": "The first women's magazine was published in Malaysia in 1932.  In the 2000s there were nearly fifty local titles addressing women in the country.  These magazines also include those having an Islamic perspective.",
+          "text_preview": "The first women's magazine was published in Malaysia in 1932. In the 2000s there were nearly fifty local titles addressing women in the country. These magazines also include those having an Islamic perspective."
+        },
+        {
+          "rank": 4,
+          "score": 0.5920308828353882,
+          "index_id": 660,
+          "child_id": "chunk_000033_009_000",
+          "parent_id": "parent_000033_009",
+          "title": "List of magazines in China",
+          "text": "In 1898 the first women's magazine was published in China.  The number of women's magazines has increased in the country since the late 1980s.  In addition to national titles international magazines are also published in the country. \"",
+          "text_preview": "In 1898 the first women's magazine was published in China. The number of women's magazines has increased in the country since the late 1980s. In addition to national titles international magazines are also published in the country. \""
+        },
+        {
+          "rank": 5,
+          "score": 0.5829231142997742,
+          "index_id": 656,
+          "child_id": "chunk_000033_007_001",
+          "parent_id": "parent_000033_007",
+          "title": "My Secret Garden",
+          "text": "Later, after other women began writing and talking about sex publicly, Friday began thinking about writing a book about female sexual fantasies, first collecting fantasies from her friends, and then advertising in newspapers and magazines for more.  She organized these narratives into \"rooms\", and each is identified by the woman's first name, except for the last chapter, \"odd notes\", which is presented as the \"fleeting thoughts\" of many anonymous women.  The book revealed that women fantasize, just as men do, and that the content of the fantasies can be as transgressive, or not, as men's.",
+          "text_preview": "Later, after other women began writing and talking about sex publicly, Friday began thinking about writing a book about female sexual fantasies, first collecting fantasies from her friends, and then advertising in newspapers and magazines for more. She organiz..."
+        }
+      ]
+    },
+    {
+      "query": "Radio City Indian radio station",
+      "top_k": 5,
+      "latency_ms": 8.25953483581543,
+      "results": [
+        {
+          "rank": 1,
+          "score": 0.8343697786331177,
+          "index_id": 0,
+          "child_id": "chunk_000001_000_000",
+          "parent_id": "parent_000001_000",
+          "title": "Radio City (Indian radio station)",
+          "text": "Radio City is India's first private FM radio station and was started on 3 July 2001.  It broadcasts on 91.1 (earlier 91.0 in most cities) megahertz from Mumbai (where it was started in 2004), Bengaluru (started first in 2001), Lucknow and New Delhi (since 2003).  It plays Hindi, English and regional songs.",
+          "text_preview": "Radio City is India's first private FM radio station and was started on 3 July 2001. It broadcasts on 91.1 (earlier 91.0 in most cities) megahertz from Mumbai (where it was started in 2004), Bengaluru (started first in 2001), Lucknow and New Delhi (since 2003)..."
+        },
+        {
+          "rank": 2,
+          "score": 0.7913984656333923,
+          "index_id": 1,
+          "child_id": "chunk_000001_000_001",
+          "parent_id": "parent_000001_000",
+          "title": "Radio City (Indian radio station)",
+          "text": "It plays Hindi, English and regional songs.  It was launched in Hyderabad in March 2006, in Chennai on 7 July 2006 and in Visakhapatnam October 2007.  Radio City recently forayed into New Media in May 2008 with the launch of a music portal - PlanetRadiocity.com that offers music related news, videos, songs, and other music-related features.",
+          "text_preview": "It plays Hindi, English and regional songs. It was launched in Hyderabad in March 2006, in Chennai on 7 July 2006 and in Visakhapatnam October 2007. Radio City recently forayed into New Media in May 2008 with the launch of a music portal - PlanetRadiocity.com..."
+        },
+        {
+          "rank": 3,
+          "score": 0.7693407535552979,
+          "index_id": 2,
+          "child_id": "chunk_000001_000_002",
+          "parent_id": "parent_000001_000",
+          "title": "Radio City (Indian radio station)",
+          "text": "Radio City recently forayed into New Media in May 2008 with the launch of a music portal - PlanetRadiocity.com that offers music related news, videos, songs, and other music-related features.  The Radio station currently plays a mix of Hindi and Regional music.  Abraham Thomas is the CEO of the company.",
+          "text_preview": "Radio City recently forayed into New Media in May 2008 with the launch of a music portal - PlanetRadiocity.com that offers music related news, videos, songs, and other music-related features. The Radio station currently plays a mix of Hindi and Regional music...."
+        },
+        {
+          "rank": 4,
+          "score": 0.5597573518753052,
+          "index_id": 602,
+          "child_id": "chunk_000030_009_000",
+          "parent_id": "parent_000030_009",
+          "title": "Tinley Park station",
+          "text": "Tinley Park Station (also known as Tinley Park-Oak Park Avenue Station) is an elaborate commuter railroad station along Metra's Rock Island District line in Tinley Park, Illinois.  The station is officially located at 6700 South Street between Oak Park Avenue and 66th Court, however parking is also available on the opposite side of the station along North Street between Oak Park Avenue and 67th Avenue, as well as the center of the block of Oak Park Avenue, 173rd Street, 67th Court and 172nd Street.  Another parking area exists along South Street opposite the main parking lot at the station.",
+          "text_preview": "Tinley Park Station (also known as Tinley Park-Oak Park Avenue Station) is an elaborate commuter railroad station along Metra's Rock Island District line in Tinley Park, Illinois. The station is officially located at 6700 South Street between Oak Park Avenue a..."
+        },
+        {
+          "rank": 5,
+          "score": 0.5482617616653442,
+          "index_id": 381,
+          "child_id": "chunk_000019_008_001",
+          "parent_id": "parent_000019_008",
+          "title": "New Rules (song)",
+          "text": "It was released to contemporary hit radio in the United Kingdom on 21 July 2017 as the album's sixth single.  It impacted the same format in the United States on 22 August 2017.",
+          "text_preview": "It was released to contemporary hit radio in the United Kingdom on 21 July 2017 as the album's sixth single. It impacted the same format in the United States on 22 August 2017."
+        }
+      ]
+    }
+  ],
+  "elapsed_seconds": 14.096986293792725
+}

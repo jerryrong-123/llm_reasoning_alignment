@@ -1,0 +1,154 @@
+{
+  "base_url": "http://127.0.0.1:8000",
+  "time": "2026-06-21T16:40:46",
+  "test_question": "Which magazine was started first Arthur's Magazine or First for Women?",
+  "health": {
+    "status": "ok",
+    "pipeline_loaded": true,
+    "service": "industrial_hierarchical_rag"
+  },
+  "summary": {
+    "num_requests": 6,
+    "max_workers": 3,
+    "success_count": 6,
+    "failure_count": 0,
+    "correct_count": 6,
+    "success_rate": 1.0,
+    "correct_rate": 1.0,
+    "wall_time_ms": 5107.05,
+    "throughput_req_per_sec": 1.1748,
+    "latency_ms": {
+      "mean": 2179.23,
+      "median": 2247.73,
+      "p50": 2247.73,
+      "p95": 2711.71,
+      "min": 1352.56,
+      "max": 2863.41
+    },
+    "ok_latency_ms": {
+      "mean": 2179.23,
+      "median": 2247.73,
+      "p50": 2247.73,
+      "p95": 2711.71,
+      "min": 1352.56,
+      "max": 2863.41
+    },
+    "overall_pass": true
+  },
+  "results": [
+    {
+      "request_id": 1,
+      "ok": true,
+      "correct": true,
+      "latency_ms": 1352.56,
+      "answer": "Arthur's Magazine was started in 1844, while First for Women was started in 1989. Therefore, Arthur's Magazine was started first.",
+      "context_titles": [
+        "Arthur's Magazine",
+        "First for Women"
+      ],
+      "server_latency_ms": {
+        "retrieval": 332.43274688720703,
+        "rerank": 100.82077980041504,
+        "pack": 0.09369850158691406,
+        "generation": 910.5467796325684,
+        "total": 1344.0494537353516
+      },
+      "error": null
+    },
+    {
+      "request_id": 2,
+      "ok": true,
+      "correct": true,
+      "latency_ms": 2863.41,
+      "answer": "Arthur's Magazine was started in 1844, while First for Women was started in 1989. Therefore, Arthur's Magazine was started first.",
+      "context_titles": [
+        "Arthur's Magazine",
+        "First for Women"
+      ],
+      "server_latency_ms": {
+        "retrieval": 42.26398468017578,
+        "rerank": 33.64157676696777,
+        "pack": 0.0705718994140625,
+        "generation": 682.6667785644531,
+        "total": 758.7616443634033
+      },
+      "error": null
+    },
+    {
+      "request_id": 3,
+      "ok": true,
+      "correct": true,
+      "latency_ms": 2107.37,
+      "answer": "Arthur's Magazine was started in 1844, while First for Women was started in 1989. Therefore, Arthur's Magazine was started first.",
+      "context_titles": [
+        "Arthur's Magazine",
+        "First for Women"
+      ],
+      "server_latency_ms": {
+        "retrieval": 33.48278999328613,
+        "rerank": 34.12580490112305,
+        "pack": 0.0762939453125,
+        "generation": 684.7233772277832,
+        "total": 752.5482177734375
+      },
+      "error": null
+    },
+    {
+      "request_id": 4,
+      "ok": true,
+      "correct": true,
+      "latency_ms": 2256.6,
+      "answer": "Arthur's Magazine was started in 1844, while First for Women was started in 1989. Therefore, Arthur's Magazine was started first.",
+      "context_titles": [
+        "Arthur's Magazine",
+        "First for Women"
+      ],
+      "server_latency_ms": {
+        "retrieval": 32.09638595581055,
+        "rerank": 34.70277786254883,
+        "pack": 0.07390975952148438,
+        "generation": 677.8953075408936,
+        "total": 744.8930740356445
+      },
+      "error": null
+    },
+    {
+      "request_id": 5,
+      "ok": true,
+      "correct": true,
+      "latency_ms": 2253.0,
+      "answer": "Arthur's Magazine was started in 1844, while First for Women was started in 1989. Therefore, Arthur's Magazine was started first.",
+      "context_titles": [
+        "Arthur's Magazine",
+        "First for Women"
+      ],
+      "server_latency_ms": {
+        "retrieval": 32.660484313964844,
+        "rerank": 34.34634208679199,
+        "pack": 0.07176399230957031,
+        "generation": 685.2569580078125,
+        "total": 752.4528503417969
+      },
+      "error": null
+    },
+    {
+      "request_id": 6,
+      "ok": true,
+      "correct": true,
+      "latency_ms": 2242.47,
+      "answer": "Arthur's Magazine was started in 1844, while First for Women was started in 1989. Therefore, Arthur's Magazine was started first.",
+      "context_titles": [
+        "Arthur's Magazine",
+        "First for Women"
+      ],
+      "server_latency_ms": {
+        "retrieval": 32.75012969970703,
+        "rerank": 33.91623497009277,
+        "pack": 0.07319450378417969,
+        "generation": 681.8416118621826,
+        "total": 748.704195022583
+      },
+      "error": null
+    }
+  ]
+}

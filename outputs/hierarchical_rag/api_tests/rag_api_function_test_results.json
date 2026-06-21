@@ -1,0 +1,207 @@
+{
+  "base_url": "http://127.0.0.1:8000",
+  "test_question": "Which magazine was started first Arthur's Magazine or First for Women?",
+  "time": "2026-06-21T16:31:19",
+  "checks": {
+    "health_ok": true,
+    "search_ok": true,
+    "search_has_contexts": true,
+    "search_has_arthur": true,
+    "search_has_first_for_women": true,
+    "answer_ok": true,
+    "answer_mentions_arthur": true,
+    "answer_mentions_first_for_women": true,
+    "answer_mentions_first": true,
+    "answer_has_arthur_context": true,
+    "answer_has_first_for_women_context": true,
+    "overall_pass": true
+  },
+  "results": {
+    "health": {
+      "ok": true,
+      "status": "success",
+      "latency_ms": 25.13,
+      "data": {
+        "status": "ok",
+        "pipeline_loaded": true,
+        "service": "industrial_hierarchical_rag"
+      },
+      "error": null
+    },
+    "search": {
+      "ok": true,
+      "status": "success",
+      "latency_ms": 78.6,
+      "data": {
+        "question": "Which magazine was started first Arthur's Magazine or First for Women?",
+        "processed_queries": [
+          "Arthur's Magazine start date",
+          "First for Women start date",
+          "Arthur's Magazine First for Women comparison",
+          "Which magazine was started first Arthur's Magazine or First for Women?"
+        ],
+        "latency_ms": {
+          "retrieval": 42.56010055541992,
+          "rerank": 33.77842903137207,
+          "pack": 0.07295608520507812,
+          "total": 76.46298408508301
+        },
+        "retrieval_debug": {
+          "search_query_count": 4,
+          "search_queries": [
+            "Arthur's Magazine start date",
+            "First for Women start date",
+            "Arthur's Magazine First for Women comparison",
+            "Which magazine was started first Arthur's Magazine or First for Women?"
+          ],
+          "raw_result_count": 40,
+          "fused_result_count": 20,
+          "final_context_count": 20,
+          "top_k_per_query": 10,
+          "final_top_k": 20,
+          "rrf_k": 60,
+          "max_chunks_per_parent": 3
+        },
+        "rerank_debug": {
+          "input_context_count": 20,
+          "output_context_count": 7,
+          "top_k": 7,
+          "batch_size": 16,
+          "max_length": 512
+        },
+        "pack_debug": {
+          "input_context_count": 7,
+          "packed_context_count": 2,
+          "max_chunks": 4,
+          "max_chunks_per_parent": 2,
+          "max_context_chars": 4000,
+          "actual_context_chars": 874,
+          "strategy": "rerank_top4_soft_cap2_compressed",
+          "dedup_by_text": true,
+          "dedup_by_title_text": true,
+          "min_score": 0.01
+        },
+        "contexts": [
+          {
+            "rank": 1,
+            "score": 0.9955258965492249,
+            "child_id": "chunk_000001_005_000",
+            "parent_id": "parent_000001_005",
+            "title": "Arthur's Magazine",
+            "text": "Arthur's Magazine (1844–1846) was an American literary periodical published in Philadelphia in the 19th century. Edited by T.S. Arthur, it featured work by Edgar A. Poe, J.H. Ingraham, Sarah Josepha Hale, Thomas G. Spear, and others. In May 1846 it was merged into \"Godey's Lady's Book\".",
+            "source_query": "Which magazine was started first Arthur's Magazine or First for Women?"
+          },
+          {
+            "rank": 2,
+            "score": 0.9928008317947388,
+            "child_id": "chunk_000033_001_000",
+            "parent_id": "parent_000033_001",
+            "title": "First for Women",
+            "text": "First for Women is a woman's magazine published by Bauer Media Group in the USA. The magazine was started in 1989. It is based in Englewood Cliffs, New Jersey.",
+            "source_query": "Which magazine was started first Arthur's Magazine or First for Women?"
+          }
+        ],
+        "context_text": "[Context 1] Title: Arthur's Magazine\nMetadata: child_id=chunk_000001_005_000 | parent_id=parent_000001_005 | score=0.9955 | source_query=Which magazine was started first Arthur's Magazine or First for Women?\nText:\nArthur's Magazine (1844–1846) was an American literary periodical published in Philadelphia in the 19th century. Edited by T.S. Arthur, it featured work by Edgar A. Poe, J.H. Ingraham, Sarah Josepha Hale, Thomas G. Spear, and others. In May 1846 it was merged into \"Godey's Lady's Book\".\n\n[Context 2] Title: First for Women\nMetadata: child_id=chunk_000033_001_000 | parent_id=parent_000033_001 | score=0.9928 | source_query=Which magazine was started first Arthur's Magazine or First for Women?\nText:\nFirst for Women is a woman's magazine published by Bauer Media Group in the USA. The magazine was started in 1989. It is based in Englewood Cliffs, New Jersey."
+      },
+      "error": null
+    },
+    "answer": {
+      "ok": true,
+      "status": "success",
+      "latency_ms": 751.68,
+      "data": {
+        "question": "Which magazine was started first Arthur's Magazine or First for Women?",
+        "answer": "Arthur's Magazine was started in 1844, while First for Women was started in 1989. Therefore, Arthur's Magazine was started first.",
+        "generator_mode": "qwen_local",
+        "processed_queries": [
+          "Arthur's Magazine start date",
+          "First for Women start date",
+          "Arthur's Magazine First for Women comparison",
+          "Which magazine was started first Arthur's Magazine or First for Women?"
+        ],
+        "latency_ms": {
+          "retrieval": 32.94563293457031,
+          "rerank": 35.457611083984375,
+          "pack": 0.07295608520507812,
+          "generation": 681.1254024505615,
+          "total": 749.7408390045166
+        },
+        "retrieval_debug": {
+          "search_query_count": 4,
+          "search_queries": [
+            "Arthur's Magazine start date",
+            "First for Women start date",
+            "Arthur's Magazine First for Women comparison",
+            "Which magazine was started first Arthur's Magazine or First for Women?"
+          ],
+          "raw_result_count": 40,
+          "fused_result_count": 20,
+          "final_context_count": 20,
+          "top_k_per_query": 10,
+          "final_top_k": 20,
+          "rrf_k": 60,
+          "max_chunks_per_parent": 3
+        },
+        "rerank_debug": {
+          "input_context_count": 20,
+          "output_context_count": 7,
+          "top_k": 7,
+          "batch_size": 16,
+          "max_length": 512
+        },
+        "pack_debug": {
+          "input_context_count": 7,
+          "packed_context_count": 2,
+          "max_chunks": 4,
+          "max_chunks_per_parent": 2,
+          "max_context_chars": 4000,
+          "actual_context_chars": 874,
+          "strategy": "rerank_top4_soft_cap2_compressed",
+          "dedup_by_text": true,
+          "dedup_by_title_text": true,
+          "min_score": 0.01
+        },
+        "generation_debug": {
+          "model_name": "/root/autodl-tmp/models/Qwen/Qwen2___5-7B-Instruct",
+          "dtype": "bfloat16",
+          "max_new_tokens": 128,
+          "temperature": 0.0,
+          "context_strategy": "rerank_top4_soft_cap2_compressed",
+          "context_debug": {
+            "input_context_count": 7,
+            "packed_context_count": 2,
+            "max_chunks": 4,
+            "max_chunks_per_parent": 2,
+            "max_context_chars": 4000,
+            "actual_context_chars": 874,
+            "strategy": "rerank_top4_soft_cap2_compressed",
+            "dedup_by_text": true,
+            "dedup_by_title_text": true,
+            "min_score": 0.01
+          }
+        },
+        "contexts": [
+          {
+            "rank": 1,
+            "score": 0.9955258965492249,
+            "child_id": "chunk_000001_005_000",
+            "parent_id": "parent_000001_005",
+            "title": "Arthur's Magazine",
+            "text": "Arthur's Magazine (1844–1846) was an American literary periodical published in Philadelphia in the 19th century. Edited by T.S. Arthur, it featured work by Edgar A. Poe, J.H. Ingraham, Sarah Josepha Hale, Thomas G. Spear, and others. In May 1846 it was merged into \"Godey's Lady's Book\".",
+            "source_query": "Which magazine was started first Arthur's Magazine or First for Women?"
+          },
+          {
+            "rank": 2,
+            "score": 0.9928008317947388,
+            "child_id": "chunk_000033_001_000",
+            "parent_id": "parent_000033_001",
+            "title": "First for Women",
+            "text": "First for Women is a woman's magazine published by Bauer Media Group in the USA. The magazine was started in 1989. It is based in Englewood Cliffs, New Jersey.",
+            "source_query": "Which magazine was started first Arthur's Magazine or First for Women?"
+          }
+        ]
+      },
+      "error": null
+    }
+  }
+}

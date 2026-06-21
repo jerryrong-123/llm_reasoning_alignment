@@ -1,0 +1,64 @@
+﻿service:
+  name: "industrial_hierarchical_rag_service"
+  version: "0.1.0"
+  host: "127.0.0.1"
+  port: 8000
+  log_level: "INFO"
+
+paths:
+  project_root: "."
+  child_chunks_path: "data/processed/hierarchical_rag/child_chunks.jsonl"
+  parent_docs_path: "outputs/hierarchical_rag/parent_docs.jsonl"
+  parent_child_map_path: "outputs/hierarchical_rag/parent_child_map.json"
+
+  index_dir: "outputs/hierarchical_rag/index"
+  faiss_index_path: "outputs/hierarchical_rag/index/faiss_child.index"
+  faiss_meta_path: "outputs/hierarchical_rag/index/faiss_child_meta.json"
+
+  api_test_dir: "outputs/hierarchical_rag/api_tests"
+  concurrency_test_dir: "outputs/hierarchical_rag/concurrency"
+  log_dir: "outputs/hierarchical_rag/logs"
+  service_log_path: "outputs/hierarchical_rag/logs/rag_service.log"
+
+query_processing:
+  mode: "decompose"
+  lowercase: false
+  strip_whitespace: true
+  remove_question_mark: false
+  max_search_queries: 4
+
+retrieval:
+  backend: "faiss"
+  top_k_per_query: 10
+  final_top_k: 10
+  fusion_method: "rrf"
+  rrf_k: 60
+  enable_parent_expansion: true
+  max_chunks_per_parent: 2
+
+embedding:
+  model_name: "BAAI/bge-small-en-v1.5"
+  normalize_embeddings: true
+  batch_size: 32
+  device: "cpu"
+
+context_packing:
+  strategy: "top7_soft_cap2_compressed"
+  max_context_chars: 6000
+  max_chunks: 7
+  max_chunks_per_parent: 2
+  include_title: true
+  include_scores: true
+
+generation:
+  mode: "extractive_mock"
+  model_name: "Qwen/Qwen2.5-7B-Instruct"
+  lora_path: "outputs/hierarchical_rag/checkpoints/qwen25_7b_rag_sft_lora"
+  max_new_tokens: 128
+  temperature: 0.0
+
+api:
+  default_search_top_k: 10
+  default_answer_top_k: 7
+  enable_debug_contexts: true
+  request_timeout_seconds: 60
