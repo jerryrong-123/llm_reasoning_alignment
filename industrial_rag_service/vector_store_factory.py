@@ -25,9 +25,7 @@ def create_vector_store(
     Supported backends:
     - faiss
     - chroma
-
-    This factory is the key extension point that prevents the FastAPI service
-    from being hard-coded to one vector database backend.
+    - milvus
     """
 
     paths_config = config.get("paths", {})
@@ -101,7 +99,41 @@ def create_vector_store(
             load_embedding_model=True,
         )
 
+    if backend == "milvus":
+        from industrial_rag_service.milvus_store import MilvusVectorStore
+
+        uri = str(
+            paths_config.get(
+                "milvus_uri",
+                "outputs/hierarchical_rag/milvus/milvus_child_store.db",
+            )
+        )
+
+        if uri.endswith(".db") and not Path(uri).is_absolute():
+            uri = str(resolve_project_path(project_root=project_root, path_value=uri))
+
+        collection_name = str(
+            retrieval_config.get(
+                "milvus_collection_name",
+                "hierarchical_rag_child_chunks",
+            )
+        )
+
+        vector_field_name = str(retrieval_config.get("milvus_vector_field_name", "vector"))
+        metric_type = str(retrieval_config.get("milvus_metric_type", "IP"))
+
+        return MilvusVectorStore(
+            uri=uri,
+            collection_name=collection_name,
+            model_name=model_name,
+            device=device,
+            normalize_embeddings=normalize_embeddings,
+            load_embedding_model=True,
+            vector_field_name=vector_field_name,
+            metric_type=metric_type,
+        )
+
     raise ValueError(
         f"Unsupported vector store backend: {backend}. "
-        "Supported backends are: faiss, chroma."
+        "Supported backends are: faiss, chroma, milvus."
     )

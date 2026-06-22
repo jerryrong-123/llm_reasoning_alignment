@@ -1,76 +1,69 @@
-﻿service:
-  name: "industrial_hierarchical_rag_service"
-  version: "0.2.0"
-  host: "127.0.0.1"
+service:
+  name: industrial_hierarchical_rag_service
+  version: 0.2.0
+  host: 127.0.0.1
   port: 8000
-  log_level: "INFO"
-
+  log_level: INFO
 paths:
-  project_root: "."
-  child_chunks_path: "data/processed/hierarchical_rag/child_chunks.jsonl"
-  parent_docs_path: "outputs/hierarchical_rag/parent_docs.jsonl"
-  parent_child_map_path: "outputs/hierarchical_rag/parent_child_map.json"
-
-  index_dir: "outputs/hierarchical_rag/index"
-  faiss_index_path: "outputs/hierarchical_rag/index/faiss_child.index"
-  faiss_meta_path: "outputs/hierarchical_rag/index/faiss_child_meta.json"
-
-  chroma_dir: "outputs/hierarchical_rag/chroma"
-  chroma_persist_dir: "outputs/hierarchical_rag/chroma/chroma_child_store"
-
-  api_test_dir: "outputs/hierarchical_rag/api_tests"
-  concurrency_test_dir: "outputs/hierarchical_rag/concurrency"
-  log_dir: "outputs/hierarchical_rag/logs"
-  service_log_path: "outputs/hierarchical_rag/logs/rag_service.log"
-
+  project_root: .
+  child_chunks_path: data/processed/hierarchical_rag/child_chunks.jsonl
+  parent_docs_path: outputs/hierarchical_rag/parent_docs.jsonl
+  parent_child_map_path: outputs/hierarchical_rag/parent_child_map.json
+  index_dir: outputs/hierarchical_rag/index
+  faiss_index_path: outputs/hierarchical_rag/index/faiss_child.index
+  faiss_meta_path: outputs/hierarchical_rag/index/faiss_child_meta.json
+  chroma_dir: outputs/hierarchical_rag/chroma
+  chroma_persist_dir: outputs/hierarchical_rag/chroma/chroma_child_store
+  api_test_dir: outputs/hierarchical_rag/api_tests
+  concurrency_test_dir: outputs/hierarchical_rag/concurrency
+  log_dir: outputs/hierarchical_rag/logs
+  service_log_path: outputs/hierarchical_rag/logs/rag_service.log
+  milvus_dir: outputs/hierarchical_rag/milvus
+  milvus_uri: outputs/hierarchical_rag/milvus/milvus_child_store.db
 query_processing:
-  mode: "decompose"
+  mode: decompose
   lowercase: false
   strip_whitespace: true
   remove_question_mark: false
   max_search_queries: 4
-
 retrieval:
-  # Supported backends: faiss, chroma
-  backend: "faiss"
-  chroma_collection_name: "hierarchical_rag_child_chunks"
+  backend: faiss
+  chroma_collection_name: hierarchical_rag_child_chunks
   top_k_per_query: 10
   final_top_k: 20
-  fusion_method: "rrf"
+  fusion_method: rrf
   rrf_k: 60
   enable_parent_expansion: true
   max_chunks_per_parent: 2
-
+  milvus_collection_name: hierarchical_rag_child_chunks
+  milvus_vector_field_name: vector
+  milvus_metric_type: IP
 embedding:
-  model_name: "BAAI/bge-small-en-v1.5"
+  model_name: BAAI/bge-small-en-v1.5
   normalize_embeddings: true
-  device: "cpu"
-
+  device: cpu
 reranking:
   enabled: true
-  model_name: "/root/autodl-tmp/hf_models/bge-reranker-base"
+  model_name: /root/autodl-tmp/hf_models/bge-reranker-base
   top_k: 7
   batch_size: 16
   max_length: 512
-  device: "cuda"
-
+  device: cuda
 context_packing:
-  strategy: "top7_soft_cap2_compressed"
+  strategy: top7_soft_cap2_compressed
   max_context_chars: 6000
   max_chunks: 7
   max_chunks_per_parent: 2
   include_title: true
   include_scores: true
   min_score: 0.01
-
 generation:
-  mode: "qwen_local"
-  model_name: "/root/autodl-tmp/models/Qwen/Qwen2___5-7B-Instruct"
-  lora_path: "outputs/hierarchical_rag/checkpoints/qwen25_7b_rag_sft_lora"
+  mode: qwen_local
+  model_name: /root/autodl-tmp/models/Qwen/Qwen2___5-7B-Instruct
+  lora_path: outputs/hierarchical_rag/checkpoints/qwen25_7b_rag_sft_lora
   max_new_tokens: 128
   temperature: 0.0
-  device: "cuda"
-
+  device: cuda
 api:
   default_search_top_k: 10
   default_answer_top_k: 7

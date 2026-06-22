@@ -12,3 +12,4 @@ accelerate
 torch
 numpy
 pyyaml
+pymilvus[milvus_lite]
