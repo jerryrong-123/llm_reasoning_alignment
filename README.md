@@ -2161,3 +2161,12 @@ RESTful API
 Evaluation and Error Analysis
 ```
 
+
+### Isolated HumanEval / MBPP execution framework
+
+The [container evaluator](code_eval/README.md) reuses saved `extracted_code`
+predictions and independently exported task manifests. It requires Docker with
+gVisor, disables network and host mounts, enforces resource/deadline limits, and
+records task/test results and subset-scoped pass@1. Offline unit tests and trusted
+container selftests are separate from model evaluation. No formal model pass@1
+has been obtained by adding this framework; container validation is still required.
